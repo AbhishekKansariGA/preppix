@@ -10,7 +10,7 @@ import { Header } from '@/components/layout/Header';
 
 
 export default function Home() {
-  const { isAuthenticated, isAuthInitialized } = useAuth();
+  const { user, isAuthenticated, isAuthInitialized } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -28,6 +28,11 @@ export default function Home() {
     <Header />
     <div className="space-y-8 mt-8">
       <div className="text-center">
+        {user && (
+            <h2 className="text-2xl font-bold font-poppins mb-4">
+                Welcome, {user.username}!
+            </h2>
+        )}
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           Choose Your Exam
         </h1>

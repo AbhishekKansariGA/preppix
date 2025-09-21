@@ -14,7 +14,7 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) return null;
 
@@ -40,9 +40,6 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
-            <span className="text-sm font-bold text-primary">Welcome, {user?.username}</span>
-        </div>
       </div>
     </header>
   );
