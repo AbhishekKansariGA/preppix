@@ -17,6 +17,8 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 
 const profileSchema = z.object({
   age: z.string().optional(),
@@ -100,6 +102,7 @@ export default function AccountPage() {
                 <DialogHeader>
                   <DialogTitle>Edit Profile</DialogTitle>
                 </DialogHeader>
+                <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleProfileUpdate)} className="space-y-4">
                   <div>
                     <Label htmlFor="age">Age</Label>
@@ -109,14 +112,33 @@ export default function AccountPage() {
                     <Label htmlFor="preparingExam">Preparing For</Label>
                     <Input id="preparingExam" {...form.register('preparingExam')} />
                   </div>
-                  <div>
-                    <Label htmlFor="qualifications">Qualifications</Label>
-                    <Input id="qualifications" {...form.register('qualifications')} />
-                  </div>
+                  <FormField
+                      control={form.control}
+                      name="qualifications"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label>Qualifications</Label>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select your qualification" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="10TH">10TH</SelectItem>
+                              <SelectItem value="12TH">12TH</SelectItem>
+                              <SelectItem value="GRADUATE">GRADUATE</SelectItem>
+                              <SelectItem value="POST GRADUATE">POST GRADUATE</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
                   <DialogFooter>
                     <Button type="submit">Save Changes</Button>
                   </DialogFooter>
                 </form>
+                </Form>
               </DialogContent>
             </Dialog>
             <Button variant="ghost" onClick={logout} className="w-full">
