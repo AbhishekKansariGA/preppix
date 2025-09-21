@@ -69,8 +69,10 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
   const currentQuestion = questions[currentQuestionIndex];
   
   const handleSubmit = () => {
-    const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id);
-    router.push(`/results/${newAttemptId}`);
+    if (answers.length > 0) {
+      const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id);
+      router.push(`/results/${newAttemptId}`);
+    }
   };
 
   useEffect(() => {
@@ -230,7 +232,7 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
                     <Clock className="h-5 w-5" />
                     <span>{formatTime(timeLeft)}</span>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => router.back()}>End Test</Button>
+                <Button variant="outline" size="sm" onClick={handleSubmit}>End Test</Button>
             </div>
           </div>
           <Progress value={progress} className="mt-4" />
@@ -293,3 +295,5 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     </div>
   );
 }
+
+    
