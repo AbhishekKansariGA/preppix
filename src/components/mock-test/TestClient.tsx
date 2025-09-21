@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Check, X, ArrowLeft, ArrowRight, Flag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag } from 'lucide-react';
+import { getSubjectById } from '@/lib/data';
 
 interface TestClientProps {
   exam: Exam;
-  subject: Subject;
+  subject: Omit<Subject, 'icon'>;
   questions: Question[];
 }
 

@@ -9,12 +9,14 @@ type Props = {
 export default function TestPage({ params }: Props) {
   const { examType, subject: subjectId } = params;
   const exam = getExamById(examType);
-  const subject = getSubjectById(subjectId);
+  const subjectData = getSubjectById(subjectId);
   const questions = getQuestions(examType, subjectId);
 
-  if (!exam || !subject || questions.length === 0) {
+  if (!exam || !subjectData || questions.length === 0) {
     notFound();
   }
+
+  const { icon: Icon, ...subject } = subjectData;
 
   return (
     <TestClient
