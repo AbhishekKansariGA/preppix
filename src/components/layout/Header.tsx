@@ -3,17 +3,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ClipboardList, LogOut, ChevronDown } from 'lucide-react';
+import { ClipboardList, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '@/context/auth-context';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuGroup,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { exams } from '@/lib/data';
 
 
@@ -29,6 +22,7 @@ export function Header() {
     { href: '/', label: 'Dashboard' },
     { href: '/leaderboard', label: 'Leaderboard' },
     { href: '/account', label: 'Account' },
+    ...exams.map(exam => ({ href: `/tests/${exam.id}`, label: exam.name }))
   ];
 
   return (
@@ -40,7 +34,7 @@ export function Header() {
             ExamPrep Ace
           </span>
         </Link>
-        <nav className="flex items-center space-x-6 text-sm font-medium">
+        <nav className="flex items-center space-x-6 text-sm font-medium whitespace-nowrap overflow-x-auto hide-scrollbar">
           {navLinks.map(link => (
              <Link
               key={link.href}
@@ -55,25 +49,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-1 text-sm font-medium text-foreground/60 hover:text-foreground/80 px-0">
-                Tests
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48">
-               <DropdownMenuGroup>
-                {exams.map((exam) => (
-                  <DropdownMenuItem key={exam.id} asChild>
-                    <Link href={`/tests/${exam.id}`}>
-                      {exam.name}
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           {isAuthenticated ? (
