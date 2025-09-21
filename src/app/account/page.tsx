@@ -9,7 +9,6 @@ import { History, ArrowRight, BarChart, FileText, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { Header } from '@/components/layout/Header';
 
 export default function AccountPage() {
   const { attempts, isInitialized, clearHistory } = useTestStore();
@@ -27,9 +26,7 @@ export default function AccountPage() {
   }
 
   return (
-    <>
-    <Header/>
-    <div className="space-y-8 mt-8">
+    <div className="space-y-8">
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl flex items-center gap-3">
@@ -98,6 +95,5 @@ export default function AccountPage() {
         </div>
       )}
     </div>
-    </>
   );
 }

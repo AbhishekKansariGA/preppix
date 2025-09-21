@@ -6,7 +6,6 @@ import { getExamById, subjects } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
-import { Header } from '@/components/layout/Header';
 
 export default function ExamTypePage() {
   const params = useParams();
@@ -31,9 +30,7 @@ export default function ExamTypePage() {
 
 
   return (
-    <>
-    <Header/>
-    <div className="space-y-8 mt-8">
+    <div className="space-y-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {exam.name} Mock Tests
@@ -61,6 +58,5 @@ export default function ExamTypePage() {
         ))}
       </div>
     </div>
-    </>
   );
 }

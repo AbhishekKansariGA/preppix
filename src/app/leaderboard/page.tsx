@@ -6,7 +6,6 @@ import { Trophy } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Header } from "@/components/layout/Header";
 
 const leaderboardData = [
   { rank: 1, name: "Arjun Sharma", score: 198.5, avatar: "AS" },
@@ -35,9 +34,7 @@ export default function LeaderboardPage() {
         return <div>Loading...</div>;
     }
   return (
-      <>
-      <Header />
-    <Card className="mt-8">
+    <Card>
       <CardHeader className="flex flex-row items-center gap-4">
         <Trophy className="h-8 w-8 text-primary" />
         <CardTitle className="text-3xl font-bold">Leaderboard</CardTitle>
@@ -75,6 +72,5 @@ export default function LeaderboardPage() {
         </Table>
       </CardContent>
     </Card>
-    </>
   );
 }

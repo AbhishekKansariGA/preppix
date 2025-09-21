@@ -5,7 +5,6 @@ import { useTestStore } from '@/hooks/use-test-store';
 import { ResultsClient } from '@/components/results/ResultsClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
-import { Header } from '@/components/layout/Header';
 
 export default function ResultsPage() {
   const params = useParams();
@@ -41,11 +40,8 @@ export default function ResultsPage() {
   }));
 
   return (
-    <>
-      <Header />
       <div className='mt-8'>
         <ResultsClient attempt={attempt} testHistory={testHistory} />
       </div>
-    </>
   )
 }

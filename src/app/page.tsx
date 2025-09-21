@@ -6,8 +6,6 @@ import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Header } from '@/components/layout/Header';
-
 
 export default function Home() {
   const { user, isAuthenticated, isAuthInitialized } = useAuth();
@@ -24,9 +22,7 @@ export default function Home() {
   }
 
   return (
-    <>
-    <Header />
-    <div className="space-y-8 mt-8">
+    <div className="space-y-8">
       <div className="text-center">
         {user && (
             <h2 className="text-2xl font-bold font-poppins mb-4 text-primary">
@@ -60,6 +56,5 @@ export default function Home() {
         ))}
       </div>
     </div>
-    </>
   );
 }

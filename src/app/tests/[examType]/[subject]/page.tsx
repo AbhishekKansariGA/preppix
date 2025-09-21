@@ -4,7 +4,6 @@ import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
-import { Header } from '@/components/layout/Header';
 
 export default function TestPage() {
   const params = useParams();
@@ -34,8 +33,6 @@ export default function TestPage() {
   const { icon: Icon, ...subject } = subjectData;
 
   return (
-    <>
-    <Header />
     <div className='mt-8'>
     <TestClient
       exam={exam}
@@ -43,6 +40,5 @@ export default function TestPage() {
       questions={questions}
     />
     </div>
-    </>
   );
 }

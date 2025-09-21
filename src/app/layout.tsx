@@ -23,8 +23,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background">
         <AuthProvider>
-          <div className="flex flex-col min-h-screen">
-            <main className="flex-grow container mx-auto px-4 py-8">
+          <div className="flex flex-col h-screen">
+            <Header/>
+            <main className="flex-1 overflow-y-auto container mx-auto px-4 py-8">
               {children}
             </main>
           </div>
