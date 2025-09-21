@@ -17,7 +17,10 @@ export function Header() {
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
 
-  if (!isAuthenticated) return null;
+  // Hide header on all test-related pages for a distraction-free experience
+  if (!isAuthenticated || pathname.startsWith('/tests')) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
