@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Exam, Subject, Question, UserAnswer, Chapter } from '@/lib/types';
 import { useTestStore } from '@/hooks/use-test-store';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, Languages } from 'lucide-react';
 import { getTranslation, getNewQuestion } from '@/lib/actions';
 import {
   AlertDialog,
@@ -51,7 +51,6 @@ const getTestDuration = (examId: string, isChapterTest: boolean): number => {
 
 export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { addAttempt } = useTestStore();
   const { toast } = useToast();
 
@@ -62,59 +61,48 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
 
-  const lang = searchParams.get('lang') || 'en';
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
     const questionTexts = new Set<string>();
     const uniqueQuestions: Question[] = [];
+    const promises = Array.from({ length: TOTAL_QUESTIONS }).map(() => 
+        getNewQuestion({
+            exam: exam.name,
+            subject: subject.name,
+            chapter: chapter?.name,
+        })
+    );
 
-    while (uniqueQuestions.length < TOTAL_QUESTIONS) {
-        try {
+    try {
+        const results = await Promise.all(promises);
+        for (const question of results) {
+            if (question && !questionTexts.has(question.question)) {
+                questionTexts.add(question.question);
+                uniqueQuestions.push(question);
+            }
+        }
+        
+        // If we still don't have enough unique questions, fetch more sequentially.
+        while (uniqueQuestions.length < TOTAL_QUESTIONS) {
             const question = await getNewQuestion({
                 exam: exam.name,
                 subject: subject.name,
                 chapter: chapter?.name,
             });
-
             if (question && !questionTexts.has(question.question)) {
                 questionTexts.add(question.question);
                 uniqueQuestions.push(question);
             }
-        } catch (error) {
-            console.error("Error fetching a question, retrying...", error);
         }
-    }
-
-    try {
-        if (lang === 'hi') {
-            const translationPromises = uniqueQuestions.map(q => 
-                getTranslation({ text: q.question, targetLanguage: 'Hindi' })
-            );
-            const translatedQuestions = await Promise.all(translationPromises);
-            
-            const optionsPromises = uniqueQuestions.flatMap(q => q.options.map(opt => getTranslation({ text: opt, targetLanguage: 'Hindi' })));
-            const translatedOptions = await Promise.all(optionsPromises);
-
-            const finalQuestions = uniqueQuestions.map((q, i) => {
-                const optionsStartIndex = i * 4;
-                return {
-                    ...q,
-                    question: translatedQuestions[i],
-                    options: translatedOptions.slice(optionsStartIndex, optionsStartIndex + 4)
-                };
-            });
-            setQuestions(finalQuestions);
-            setAnswers(finalQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-
-        } else {
-            setQuestions(uniqueQuestions);
-            setAnswers(uniqueQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-        }
+        
+        setQuestions(uniqueQuestions);
+        setAnswers(uniqueQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
     } catch (error) {
-        console.error("Failed to generate or translate questions:", error);
+        console.error("Failed to generate questions:", error);
         toast({
             title: "Error",
             description: "Could not load test. Please try again later.",
@@ -124,7 +112,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     } finally {
         setIsLoading(false);
     }
-}, [exam.name, subject.name, chapter?.name, lang, toast]);
+}, [exam.name, subject.name, chapter?.name, toast]);
 
 
   useEffect(() => {
@@ -197,7 +185,30 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const handleTranslate = async () => {
+    if (!currentQuestion) return;
+    setIsTranslating(true);
+    try {
+        const translatedQuestionPromise = getTranslation({ text: currentQuestion.question, targetLanguage: 'Hindi' });
+        const translatedOptionsPromises = currentQuestion.options.map(opt => getTranslation({ text: opt, targetLanguage: 'Hindi' }));
+        
+        const [translatedQuestion, ...translatedOptions] = await Promise.all([translatedQuestionPromise, ...translatedOptionsPromises]);
+
+        setQuestions(prevQuestions => prevQuestions.map((q, index) => {
+            if(index === currentQuestionIndex) {
+                return { ...q, question: translatedQuestion, options: translatedOptions };
+            }
+            return q;
+        }));
+
+    } catch (error) {
+        toast({ title: "Translation Failed", description: "Could not translate the question.", variant: "destructive" });
+    } finally {
+        setIsTranslating(false);
     }
   };
   
@@ -255,7 +266,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center flex-wrap gap-4">
+          <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
               <CardTitle className="text-2xl">{testTitle}</CardTitle>
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
@@ -272,8 +283,13 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
         </CardHeader>
         <CardContent className="min-h-[300px]">
           <div className="space-y-6">
-            <div className="text-lg font-semibold w-full pr-4">
-              {currentQuestion.question}
+            <div className="flex justify-between items-start w-full">
+                <div className="text-lg font-semibold w-full pr-4">
+                {currentQuestion.question}
+                </div>
+                <Button variant="ghost" size="sm" onClick={handleTranslate} disabled={isTranslating}>
+                    <Languages className="mr-2 h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate'}
+                </Button>
             </div>
             <RadioGroup
               key={currentQuestion.id}
