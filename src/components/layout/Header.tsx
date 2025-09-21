@@ -34,7 +34,7 @@ export function Header() {
               className={cn(
                 'flex items-center gap-2 transition-colors hover:text-primary whitespace-nowrap px-4 py-2 rounded-md',
                 pathname === link.href
-                  ? 'bg-white text-black'
+                  ? 'bg-white text-black hover:text-black'
                   : 'text-muted-foreground'
               )}
             >
