@@ -58,17 +58,14 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   
   const [testLanguage, setTestLanguage] = useState(defaultLang);
-  const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
-  const [isTranslating, setIsTranslating] = useState<Record<number, boolean>>({});
-  const [isBulkTranslating, setIsBulkTranslating] = useState(false);
+  const [questions, setQuestions] = useState(initialQuestions);
+  const [isTranslating, setIsTranslating] = useState(defaultLang === 'hi');
 
 
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   
   const translationAbortController = useRef<AbortController | null>(null);
-
-  const questions = useMemo(() => initialQuestions, [initialQuestions]);
 
   const currentQuestion = questions[currentQuestionIndex];
   
@@ -100,81 +97,71 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     }
   }, [isTimeUp, handleSubmit]);
 
+   useEffect(() => {
+    const translateAll = async () => {
+      if (defaultLang === 'hi' && initialQuestions.length > 0) {
+        setIsTranslating(true);
+        try {
+          const translated = await Promise.all(
+            initialQuestions.map(async (q) => {
+              const translatedText = await getTranslation({ text: q.question, targetLanguage: 'Hindi' });
+              return { ...q, question: translatedText };
+            })
+          );
+          setQuestions(translated);
+        } catch (error) {
+          console.error("Bulk translation failed:", error);
+          toast({
+            title: "Translation Failed",
+            description: "Could not translate questions. Starting test in English.",
+            variant: "destructive",
+          });
+          setQuestions(initialQuestions); // Fallback to original questions
+          setTestLanguage('en');
+        } finally {
+          setIsTranslating(false);
+        }
+      }
+    };
+    translateAll();
+  }, [defaultLang, initialQuestions, toast]);
+  
   useEffect(() => {
-     if (initialQuestions.length > 0) {
-      setAnswers(initialQuestions.map(q => ({ questionId: q.id, selectedOption: null })))
+     if (questions.length > 0) {
+      setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
     }
-  }, [initialQuestions]);
+  }, [questions]);
 
-  const translateSingleQuestion = useCallback(async (questionId: number, questionText: string, signal?: AbortSignal) => {
-    if (translatedQuestions[questionId]) return;
+  const handleLanguageToggle = async () => {
+    const newLang = testLanguage === 'en' ? 'hi' : 'en';
+    const originalLang = defaultLang === 'hi' ? 'en' : 'hi';
+
+    if (newLang === defaultLang) {
+        setQuestions(initialQuestions);
+        setTestLanguage(defaultLang);
+        return;
+    }
     
-    setIsTranslating(prev => ({ ...prev, [questionId]: true }));
-    
+    setIsTranslating(true);
     try {
-      const translation = await getTranslation({ text: questionText, targetLanguage: 'Hindi' }, signal);
-      if (signal?.aborted) return;
-      setTranslatedQuestions(prev => ({...prev, [questionId]: translation}));
-    } catch (error: any) {
-      if (error.name !== 'AbortError') {
-        console.error("Translation failed:", error);
+        const translated = await Promise.all(
+            initialQuestions.map(async (q) => {
+              const translatedText = await getTranslation({ text: q.question, targetLanguage: newLang === 'hi' ? 'Hindi' : 'English' });
+              return { ...q, question: translatedText };
+            })
+          );
+        setQuestions(translated);
+        setTestLanguage(newLang);
+    } catch (error) {
+        console.error("Language toggle translation failed:", error);
         toast({
           title: "Translation Failed",
-          description: "Could not translate the question. Please try again.",
+          description: "Could not switch language. Please try again.",
           variant: "destructive",
         });
-      }
     } finally {
-      if (!signal?.aborted) {
-        setIsTranslating(prev => ({ ...prev, [questionId]: false }));
-      }
+        setIsTranslating(false);
     }
-  }, [translatedQuestions, toast]);
-  
-   const translateAllQuestions = useCallback(async (qs: Question[]) => {
-        setIsBulkTranslating(true);
-        const promises = qs.map(q => {
-            if (translatedQuestions[q.id]) return Promise.resolve({ id: q.id, translatedText: translatedQuestions[q.id] });
-            
-            setIsTranslating(prev => ({ ...prev, [q.id]: true }));
-            return getTranslation({ text: q.question, targetLanguage: 'Hindi' })
-                .then(translatedText => ({ id: q.id, translatedText }))
-                .catch(err => {
-                    console.error(`Failed to translate question ${q.id}`, err);
-                    return { id: q.id, translatedText: q.question }; // Fallback to original
-                })
-                .finally(() => {
-                   setIsTranslating(prev => ({ ...prev, [q.id]: false }));
-                });
-        });
-        
-        // We don't await all promises here to avoid blocking UI
-        // Individual question translations will update the state
-        Promise.allSettled(promises).then(() => {
-            setIsBulkTranslating(false);
-        });
-
-    }, [translatedQuestions]);
-
-    useEffect(() => {
-        if (testLanguage === 'hi' && questions.length > 0) {
-            translateAllQuestions(questions);
-        }
-    }, [testLanguage, questions, translateAllQuestions]);
-
-  
-  useEffect(() => {
-    // When question changes, abort any ongoing single translation
-    if (translationAbortController.current) {
-      translationAbortController.current.abort();
-      translationAbortController.current = null;
-    }
-  }, [currentQuestionIndex]);
-
-
-  const handleLanguageToggle = () => {
-    const newLang = testLanguage === 'en' ? 'hi' : 'en';
-    setTestLanguage(newLang);
   };
 
 
@@ -211,6 +198,10 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     }
   };
 
+  if (isTranslating) {
+      return <Loader text="Translating questions for you..." />;
+  }
+
   if (answers.length === 0 || !currentQuestion) {
       return <Loader text="Preparing your test..." />;
   }
@@ -218,10 +209,7 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
   
-  const isCurrentQuestionTranslating = isTranslating[currentQuestion.id];
-  const displayQuestion = testLanguage === 'hi' && translatedQuestions[currentQuestion.id] 
-    ? translatedQuestions[currentQuestion.id] 
-    : currentQuestion.question;
+  const displayQuestion = currentQuestion.question;
     
   const testTitle = chapter ? `${exam.name} - ${subject.name} (${chapter.name})` : `${exam.name} - ${subject.name}`;
 
@@ -273,17 +261,11 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
           <div className="space-y-6">
             <div className="flex justify-between items-start">
               <div className="text-lg font-semibold w-full pr-4">
-                 {isCurrentQuestionTranslating ? (
-                   <div className='space-y-2'>
-                      <Skeleton className="h-6 w-full" />
-                      <Skeleton className="h-6 w-3/4" />
-                   </div>
-                ) : (
-                  displayQuestion
-                )}
+                {displayQuestion}
               </div>
-              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isBulkTranslating} className="shrink-0">
+              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isTranslating} className="shrink-0">
                 <Languages className="h-5 w-5" />
+                <span className='sr-only'>Toggle Language</span>
               </Button>
             </div>
             <RadioGroup
@@ -327,3 +309,5 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     </div>
   );
 }
+
+    
