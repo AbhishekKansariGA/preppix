@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, Languages } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, Languages, ChevronLeft } from 'lucide-react';
 import { getTranslation, getNewQuestion } from '@/lib/actions';
 import {
   AlertDialog,
@@ -185,7 +185,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
@@ -271,7 +271,10 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
               <CardTitle className="text-2xl">{testTitle}</CardTitle>
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+                <Button variant="outline" size="icon" onClick={() => router.back()}>
+                    <ChevronLeft className="h-4 w-4" />
+                </Button>
                 <div className="flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10">
                     <Clock className="h-5 w-5" />
                     <span>{formatTime(timeLeft)}</span>
