@@ -48,7 +48,7 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
-  const { login, isAuthenticated, isAuthInitialized } = useAuth();
+  const { isAuthenticated, isAuthInitialized } = useAuth();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -68,8 +68,16 @@ export default function LoginPage() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.username, values.password, values.mobile, values.preparingExam);
-    router.push('/');
+    const query = new URLSearchParams({
+        username: values.username,
+        mobile: values.mobile,
+        preparingExam: values.preparingExam,
+    }).toString();
+
+    // Store password temporarily to avoid passing it in URL
+    sessionStorage.setItem('tempPassword', values.password);
+
+    router.push(`/otp-verify?${query}`);
   }
   
   if (isAuthInitialized && isAuthenticated) {
@@ -80,7 +88,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold font-poppins">Welcome to ExamPrep Ace</CardTitle>
+          <CardTitle className="text-3xl font-bold font-poppins">Welcome</CardTitle>
           <CardDescription>Enter your details to start your preparation journey</CardDescription>
         </CardHeader>
         <CardContent>
@@ -153,7 +161,7 @@ export default function LoginPage() {
                 )}
               />
               <Button type="submit" className="w-full">
-                Login
+                Get OTP
               </Button>
             </form>
           </Form>
