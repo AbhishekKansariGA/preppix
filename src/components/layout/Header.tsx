@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, ClipboardList, BarChart3, UserCircle, LogOut } from 'lucide-react';
+import { ClipboardList, LogOut, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '@/context/auth-context';
@@ -14,8 +14,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { exams } from '@/lib/data';
 
 
 const navLinks = [
@@ -41,20 +43,52 @@ export function Header() {
           </span>
         </Link>
         <nav className="flex items-center space-x-6 text-sm font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                'transition-colors hover:text-foreground/80',
-                pathname === link.href
-                  ? 'text-foreground'
-                  : 'text-foreground/60'
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Link
+            href="/"
+            className={cn(
+              'transition-colors hover:text-foreground/80',
+              pathname === '/'
+                ? 'text-foreground'
+                : 'text-foreground/60'
+            )}
+          >
+            Dashboard
+          </Link>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className={cn(
+                    'flex items-center gap-1 text-sm font-medium transition-colors hover:text-foreground/80 focus-visible:ring-0 px-0',
+                    pathname.startsWith('/tests') ? 'text-foreground' : 'text-foreground/60'
+                )}>
+                Tests <ChevronDown className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48">
+                <DropdownMenuLabel>Select Exam</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                {exams.map((exam) => (
+                    <Link href={`/tests/${exam.id}`} key={exam.id}>
+                        <DropdownMenuItem>
+                            {exam.name}
+                        </DropdownMenuItem>
+                    </Link>
+                ))}
+                </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Link
+            href="/account"
+            className={cn(
+              'transition-colors hover:text-foreground/80',
+              pathname === '/account'
+                ? 'text-foreground'
+                : 'text-foreground/60'
+            )}
+          >
+            Account
+          </Link>
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
           {isAuthenticated && user ? (
