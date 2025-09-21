@@ -33,12 +33,12 @@ const QuestionSchema = z.object({
 });
 
 const GenerateQuestionOutputSchema = z.object({
-    questions: z.array(QuestionSchema).length(10).describe("An array of 10 generated questions."),
+    question: QuestionSchema.describe("The generated question."),
 });
 
 export type GenerateQuestionOutput = z.infer<typeof GenerateQuestionOutputSchema>;
 
-export async function generateQuestions(input: GenerateQuestionInput): Promise<GenerateQuestionOutput> {
+export async function generateQuestion(input: GenerateQuestionInput): Promise<GenerateQuestionOutput> {
   return questionGenerationFlow(input);
 }
 
@@ -51,9 +51,9 @@ const prompt = ai.definePrompt({
     schema: GenerateQuestionOutputSchema,
   },
   prompt: `You are an expert question creator for Indian competitive exams like SSC CGL, CHSL, and MTS.
-Generate 10 unique and relevant multiple-choice questions for the following subject and chapter, tailored for the specified exam.
-Ensure the questions are of a suitable difficulty level for the exam.
-For each question, provide 4 options and the index of the correct answer.
+Generate a unique and relevant multiple-choice question for the following subject and chapter, tailored for the specified exam.
+Ensure the question is of a suitable difficulty level for the exam.
+For the question, provide 4 options and the index of the correct answer.
 
 Exam: {{exam}}
 Subject: {{subject}}
@@ -61,7 +61,7 @@ Subject: {{subject}}
 Chapter: {{chapter}}
 {{/if}}
 
-Generate the questions now.`,
+Generate the question now.`,
 });
 
 

@@ -1,6 +1,6 @@
 import { Exam, Subject, Question, Chapter } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
-import { getNewQuestions } from './actions';
+import { getNewQuestion } from './actions';
 
 export const exams: Exam[] = [
   { id: 'cgl', name: 'SSC CGL', description: 'Combined Graduate Level' },
@@ -35,11 +35,15 @@ export const populateQuestions = async (examId: string, subjectId: string, chapt
     
     if (!exam || !subject) return [];
 
-    const newQuestions = await getNewQuestions({
-        exam: exam.name,
-        subject: subject.name,
-        chapter: chapter?.name
-    });
+    const questionPromises = Array.from({ length: 10 }, () => 
+        getNewQuestion({
+            exam: exam.name,
+            subject: subject.name,
+            chapter: chapter?.name
+        })
+    );
+
+    const newQuestions = await Promise.all(questionPromises);
     
     // Add newly fetched questions to our global store to be accessible by getQuestionById
     const existingQuestionIds = new Set(allQuestions.map(q => q.id));

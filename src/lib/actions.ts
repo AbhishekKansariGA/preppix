@@ -2,7 +2,7 @@
 'use server';
 
 import { adaptiveLearningPath, AdaptiveLearningPathInput } from '@/ai/flows/adaptive-learning-path';
-import { generateQuestions, GenerateQuestionInput } from '@/ai/flows/question-generation-flow';
+import { generateQuestion, GenerateQuestionInput } from '@/ai/flows/question-generation-flow';
 import { translateText, TranslateTextInput } from '@/ai/flows/translation-flow';
 import { Question } from './types';
 
@@ -41,19 +41,19 @@ export async function getTranslation(input: TranslateTextInput, signal?: AbortSi
 }
 
 
-export async function getNewQuestions(input: GenerateQuestionInput): Promise<Question[]> {
-  console.log("Generating new questions from AI...");
+export async function getNewQuestion(input: GenerateQuestionInput): Promise<Question> {
+  console.log("Generating new question from AI...");
   try {
-    const result = await generateQuestions(input);
+    const result = await generateQuestion(input);
     
-    const questionsWithDynamicIds = result.questions.map(q => ({
-      ...q,
+    const questionWithDynamicId = {
+      ...result.question,
       id: Math.floor(Math.random() * 100000) + Date.now(), // Create a more dynamic ID
-    }));
+    };
     
-    return questionsWithDynamicIds;
+    return questionWithDynamicId;
   } catch (error) {
-    console.error("Error in getNewQuestions action:", error);
-    throw new Error("Failed to get new questions from AI.");
+    console.error("Error in getNewQuestion action:", error);
+    throw new Error("Failed to get new question from AI.");
   }
 }
