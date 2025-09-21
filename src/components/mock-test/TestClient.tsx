@@ -24,6 +24,7 @@ import {
 import { Loader } from '../ui/loader';
 import { useToast } from '@/hooks/use-toast';
 import { getTranslation } from '@/lib/actions';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface TestClientProps {
   exam: Exam;
@@ -266,17 +267,23 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                 <div className="text-lg font-semibold w-full pr-4">
                 {currentQuestionIndex + 1}. {displayQuestion?.question}
                 </div>
-                 <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleTranslate}
-                    disabled={isTranslating[currentQuestion.id]}
-                >
-                    <Languages className="mr-2 h-4 w-4" />
-                    {isTranslating[currentQuestion.id] 
-                        ? 'Translating...' 
-                        : (showTranslated ? 'English' : 'Translate')}
-                </Button>
+                 <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={handleTranslate}
+                          disabled={isTranslating[currentQuestion.id]}
+                      >
+                        {isTranslating[currentQuestion.id] ? <Loader className="h-4 w-4" /> : <Languages className="h-4 w-4" />}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{showTranslated ? 'Show in English' : 'Translate to Hindi'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
             </div>
             <RadioGroup
               key={currentQuestion.id}
