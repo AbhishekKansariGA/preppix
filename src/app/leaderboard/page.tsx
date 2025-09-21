@@ -13,14 +13,14 @@ import { Attempt } from '@/lib/types';
 
 // Dummy data for top candidates
 const dummyTopCandidates = [
-  { username: 'Rohan Sharma', score: 192.5, exam: 'SSC CGL' },
-  { username: 'Priya Patel', score: 188.0, exam: 'SSC CGL' },
-  { username: 'Amit Singh', score: 185.5, exam: 'SSC CHSL' },
-  { username: 'Sneha Verma', score: 182.0, exam: 'SSC CGL' },
-  { username: 'Vikram Rathore', score: 179.5, exam: 'SSC MTS' },
+  { username: 'Rohan Sharma', score: 19.5, exam: 'SSC CGL' },
+  { username: 'Priya Patel', score: 18.0, exam: 'SSC CGL' },
+  { username: 'Amit Singh', score: 17.5, exam: 'SSC CHSL' },
+  { username: 'Sneha Verma', score: 16.0, exam: 'SSC CGL' },
+  { username: 'Vikram Rathore', score: 15.5, exam: 'SSC MTS' },
 ];
 
-const CUTOFF_SCORE = 50; // Example cutoff score
+const CUTOFF_SCORE = 10; // Example cutoff score
 
 export default function LeaderboardPage() {
   const { user, isAuthenticated, isAuthInitialized } = useAuth();
