@@ -1,6 +1,7 @@
+
 'use client'
 import { getExamById, getSubjectById, getChapterById, populateQuestions } from '@/lib/data';
-import { notFound, useRouter, useParams } from 'next/navigation';
+import { notFound, useRouter, useParams, useSearchParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect, useState } from 'react';
@@ -9,8 +10,10 @@ import { Loader } from '@/components/ui/loader';
 
 export default function MathsChapterTestPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
   const chapterId = Array.isArray(params.chapter) ? params.chapter[0] : params.chapter;
+  const lang = searchParams.get('lang') || 'en';
   const subjectId = 'maths';
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -62,7 +65,9 @@ export default function MathsChapterTestPage() {
       subject={subject}
       questions={questions}
       chapter={chapterData}
+      defaultLang={lang}
     />
     </div>
   );
 }
+

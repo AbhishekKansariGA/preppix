@@ -30,6 +30,7 @@ interface TestClientProps {
   subject: Omit<Subject, 'icon'>;
   questions: Question[];
   chapter?: Chapter;
+  defaultLang?: string;
 }
 
 const getTestDuration = (examId: string, isChapterTest: boolean): number => {
@@ -49,16 +50,18 @@ const getTestDuration = (examId: string, isChapterTest: boolean): number => {
     }
 }
 
-export function TestClient({ exam, subject, questions: initialQuestions, chapter }: TestClientProps) {
+export function TestClient({ exam, subject, questions: initialQuestions, chapter, defaultLang = 'en' }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
   const { toast } = useToast();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   
-  const [testLanguage, setTestLanguage] = useState('en');
+  const [testLanguage, setTestLanguage] = useState(defaultLang);
   const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
   const [isTranslating, setIsTranslating] = useState<Record<number, boolean>>({});
+  const [isBulkTranslating, setIsBulkTranslating] = useState(false);
+
 
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
@@ -98,25 +101,19 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
   }, [isTimeUp, handleSubmit]);
 
   useEffect(() => {
-    if (questions.length > 0 && answers.length === 0) {
-      setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
+     if (initialQuestions.length > 0) {
+      setAnswers(initialQuestions.map(q => ({ questionId: q.id, selectedOption: null })))
     }
-  }, [questions, answers]);
-  
-  const translateQuestion = useCallback(async (questionId: number, questionText: string) => {
+  }, [initialQuestions]);
+
+  const translateSingleQuestion = useCallback(async (questionId: number, questionText: string, signal?: AbortSignal) => {
     if (translatedQuestions[questionId]) return;
     
     setIsTranslating(prev => ({ ...prev, [questionId]: true }));
     
-    if (translationAbortController.current) {
-      translationAbortController.current.abort();
-    }
-    const abortController = new AbortController();
-    translationAbortController.current = abortController;
-
     try {
-      const translation = await getTranslation({ text: questionText, targetLanguage: 'Hindi' }, abortController.signal);
-      if (abortController.signal.aborted) return;
+      const translation = await getTranslation({ text: questionText, targetLanguage: 'Hindi' }, signal);
+      if (signal?.aborted) return;
       setTranslatedQuestions(prev => ({...prev, [questionId]: translation}));
     } catch (error: any) {
       if (error.name !== 'AbortError') {
@@ -126,34 +123,53 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
           description: "Could not translate the question. Please try again.",
           variant: "destructive",
         });
-        setTestLanguage('en'); // Revert to English if translation fails
       }
     } finally {
-      if (!abortController.signal.aborted) {
+      if (!signal?.aborted) {
         setIsTranslating(prev => ({ ...prev, [questionId]: false }));
-        translationAbortController.current = null;
       }
     }
   }, [translatedQuestions, toast]);
   
+   const translateAllQuestions = useCallback(async (qs: Question[]) => {
+        setIsBulkTranslating(true);
+        const promises = qs.map(q => 
+            getTranslation({ text: q.question, targetLanguage: 'Hindi' })
+                .then(translatedText => ({ id: q.id, translatedText }))
+                .catch(err => {
+                    console.error(`Failed to translate question ${q.id}`, err);
+                    return { id: q.id, translatedText: q.question }; // Fallback to original
+                })
+        );
+        const results = await Promise.all(promises);
+        const newTranslations = results.reduce((acc, result) => {
+            acc[result.id] = result.translatedText;
+            return acc;
+        }, {} as Record<number, string>);
+
+        setTranslatedQuestions(prev => ({...prev, ...newTranslations}));
+        setIsBulkTranslating(false);
+    }, []);
+
+    useEffect(() => {
+        if (testLanguage === 'hi' && questions.length > 0) {
+            translateAllQuestions(questions);
+        }
+    }, [testLanguage, questions, translateAllQuestions]);
+
+  
   useEffect(() => {
-    // When question changes, abort any ongoing translation
+    // When question changes, abort any ongoing single translation
     if (translationAbortController.current) {
       translationAbortController.current.abort();
+      translationAbortController.current = null;
     }
-    // If test language is Hindi, translate the new question
-    if (testLanguage === 'hi' && currentQuestion) {
-      translateQuestion(currentQuestion.id, currentQuestion.question);
-    }
-  }, [currentQuestionIndex, currentQuestion, testLanguage, translateQuestion]);
+  }, [currentQuestionIndex]);
 
 
   const handleLanguageToggle = () => {
     const newLang = testLanguage === 'en' ? 'hi' : 'en';
     setTestLanguage(newLang);
-    if (newLang === 'hi' && currentQuestion) {
-      translateQuestion(currentQuestion.id, currentQuestion.question);
-    }
   };
 
 
@@ -189,6 +205,10 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
+
+  if (isBulkTranslating) {
+    return <Loader text="Translating questions for you..." />;
+  }
 
   if (answers.length === 0 || !currentQuestion) {
       return <Loader text="Preparing your test..." />;
@@ -261,7 +281,7 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
                   displayQuestion
                 )}
               </div>
-              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isCurrentQuestionTranslating} className="shrink-0">
+              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isCurrentQuestionTranslating || isBulkTranslating} className="shrink-0">
                 <Languages className="h-5 w-5" />
               </Button>
             </div>
@@ -306,3 +326,4 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     </div>
   );
 }
+

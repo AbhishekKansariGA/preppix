@@ -1,6 +1,7 @@
+
 'use client'
 import { getExamById, getSubjectById, populateQuestions } from '@/lib/data';
-import { notFound, useRouter, useParams } from 'next/navigation';
+import { notFound, useRouter, useParams, useSearchParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect, useState } from 'react';
@@ -9,8 +10,11 @@ import { Loader } from '@/components/ui/loader';
 
 export default function TestPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
   const subjectId = Array.isArray(params.subject) ? params.subject[0] : params.subject;
+  const lang = searchParams.get('lang') || 'en';
+
   const [isLoading, setIsLoading] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
   
@@ -63,7 +67,9 @@ export default function TestPage() {
       exam={exam}
       subject={subject}
       questions={questions}
+      defaultLang={lang}
     />
     </div>
   );
 }
+
