@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Exam, Subject, Question, UserAnswer, Chapter } from '@/lib/types';
 import { useTestStore } from '@/hooks/use-test-store';
@@ -30,13 +31,23 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
   const [isTranslating, setIsTranslating] = useState(false);
   
+  const translationAbortController = useRef<AbortController | null>(null);
+
   const currentQuestion = questions[currentQuestionIndex];
 
   useEffect(() => {
-    // Initialize answers state when questions are loaded/changed
     setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
   }, [questions]);
   
+  useEffect(() => {
+    // Reset language and cancel any ongoing translation when question changes
+    setCurrentLanguage('en');
+    if (translationAbortController.current) {
+      translationAbortController.current.abort();
+      setIsTranslating(false);
+    }
+  }, [currentQuestionIndex]);
+
 
   const handleTranslate = async () => {
     if (currentLanguage === 'hi') {
@@ -48,17 +59,32 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
       setCurrentLanguage('hi');
       return;
     }
+    
+    if (translationAbortController.current) {
+        translationAbortController.current.abort();
+    }
+    const abortController = new AbortController();
+    translationAbortController.current = abortController;
 
     setIsTranslating(true);
     try {
       const translation = await getTranslation({ text: currentQuestion.question, targetLanguage: 'Hindi' });
+      
+      if (abortController.signal.aborted) {
+          return;
+      }
+      
       setTranslatedQuestions(prev => ({...prev, [currentQuestion.id]: translation}));
       setCurrentLanguage('hi');
-    } catch (error) {
-      console.error("Translation failed:", error);
-      // Optionally, show an error to the user
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        console.error("Translation failed:", error);
+      }
     } finally {
-      setIsTranslating(false);
+      if (!abortController.signal.aborted) {
+        setIsTranslating(false);
+      }
+      translationAbortController.current = null;
     }
   };
 
@@ -77,14 +103,12 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setCurrentLanguage('en');
     }
   };
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-      setCurrentLanguage('en');
     }
   };
 
@@ -122,20 +146,22 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
         <CardContent className="min-h-[300px]">
           <div className="space-y-6">
             <div className="flex justify-between items-start">
-              {isTranslating && currentLanguage === 'en' ? (
-                 <div className='space-y-2 w-full'>
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-1/2" />
-                 </div>
-              ) : (
-                <p className="text-lg font-semibold">{displayQuestion}</p>
-              )}
-              <Button variant="ghost" size="icon" onClick={handleTranslate} disabled={isTranslating} className="shrink-0 ml-4">
+              <div className="text-lg font-semibold w-full pr-4">
+                 {isTranslating ? (
+                   <div className='space-y-2'>
+                      <Skeleton className="h-6 w-full" />
+                      <Skeleton className="h-6 w-3/4" />
+                   </div>
+                ) : (
+                  displayQuestion
+                )}
+              </div>
+              <Button variant="ghost" size="icon" onClick={handleTranslate} disabled={isTranslating} className="shrink-0">
                 <Languages className="h-5 w-5" />
               </Button>
             </div>
             <RadioGroup
-              key={currentQuestion.id} // Add key to force re-render
+              key={currentQuestion.id}
               value={currentAnswer?.selectedOption?.toString()}
               onValueChange={handleOptionChange}
             >
