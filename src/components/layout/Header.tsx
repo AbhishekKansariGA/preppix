@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -33,7 +34,7 @@ export function Header() {
               className={cn(
                 'flex items-center gap-2 transition-colors hover:text-primary whitespace-nowrap px-4 py-2 rounded-md',
                 pathname === link.href
-                  ? 'bg-primary/90 text-primary-foreground'
+                  ? 'bg-white text-black'
                   : 'text-muted-foreground'
               )}
             >
