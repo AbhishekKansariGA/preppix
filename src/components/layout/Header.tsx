@@ -63,7 +63,7 @@ export function Header() {
                 Tests <ChevronDown className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48">
+            <DropdownMenuContent className="w-48 max-h-60 overflow-y-auto hide-scrollbar">
                 <DropdownMenuLabel>Select Exam</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
