@@ -78,6 +78,14 @@ export default function AccountPage() {
     setIsEditDialogOpen(false);
   };
 
+  const testName = (a: typeof attempts[0]) => {
+      let name = `${a.examName} - ${a.subjectName}`;
+      if (a.chapterName) {
+        name += ` (${a.chapterName})`;
+      }
+      return name;
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row gap-8 items-start">
@@ -250,7 +258,6 @@ export default function AccountPage() {
           ) : (
             <div className="space-y-4">
               {attempts.map((attempt, index) => {
-                  const title = attempt.chapterName ? `${attempt.examName} - ${attempt.subjectName} (${attempt.chapterName})` : `${attempt.examName} - ${attempt.subjectName}`;
                   return (
                     <Link href={`/results/${attempt.id}`} key={`${attempt.id}-${index}`}>
                       <Card className="group transition-all bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-md hover:border-secondary">
@@ -260,7 +267,10 @@ export default function AccountPage() {
                                 <BarChart className="h-6 w-6" />
                              </div>
                              <div>
-                              <p className="font-semibold text-lg">{title}</p>
+                              <p className="font-semibold text-lg">
+                                {attempt.examName} - {attempt.subjectName}
+                                {attempt.chapterName && <span className="text-primary"> ({attempt.chapterName})</span>}
+                              </p>
                               <p className="text-sm text-muted-foreground">
                                 {format(new Date(attempt.date), 'MMMM d, yyyy - h:mm a')}
                               </p>

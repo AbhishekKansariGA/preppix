@@ -232,8 +232,6 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
     
-  const testTitle = chapter ? `${exam.name} - ${subject.name} (${chapter.name})` : `${exam.name} - ${subject.name}`;
-
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -268,7 +266,10 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
         <CardHeader>
           <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
-              <CardTitle className="text-2xl">{testTitle}</CardTitle>
+              <CardTitle className="text-2xl">
+                {exam.name} - {subject.name}
+                {chapter && <span className="text-primary"> ({chapter.name})</span>}
+              </CardTitle>
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
             </div>
             <div className="flex items-center gap-2">

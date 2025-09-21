@@ -39,15 +39,12 @@ export function ResultsClient({ attempt, testHistory }: ResultsClientProps) {
     unattempted: { label: 'Unattempted', color: 'hsl(var(--muted))' },
   } satisfies ChartConfig;
 
-  const testTitle = attempt.chapterName 
-    ? `${attempt.examName} - ${attempt.subjectName} (${attempt.chapterName})`
-    : `${attempt.examName} - ${attempt.subjectName}`;
-
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Test Results: {testTitle}
+          Test Results: {attempt.examName} - {attempt.subjectName}
+          {attempt.chapterName && <span className="text-primary"> ({attempt.chapterName})</span>}
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
           Here's a breakdown of your performance.
