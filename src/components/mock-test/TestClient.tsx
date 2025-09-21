@@ -22,8 +22,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Loader } from '../ui/loader';
-import { useToast } from '@/hooks/use-toast';
-import { getTranslation } from '@/lib/actions';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface TestClientProps {
@@ -57,7 +55,6 @@ const getTestDuration = (examId: string, isChapterTest: boolean): number => {
 export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
-  const { toast } = useToast();
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -67,9 +64,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, TranslatedQuestion>>({});
   const [isTranslated, setIsTranslated] = useState<Record<number, boolean>>({});
-  const [isTranslating, setIsTranslating] = useState<Record<number, boolean>>({});
 
 
   useEffect(() => {
@@ -87,11 +82,10 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
       const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id, questions);
       router.push(`/results/${newAttemptId}`);
     } else {
-        toast({ title: "Submission Error", description: "No questions were loaded to submit.", variant: "destructive" });
         setIsSubmitting(false);
         router.back();
     }
-  }, [addAttempt, answers, chapter?.id, exam.id, subject.id, router, questions, toast]);
+  }, [addAttempt, answers, chapter?.id, exam.id, subject.id, router, questions]);
 
   useEffect(() => {
     if (questions.length === 0) return;
@@ -148,47 +142,10 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     }
   };
   
-  const handleTranslate = async () => {
+  const handleTranslate = () => {
     const questionId = currentQuestion.id;
-    
-    // If it's already translated, just toggle the view
-    if (translatedQuestions[questionId]) {
+    if (currentQuestion.translation) {
       setIsTranslated(prev => ({ ...prev, [questionId]: !prev[questionId] }));
-      return;
-    }
-    
-    setIsTranslating(prev => ({ ...prev, [questionId]: true }));
-    try {
-      const textsToTranslate = [
-        currentQuestion.question,
-        ...currentQuestion.options
-      ];
-
-      const targetLanguage = subject.id === 'english' ? 'Hindi' : 'English';
-      
-      const translatedTexts = await Promise.all(
-        textsToTranslate.map(text => getTranslation({ text, targetLanguage }))
-      );
-
-      const [translatedQ, ...translatedOps] = translatedTexts;
-
-      setTranslatedQuestions(prev => ({
-        ...prev,
-        [questionId]: {
-          question: translatedQ,
-          options: translatedOps
-        }
-      }));
-      setIsTranslated(prev => ({ ...prev, [questionId]: true }));
-    } catch (error) {
-      console.error("Translation failed:", error);
-      toast({
-        title: "Translation Failed",
-        description: "Could not translate the question. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsTranslating(prev => ({ ...prev, [questionId]: false }));
     }
   };
 
@@ -201,7 +158,6 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   }
   
   if (!currentQuestion) {
-      // This should not happen with static questions, but as a fallback
       return <Loader />;
   }
 
@@ -209,7 +165,9 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
   
   const showTranslated = isTranslated[currentQuestion.id];
-  const displayQuestion = showTranslated ? translatedQuestions[currentQuestion.id] : currentQuestion;
+  const displayQuestion = (showTranslated && currentQuestion.translation) ? currentQuestion.translation : {question: currentQuestion.question, options: currentQuestion.options};
+  
+  // Determine the target language for the tooltip based on the subject.
   const targetLanguage = subject.id === 'english' ? 'Hindi' : 'English';
     
   const formatTime = (seconds: number) => {
@@ -271,6 +229,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                 <div className="text-lg font-semibold w-full pr-4">
                   {currentQuestionIndex + 1}. {displayQuestion?.question}
                 </div>
+                {currentQuestion.translation && (
                  <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -278,19 +237,19 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                           variant="outline"
                           size="icon"
                           onClick={handleTranslate}
-                          disabled={isTranslating[currentQuestion.id]}
                       >
-                        {isTranslating[currentQuestion.id] ? <Loader className="h-4 w-4" /> : <Languages className="h-4 w-4" />}
+                        <Languages className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'Original'}` : `Translate to ${targetLanguage}`}</p>
+                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'Hindi'}` : `Translate to ${targetLanguage}`}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+                )}
             </div>
             <RadioGroup
-              key={currentQuestion.id}
+              key={`${currentQuestion.id}-${showTranslated}`}
               value={currentAnswer?.selectedOption?.toString() ?? ""}
               onValueChange={handleOptionChange}
             >

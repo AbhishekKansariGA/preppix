@@ -25,6 +25,10 @@ export interface Question {
   subject: string;
   exam: string;
   chapter?: string;
+  translation?: {
+    question: string;
+    options: string[];
+  }
 }
 
 export interface UserAnswer {
