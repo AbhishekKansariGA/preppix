@@ -94,7 +94,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
             <ArrowLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
           {currentQuestionIndex === questions.length - 1 ? (
-             <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700">
+             <Button onClick={handleSubmit}>
                <Flag className="mr-2 h-4 w-4" /> Submit Test
              </Button>
           ) : (
