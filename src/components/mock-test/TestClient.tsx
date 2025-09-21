@@ -25,11 +25,9 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
   const [answers, setAnswers] = useState<UserAnswer[]>(
     questions.map(q => ({ questionId: q.id, selectedOption: null }))
   );
-  const [currentSelection, setCurrentSelection] = useState<string | undefined>(undefined);
 
   const handleOptionChange = (value: string) => {
     const selectedOption = parseInt(value, 10);
-    setCurrentSelection(value);
     setAnswers(prev =>
       prev.map(a =>
         a.questionId === questions[currentQuestionIndex].id
@@ -39,21 +37,15 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
     );
   };
 
-  const navigateAndClear = (newIndex: number) => {
-    setCurrentQuestionIndex(newIndex);
-    const nextAnswer = answers.find(a => a.questionId === questions[newIndex].id);
-    setCurrentSelection(nextAnswer?.selectedOption?.toString());
-  }
-
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
-      navigateAndClear(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      navigateAndClear(currentQuestionIndex - 1);
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
 
@@ -63,6 +55,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
   };
 
   const currentQuestion = questions[currentQuestionIndex];
+  const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
@@ -82,7 +75,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
           <div className="space-y-6">
             <p className="text-lg font-semibold">{currentQuestion.question}</p>
             <RadioGroup
-              value={currentSelection}
+              value={currentAnswer?.selectedOption?.toString()}
               onValueChange={handleOptionChange}
             >
               {currentQuestion.options.map((option, index) => (
