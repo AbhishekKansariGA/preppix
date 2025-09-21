@@ -2,10 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ClipboardList, Trophy, User, PenSquare, LogOut } from 'lucide-react';
+import { ClipboardList, Trophy, User, PenSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/context/auth-context';
-import { Button } from '../ui/button';
 
 const navLinks = [
   { href: '/', label: 'Mock Tests', icon: ClipboardList },
@@ -15,7 +14,7 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   if (!isAuthenticated) return null;
 
@@ -43,10 +42,6 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">Welcome, {user?.username}</span>
-            <Button variant="ghost" size="sm" onClick={logout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-            </Button>
         </div>
       </div>
     </header>

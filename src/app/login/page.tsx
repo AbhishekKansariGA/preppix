@@ -73,7 +73,7 @@ export default function LoginPage() {
             <div className="flex justify-center items-center mb-4">
                 <PenSquare className="h-8 w-8 text-primary" />
             </div>
-          <CardTitle className="text-3xl">Welcome to ExamPrep Ace</CardTitle>
+          <CardTitle className="text-3xl font-bold text-primary">Welcome to ExamPrep Ace</CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>

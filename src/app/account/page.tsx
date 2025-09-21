@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { History, ArrowRight, BarChart, FileText } from 'lucide-react';
+import { History, ArrowRight, BarChart, FileText, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ import { Header } from '@/components/layout/Header';
 
 export default function AccountPage() {
   const { attempts, isInitialized, clearHistory } = useTestStore();
-  const { isAuthenticated, isAuthInitialized: isAuthInitialized } = useAuth();
+  const { isAuthenticated, isAuthInitialized, logout } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -40,9 +40,15 @@ export default function AccountPage() {
             Review your previous mock tests to track your progress.
           </p>
         </div>
+        <div className="flex gap-2">
         {attempts.length > 0 && (
           <Button variant="destructive" onClick={clearHistory}>Clear History</Button>
         )}
+        <Button variant="ghost" onClick={logout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+        </Button>
+        </div>
       </div>
 
       {attempts.length === 0 ? (
