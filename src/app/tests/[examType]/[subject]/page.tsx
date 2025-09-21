@@ -1,5 +1,6 @@
+
 'use client'
-import { getExamById, getSubjectById, getQuestions, getChapterById } from '@/lib/data';
+import { getExamById, getSubjectById, getChapterById } from '@/lib/data';
 import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
@@ -15,7 +16,7 @@ export default function TestPage() {
   const exam = getExamById(examType);
   const subjectData = getSubjectById(subjectId);
   const chapterData = chapterId ? getChapterById(subjectId, chapterId) : undefined;
-  const questions = getQuestions(examType, subjectId, chapterId);
+  
   const { isAuthenticated, isAuthInitialized } = useAuth();
   const router = useRouter();
 
@@ -25,7 +26,7 @@ export default function TestPage() {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
-  if (!exam || !subjectData || questions.length === 0) {
+  if (!exam || !subjectData) {
     notFound();
   }
   
@@ -44,7 +45,6 @@ export default function TestPage() {
     <TestClient
       exam={exam}
       subject={subject}
-      questions={questions}
       chapter={chapterData}
     />
     </div>
