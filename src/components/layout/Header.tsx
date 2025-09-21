@@ -25,7 +25,7 @@ export function Header() {
           <PenSquare className="h-6 w-6 text-primary" />
           <span className="hidden font-bold sm:inline-block text-lg">ExamPrep Ace</span>
         </Link>
-        <nav className="flex flex-1 items-center space-x-2 text-sm font-medium">
+        <nav className="flex flex-1 items-center space-x-2 text-sm font-medium overflow-x-auto hide-scrollbar">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -33,7 +33,7 @@ export function Header() {
               className={cn(
                 'flex items-center gap-2 transition-colors hover:text-primary whitespace-nowrap px-4 py-2 rounded-md',
                 pathname === link.href
-                  ? 'bg-primary text-primary-foreground'
+                  ? 'bg-primary/90 text-primary-foreground'
                   : 'text-muted-foreground'
               )}
             >

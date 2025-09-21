@@ -32,7 +32,7 @@ export default function Home() {
         <div className="px-6 py-24 sm:px-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             {user && (
-              <p className="text-lg font-semibold leading-8 text-primary">
+              <p className="text-xl font-semibold leading-8 text-blue-400">
                 Welcome back, {user.username}!
               </p>
             )}
