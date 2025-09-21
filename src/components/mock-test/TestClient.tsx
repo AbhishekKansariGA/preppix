@@ -133,23 +133,28 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
   
    const translateAllQuestions = useCallback(async (qs: Question[]) => {
         setIsBulkTranslating(true);
-        const promises = qs.map(q => 
-            getTranslation({ text: q.question, targetLanguage: 'Hindi' })
+        const promises = qs.map(q => {
+            if (translatedQuestions[q.id]) return Promise.resolve({ id: q.id, translatedText: translatedQuestions[q.id] });
+            
+            setIsTranslating(prev => ({ ...prev, [q.id]: true }));
+            return getTranslation({ text: q.question, targetLanguage: 'Hindi' })
                 .then(translatedText => ({ id: q.id, translatedText }))
                 .catch(err => {
                     console.error(`Failed to translate question ${q.id}`, err);
                     return { id: q.id, translatedText: q.question }; // Fallback to original
                 })
-        );
-        const results = await Promise.all(promises);
-        const newTranslations = results.reduce((acc, result) => {
-            acc[result.id] = result.translatedText;
-            return acc;
-        }, {} as Record<number, string>);
+                .finally(() => {
+                   setIsTranslating(prev => ({ ...prev, [q.id]: false }));
+                });
+        });
+        
+        // We don't await all promises here to avoid blocking UI
+        // Individual question translations will update the state
+        Promise.allSettled(promises).then(() => {
+            setIsBulkTranslating(false);
+        });
 
-        setTranslatedQuestions(prev => ({...prev, ...newTranslations}));
-        setIsBulkTranslating(false);
-    }, []);
+    }, [translatedQuestions]);
 
     useEffect(() => {
         if (testLanguage === 'hi' && questions.length > 0) {
@@ -205,10 +210,6 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
-
-  if (isBulkTranslating) {
-    return <Loader text="Translating questions for you..." />;
-  }
 
   if (answers.length === 0 || !currentQuestion) {
       return <Loader text="Preparing your test..." />;
@@ -281,7 +282,7 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
                   displayQuestion
                 )}
               </div>
-              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isCurrentQuestionTranslating || isBulkTranslating} className="shrink-0">
+              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isBulkTranslating} className="shrink-0">
                 <Languages className="h-5 w-5" />
               </Button>
             </div>
@@ -326,4 +327,3 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     </div>
   );
 }
-
