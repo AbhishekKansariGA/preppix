@@ -89,7 +89,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Paul" {...field} />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,7 +102,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Strong Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="********" {...field} />
+                      <Input type="password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -117,7 +117,6 @@ export default function LoginPage() {
                     <FormControl>
                       <Input
                         type="tel"
-                        placeholder="000-000-0000"
                         {...field}
                       />
                     </FormControl>
