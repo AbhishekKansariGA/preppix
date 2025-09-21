@@ -64,7 +64,7 @@ export function useTestStore() {
     const subject = getSubjectById(subjectId);
 
     const newAttempt: Attempt = {
-      id: `${Date.now()}-${examId}-${subjectId}`,
+      id: `${Date.now()}-${examId}-${subjectId}-${Math.random()}`,
       examId,
       subjectId,
       examName: exam?.name || 'Unknown Exam',
