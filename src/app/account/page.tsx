@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { exams } from '@/lib/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LogOut } from 'lucide-react';
 
 const formSchema = z.object({
     dob: z.string().optional(),
@@ -25,7 +26,7 @@ const formSchema = z.object({
 });
 
 export default function AccountPage() {
-  const { user, isAuthenticated, isAuthInitialized, updateUser } = useAuth();
+  const { user, isAuthenticated, isAuthInitialized, updateUser, logout } = useAuth();
   const router = useRouter();
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -167,6 +168,12 @@ export default function AccountPage() {
                 </Form>
             </CardContent>
         </Card>
+        <div className='text-center'>
+            <Button variant="destructive" onClick={() => logout()}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Log Out
+            </Button>
+        </div>
     </div>
   );
 }

@@ -3,16 +3,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ClipboardList, LogOut } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '@/context/auth-context';
-import { exams } from '@/lib/data';
-
 
 export function Header() {
   const pathname = usePathname();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
   
   if (pathname === '/login' || pathname.startsWith('/tests/')) {
     return null;
@@ -22,7 +20,9 @@ export function Header() {
     { href: '/', label: 'Dashboard' },
     { href: '/leaderboard', label: 'Leaderboard' },
     { href: '/account', label: 'Account' },
-    ...exams.map(exam => ({ href: `/tests/${exam.id}`, label: exam.name }))
+    { href: `/tests/cgl`, label: 'SSC CGL' },
+    { href: `/tests/chsl`, label: 'SSC CHSL' },
+    { href: `/tests/mts`, label: 'SSC MTS' },
   ];
 
   return (
@@ -51,12 +51,7 @@ export function Header() {
           ))}
         </nav>
         <div className="flex flex-1 items-center justify-end space-x-4">
-          {isAuthenticated ? (
-             <Button variant="outline" size="sm" onClick={() => logout()}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-            </Button>
-          ) : (
+          {!isAuthenticated && (
              <Button asChild>
                 <Link href="/login">Login</Link>
              </Button>
