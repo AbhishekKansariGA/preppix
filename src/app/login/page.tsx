@@ -17,28 +17,16 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
-import { PenSquare } from 'lucide-react';
+import { Smile } from 'lucide-react';
 import { useEffect } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { exams } from '@/lib/data';
-
-const strongPassword = new RegExp(
-  '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})'
-);
-const indianMobileRegex = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
-  password: z.string().regex(strongPassword, {
-    message:
-      'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.',
-  }),
-  mobile: z.string().regex(indianMobileRegex, {
-    message: 'Please enter a valid Indian mobile number.',
-  }),
-  preparingExam: z.string().min(1, { message: 'Please select an exam.' }),
+  password: z.string().min(1, {
+      message: 'Password is required'
+  })
 });
 
 export default function LoginPage() {
@@ -50,8 +38,6 @@ export default function LoginPage() {
     defaultValues: {
       username: '',
       password: '',
-      mobile: '',
-      preparingExam: '',
     },
   });
 
@@ -63,7 +49,8 @@ export default function LoginPage() {
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.username, values.mobile, values.preparingExam);
+    // In a real app, you'd validate the password. Here we just log in.
+    login(values.username, '000-000-0000', 'Wellbeing');
     router.push('/');
   }
   
@@ -73,13 +60,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-background">
-      <Card className="w-full max-w-md border-secondary bg-secondary/30">
+      <Card className="w-full max-w-sm border-0 bg-transparent shadow-none">
         <CardHeader className="text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
-                <PenSquare className="h-8 w-8 text-primary" />
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-card mb-4">
+                <Smile className="h-8 w-8 text-primary" />
             </div>
-          <CardTitle className="text-3xl font-bold font-poppins text-foreground">Welcome to ExamPrep Ace</CardTitle>
-          <CardDescription>Enter your credentials to access your account</CardDescription>
+          <CardTitle className="text-3xl font-bold font-poppins text-foreground">Welcome Back</CardTitle>
+          <CardDescription>Enter your details to continue</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -91,7 +78,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your username" {...field} />
+                      <Input placeholder="Paul" {...field} className="bg-card h-12" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,54 +93,17 @@ export default function LoginPage() {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Your password"
+                        placeholder="••••••••"
                         {...field}
+                        className="bg-card h-12"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="mobile"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mobile Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your Indian mobile number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="preparingExam"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Preparing For</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select an exam" />
-                        </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {exams.map(exam => (
-                            <SelectItem key={exam.id} value={exam.name}>{exam.name}</SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                Sign In
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 text-base font-semibold">
+                Login
               </Button>
             </form>
           </Form>

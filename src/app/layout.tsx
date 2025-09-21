@@ -3,10 +3,11 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'ExamPrep Ace',
-  description: 'Your partner in cracking SSC exams.',
+  title: 'Calm',
+  description: 'Find your balance.',
 };
 
 export default function RootLayout({
@@ -21,7 +22,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased bg-background">
+      <body className={cn("font-body antialiased bg-background")}>
         <AuthProvider>
             <div className="flex flex-col h-screen">
               <Header/>

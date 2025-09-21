@@ -1,39 +1,27 @@
 
 'use client'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
+import { Button } from "@/components/ui/button";
 
-const allUsers = [
-  "Arjun Sharma", "Priya Singh", "Rohan Kumar", "Sneha Patel", "Vikram Reddy",
-  "Anjali Gupta", "Manish Verma", "Kavita Desai", "Suresh Iyer", "Deepika Rao",
-  "Amit Patel", "Neha Sharma", "Rajesh Kumar", "Sunita Reddy", "Vivek Singh",
-  "Pooja Gupta", "Sanjay Verma", "Meera Desai", "Ashok Iyer", "Rani Rao"
+const moodData = [
+  { day: 'Mon', mood: 3, pv: 2400, amt: 2400 },
+  { day: 'Tue', mood: 4, pv: 1398, amt: 2210 },
+  { day: 'Wed', mood: 3.5, pv: 9800, amt: 2290 },
+  { day: 'Thu', mood: 5, pv: 3908, amt: 2000 },
+  { day: 'Fri', mood: 4, pv: 4800, amt: 2181 },
+  { day: 'Sat', mood: 4.5, pv: 3800, amt: 2500 },
+  { day: 'Sun', mood: 5, pv: 4300, amt: 2100 },
 ];
-
-const generateLeaderboardData = () => {
-  // Shuffle users and pick 10 to make it dynamic
-  const shuffledUsers = [...allUsers].sort(() => 0.5 - Math.random());
-  const selectedUsers = shuffledUsers.slice(0, 10);
-
-  return selectedUsers.map((name, index) => ({
-    name: name,
-    score: 180 + Math.random() * 20, // Scores between 180 and 200
-    avatar: name.split(' ').map(n => n[0]).join('')
-  }))
-  .sort((a, b) => b.score - a.score)
-  .map((user, index) => ({ ...user, rank: index + 1 }));
-};
 
 
 export default function LeaderboardPage() {
-    const { isAuthenticated, isAuthInitialized } = useAuth();
+    const { isAuthenticated, isAuthInitialized, user } = useAuth();
     const router = useRouter();
-    const [leaderboardData, setLeaderboardData] = useState(() => generateLeaderboardData());
 
     useEffect(() => {
         if (isAuthInitialized && !isAuthenticated) {
@@ -41,53 +29,55 @@ export default function LeaderboardPage() {
         }
     }, [isAuthenticated, isAuthInitialized, router]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setLeaderboardData(generateLeaderboardData());
-        }, 60000); // Update every minute
-
-        return () => clearInterval(interval); // Cleanup on unmount
-    }, []);
 
     if (!isAuthInitialized || !isAuthenticated) {
         return null;
     }
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center gap-4">
-        <Trophy className="h-8 w-8 text-primary" />
-        <CardTitle className="text-3xl font-bold">Leaderboard</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px] text-center">Rank</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right w-[100px]">Score</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {leaderboardData.slice(0, 5).map((user, index) => (
-              <TableRow key={user.rank} className={index < 3 ? "bg-primary/10" : ""}>
-                <TableCell className="font-medium text-lg text-center">
-                  {user.rank}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={`https://api.dicebear.com/8.x/initials/svg?seed=${user.name}`} />
-                      <AvatarFallback>{user.avatar}</AvatarFallback>
-                    </Avatar>
-                    <span className="font-medium">{user.name}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-right font-bold text-primary text-lg">{user.score.toFixed(2)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+        <div className="flex items-center gap-4">
+            <Avatar className="h-16 w-16">
+                <AvatarImage src={`https://api.dicebear.com/8.x/initials/svg?seed=${user?.username}`} />
+                <AvatarFallback>{user?.username?.[0]}</AvatarFallback>
+            </Avatar>
+            <div>
+                <h1 className="text-2xl font-bold">{user?.username}</h1>
+                <p className="text-muted-foreground">Here are your weekly stats.</p>
+            </div>
+        </div>
+
+        <Card>
+            <CardHeader>
+                <CardTitle>Mood Analysis</CardTitle>
+                <CardDescription>Your mood fluctuations over the week.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={moodData}>
+                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis domain={[1, 5]} hide />
+                     <Tooltip
+                        contentStyle={{
+                            backgroundColor: "hsl(var(--background))",
+                            borderColor: "hsl(var(--border))"
+                        }}
+                     />
+                    <Line type="monotone" dataKey="mood" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 6, fill: 'hsl(var(--primary))' }} />
+                </LineChart>
+                </ResponsiveContainer>
+            </CardContent>
+        </Card>
+        
+        <Card>
+            <CardHeader>
+                 <CardTitle>Quote of the day</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-foreground">
+                    "Every day is a new opportunity for growth and positive change."
+                </blockquote>
+            </CardContent>
+        </Card>
+    </div>
   );
 }
