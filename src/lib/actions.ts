@@ -18,31 +18,19 @@ export async function getAdaptiveLearningPath(input: AdaptiveLearningPathInput) 
   }
 }
 
-async function withAbort<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T> {
-  return new Promise((resolve, reject) => {
-    if (signal) {
-      signal.addEventListener('abort', () => {
-        reject(new DOMException('Aborted', 'AbortError'));
-      });
-    }
-
-    promise.then(resolve, reject);
-  });
-}
-
-
-export async function getTranslation(input: TranslateTextInput, signal?: AbortSignal): Promise<string> {
+export async function getTranslation(input: TranslateTextInput): Promise<string> {
     try {
         const output = await translateText(input);
         return output.translatedText;
     } catch (error) {
         console.error("Error in getTranslation action:", error);
-        throw error; // Re-throw to be handled by the caller
+        // Return original text as a fallback
+        return input.text;
     }
 }
 
 
-export async function getNewQuestion(input: GenerateQuestionInput): Promise<Question> {
+export async function getNewQuestion(input: GenerateQuestionInput): Promise<Question | null> {
   console.log("Generating new question from AI...");
   try {
     const result = await generateQuestion(input);
@@ -59,6 +47,6 @@ export async function getNewQuestion(input: GenerateQuestionInput): Promise<Ques
     return questionWithDynamicId;
   } catch (error) {
     console.error("Error in getNewQuestion action:", error);
-    throw new Error("Failed to get new question from AI.");
+    return null; // Return null on error instead of throwing
   }
 }
