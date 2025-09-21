@@ -2,9 +2,9 @@ import { Exam, Subject, Question } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 
 export const exams: Exam[] = [
-  { id: 'cgl', name: 'SSC CGL', description: 'Combined Graduate Level', imageUrl: 'https://picsum.photos/seed/cgl/600/400', imageHint: 'exam paper' },
-  { id: 'chsl', name: 'SSC CHSL', description: 'Combined Higher Secondary Level', imageUrl: 'https://picsum.photos/seed/chsl/600/400', imageHint: 'student studying' },
-  { id: 'mts', name: 'SSC MTS', description: 'Multi-Tasking Staff', imageUrl: 'https://picsum.photos/seed/mts/600/400', imageHint: 'books library' },
+  { id: 'cgl', name: 'SSC CGL', description: 'Combined Graduate Level' },
+  { id: 'chsl', name: 'SSC CHSL', description: 'Combined Higher Secondary Level' },
+  { id: 'mts', name: 'SSC MTS', description: 'Multi-Tasking Staff' },
 ];
 
 export const subjects: Subject[] = [

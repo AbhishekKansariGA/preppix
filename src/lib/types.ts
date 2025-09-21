@@ -2,8 +2,6 @@ export type Exam = {
   id: string;
   name: string;
   description: string;
-  imageUrl: string;
-  imageHint: string;
 };
 
 export type Subject = {

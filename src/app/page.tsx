@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { exams } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
@@ -21,15 +20,6 @@ export default function Home() {
           <Link href={`/tests/${exam.id}`} key={exam.id} className="group">
             <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:bg-card/80 hover:shadow-primary/20 hover:shadow-lg">
               <CardHeader>
-                <div className="relative h-40 w-full mb-4">
-                  <Image
-                    src={exam.imageUrl}
-                    alt={exam.name}
-                    fill
-                    className="rounded-t-lg object-cover"
-                    data-ai-hint={exam.imageHint}
-                  />
-                </div>
                 <CardTitle className="text-2xl font-semibold">{exam.name}</CardTitle>
               </CardHeader>
               <CardContent>
