@@ -29,7 +29,7 @@ export default function Home() {
     <div className="space-y-8 mt-8">
       <div className="text-center">
         {user && (
-            <h2 className="text-2xl font-bold font-poppins mb-4">
+            <h2 className="text-2xl font-bold font-poppins mb-4 text-primary">
                 Welcome, {user.username}!
             </h2>
         )}
