@@ -1,14 +1,24 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface User {
+    username: string;
+    mobile: string;
+    age?: string;
+    preparingExam?: string;
+    qualifications?: string;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
   isAuthInitialized: boolean;
-  user: { username: string } | null;
-  login: (username: string) => void;
+  user: User | null;
+  login: (username: string, mobile: string) => void;
   logout: () => void;
+  updateUser: (data: Partial<Omit<User, 'username' | 'mobile'>>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,7 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
-  const [user, setUser] = useState<{ username: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   const checkAuth = useCallback(() => {
@@ -37,8 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
   }, [checkAuth]);
 
-  const login = (username: string) => {
-    const userData = { username };
+  const login = (username: string, mobile: string) => {
+    const userData: User = { username, mobile };
     localStorage.setItem('examPrepUser', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
@@ -52,8 +62,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   };
 
+  const updateUser = (data: Partial<Omit<User, 'username' | 'mobile'>>) => {
+    if (user) {
+        const updatedUser = { ...user, ...data };
+        setUser(updatedUser);
+        localStorage.setItem('examPrepUser', JSON.stringify(updatedUser));
+    }
+  };
+
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isAuthInitialized }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isAuthInitialized, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

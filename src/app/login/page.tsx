@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -58,7 +59,7 @@ export default function LoginPage() {
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.username);
+    login(values.username, values.mobile);
     router.push('/');
   }
   
