@@ -10,7 +10,6 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, ArrowRight, Flag } from 'lucide-react';
-import { getSubjectById } from '@/lib/data';
 
 interface TestClientProps {
   exam: Exam;
@@ -75,6 +74,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
           <div className="space-y-6">
             <p className="text-lg font-semibold">{currentQuestion.question}</p>
             <RadioGroup
+              key={currentQuestion.id} // Add key to force re-render
               value={currentAnswer?.selectedOption?.toString()}
               onValueChange={handleOptionChange}
             >
