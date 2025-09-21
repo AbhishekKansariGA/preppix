@@ -5,30 +5,48 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const leaderboardData = [
-  { rank: 1, name: "Arjun Sharma", score: 198.5, avatar: "AS" },
-  { rank: 2, name: "Priya Singh", score: 195.0, avatar: "PS" },
-  { rank: 3, name: "Rohan Kumar", score: 192.5, avatar: "RK" },
-  { rank: 4, name: "Sneha Patel", score: 190.0, avatar: "SP" },
-  { rank: 5, name: "Vikram Reddy", score: 188.5, avatar: "VR" },
-  { rank: 6, name: "Anjali Gupta", score: 187.0, avatar: "AG" },
-  { rank: 7, name: "Manish Verma", score: 185.5, avatar: "MV" },
-  { rank: 8, name: "Kavita Desai", score: 184.0, avatar: "KD" },
-  { rank: 9, name: "Suresh Iyer", score: 182.5, avatar: "SI" },
-  { rank: 10, name: "Deepika Rao", score: 181.0, avatar: "DR" },
+const allUsers = [
+  "Arjun Sharma", "Priya Singh", "Rohan Kumar", "Sneha Patel", "Vikram Reddy",
+  "Anjali Gupta", "Manish Verma", "Kavita Desai", "Suresh Iyer", "Deepika Rao",
+  "Amit Patel", "Neha Sharma", "Rajesh Kumar", "Sunita Reddy", "Vivek Singh",
+  "Pooja Gupta", "Sanjay Verma", "Meera Desai", "Ashok Iyer", "Rani Rao"
 ];
+
+const generateLeaderboardData = () => {
+  // Shuffle users and pick 10 to make it dynamic
+  const shuffledUsers = [...allUsers].sort(() => 0.5 - Math.random());
+  const selectedUsers = shuffledUsers.slice(0, 10);
+
+  return selectedUsers.map((name, index) => ({
+    name: name,
+    score: 180 + Math.random() * 20, // Scores between 180 and 200
+    avatar: name.split(' ').map(n => n[0]).join('')
+  }))
+  .sort((a, b) => b.score - a.score)
+  .map((user, index) => ({ ...user, rank: index + 1 }));
+};
+
 
 export default function LeaderboardPage() {
     const { isAuthenticated, isAuthInitialized } = useAuth();
     const router = useRouter();
+    const [leaderboardData, setLeaderboardData] = useState(() => generateLeaderboardData());
 
     useEffect(() => {
         if (isAuthInitialized && !isAuthenticated) {
             router.push('/login');
         }
     }, [isAuthenticated, isAuthInitialized, router]);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setLeaderboardData(generateLeaderboardData());
+        }, 60000); // Update every minute
+
+        return () => clearInterval(interval); // Cleanup on unmount
+    }, []);
 
     if (!isAuthInitialized || !isAuthenticated) {
         return <div>Loading...</div>;
@@ -49,7 +67,7 @@ export default function LeaderboardPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {leaderboardData.map((user, index) => (
+            {leaderboardData.slice(0, 5).map((user, index) => (
               <TableRow key={user.rank} className={index < 3 ? "bg-primary/10" : ""}>
                 <TableCell className="font-medium text-lg">
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
