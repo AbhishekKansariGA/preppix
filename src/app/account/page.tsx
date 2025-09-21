@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { History, ArrowRight, BarChart, FileText, LogOut, User, Edit } from 'lucide-react';
+import { History, ArrowRight, BarChart, FileText, LogOut, User, Edit, CalendarIcon } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -18,10 +18,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 const profileSchema = z.object({
-  age: z.string().optional(),
+  dob: z.date().optional(),
   preparingExam: z.string().optional(),
   qualifications: z.string().optional(),
 });
@@ -37,7 +40,7 @@ export default function AccountPage() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      age: user?.age || '',
+      dob: user?.dob ? new Date(user.dob) : undefined,
       preparingExam: user?.preparingExam || '',
       qualifications: user?.qualifications || '',
     },
@@ -52,7 +55,7 @@ export default function AccountPage() {
   useEffect(() => {
     if (user) {
         form.reset({
-            age: user.age || '',
+            dob: user.dob ? new Date(user.dob) : undefined,
             preparingExam: user.preparingExam || '',
             qualifications: user.qualifications || '',
         });
@@ -64,7 +67,10 @@ export default function AccountPage() {
   }
   
   const handleProfileUpdate = (values: ProfileFormValues) => {
-    updateUser(values);
+    updateUser({
+        ...values,
+        dob: values.dob?.toISOString()
+    });
     setIsEditDialogOpen(false);
   };
 
@@ -81,8 +87,8 @@ export default function AccountPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Age:</span>
-              <span className="font-medium">{user.age || 'N/A'}</span>
+              <span className="text-muted-foreground">Date of Birth:</span>
+              <span className="font-medium">{user.dob ? format(new Date(user.dob), 'PPP') : 'N/A'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Preparing for:</span>
@@ -104,10 +110,46 @@ export default function AccountPage() {
                 </DialogHeader>
                 <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleProfileUpdate)} className="space-y-4">
-                  <div>
-                    <Label htmlFor="age">Age</Label>
-                    <Input id="age" {...form.register('age')} />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name="dob"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Date of birth</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) =>
+                                date > new Date() || date < new Date("1900-01-01")
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormItem>
+                    )}
+                  />
                   <div>
                     <Label htmlFor="preparingExam">Preparing For</Label>
                     <Input id="preparingExam" {...form.register('preparingExam')} />
@@ -173,8 +215,8 @@ export default function AccountPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {attempts.map(attempt => (
-                <Link href={`/results/${attempt.id}`} key={attempt.id}>
+              {attempts.map((attempt, index) => (
+                <Link href={`/results/${attempt.id}`} key={`${attempt.id}-${index}`}>
                   <Card className="group transition-all hover:bg-card/80 hover:shadow-primary/20 hover:shadow-md">
                     <CardContent className="p-4 flex items-center justify-between">
                       <div className="flex items-center gap-4">
