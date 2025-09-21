@@ -16,7 +16,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAuthInitialized: boolean;
   user: User | null;
-  login: (username: string, mobile: string) => void;
+  login: (username: string, mobile: string, preparingExam: string) => void;
   logout: () => void;
   updateUser: (data: Partial<Omit<User, 'username' | 'mobile'>>) => void;
 }
@@ -47,8 +47,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
   }, [checkAuth]);
 
-  const login = (username: string, mobile: string) => {
-    const userData: User = { username, mobile };
+  const login = (username: string, mobile: string, preparingExam: string) => {
+    const userData: User = { username, mobile, preparingExam };
     localStorage.setItem('examPrepUser', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);

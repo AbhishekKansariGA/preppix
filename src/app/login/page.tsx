@@ -19,6 +19,8 @@ import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { PenSquare } from 'lucide-react';
 import { useEffect } from 'react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { exams } from '@/lib/data';
 
 const strongPassword = new RegExp(
   '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})'
@@ -36,6 +38,7 @@ const formSchema = z.object({
   mobile: z.string().regex(indianMobileRegex, {
     message: 'Please enter a valid Indian mobile number.',
   }),
+  preparingExam: z.string().min(1, { message: 'Please select an exam.' }),
 });
 
 export default function LoginPage() {
@@ -48,6 +51,7 @@ export default function LoginPage() {
       username: '',
       password: '',
       mobile: '',
+      preparingExam: '',
     },
   });
 
@@ -59,7 +63,7 @@ export default function LoginPage() {
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.username, values.mobile);
+    login(values.username, values.mobile, values.preparingExam);
     router.push('/');
   }
   
@@ -122,6 +126,28 @@ export default function LoginPage() {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="preparingExam"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Preparing For</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select an exam" />
+                        </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                        {exams.map(exam => (
+                            <SelectItem key={exam.id} value={exam.name}>{exam.name}</SelectItem>
+                        ))}
+                        </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
