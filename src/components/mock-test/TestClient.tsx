@@ -68,48 +68,73 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
-    const generatedQuestions: Question[] = [];
+    let generatedQuestions: (Question | null)[] = [];
     const questionTexts = new Set<string>();
 
-    while (generatedQuestions.length < TOTAL_QUESTIONS) {
-      try {
-        let question = await getNewQuestion({
-          exam: exam.name,
-          subject: subject.name,
-          chapter: chapter?.name,
-        });
-        
-        if (!question) {
-          console.error(`Failed to generate question, retrying...`);
-          await new Promise(resolve => setTimeout(resolve, 500));
-          continue;
-        }
+    const generationPromises = Array(TOTAL_QUESTIONS).fill(null).map(() => getNewQuestion({
+        exam: exam.name,
+        subject: subject.name,
+        chapter: chapter?.name,
+    }));
 
-        // Ensure question is unique
-        if (questionTexts.has(question.question)) {
-          console.log("Duplicate question generated, retrying...");
-          continue; // Skip if question text is a duplicate
+    try {
+        generatedQuestions = await Promise.all(generationPromises);
+        let uniqueQuestions = generatedQuestions.filter((q): q is Question => {
+            if (q && !questionTexts.has(q.question)) {
+                questionTexts.add(q.question);
+                return true;
+            }
+            return false;
+        });
+
+        // If we didn't get enough unique questions, fetch more until we have enough
+        while (uniqueQuestions.length < TOTAL_QUESTIONS) {
+            const question = await getNewQuestion({
+                exam: exam.name,
+                subject: subject.name,
+                chapter: chapter?.name,
+            });
+
+            if (question && !questionTexts.has(question.question)) {
+                questionTexts.add(question.question);
+                uniqueQuestions.push(question);
+            }
         }
-        questionTexts.add(question.question);
+        
+        uniqueQuestions = uniqueQuestions.slice(0, TOTAL_QUESTIONS);
 
         if (lang === 'hi') {
-          const translatedText = await getTranslation({ text: question.question, targetLanguage: 'Hindi' });
-          const translatedOptions = await Promise.all(question.options.map(option => getTranslation({ text: option, targetLanguage: 'Hindi' })));
-          question.question = translatedText;
-          question.options = translatedOptions;
-        }
+          const translationPromises = uniqueQuestions.map(q => 
+              getTranslation({ text: q.question, targetLanguage: 'Hindi' })
+          );
+          const translatedQuestions = await Promise.all(translationPromises);
+          
+          const optionsPromises = uniqueQuestions.flatMap(q => q.options.map(opt => getTranslation({ text: opt, targetLanguage: 'Hindi' })));
+          const translatedOptions = await Promise.all(optionsPromises);
 
-        generatedQuestions.push(question);
-      } catch (error) {
-        console.error(`Failed to generate or translate question, retrying...`, error);
-        // Wait for a short duration before retrying to avoid spamming the service
-        await new Promise(resolve => setTimeout(resolve, 500));
-      }
+          uniqueQuestions = uniqueQuestions.map((q, i) => {
+              const optionsStartIndex = i * 4;
+              return {
+                  ...q,
+                  question: translatedQuestions[i],
+                  options: translatedOptions.slice(optionsStartIndex, optionsStartIndex + 4)
+              };
+          });
+        }
+        
+        setQuestions(uniqueQuestions);
+        setAnswers(uniqueQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
+    } catch (error) {
+        console.error("Failed to generate or translate questions:", error);
+        toast({
+            title: "Error",
+            description: "Could not load test. Please try again later.",
+            variant: "destructive"
+        });
+        setQuestions([]);
+    } finally {
+        setIsLoading(false);
     }
-    
-    setQuestions(generatedQuestions);
-    setAnswers(generatedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-    setIsLoading(false);
   }, [exam.name, subject.name, chapter?.name, lang, toast]);
 
 
@@ -126,7 +151,6 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
       const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id, questions);
       router.push(`/results/${newAttemptId}`);
     } else {
-        // Handle case where submission is clicked but no questions were loaded
         toast({ title: "Submission Error", description: "No questions were loaded to submit.", variant: "destructive" });
         setIsSubmitting(false);
         router.back();
