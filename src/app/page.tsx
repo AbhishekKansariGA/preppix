@@ -1,11 +1,32 @@
+'use client';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { exams } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
+import { useAuth } from '@/context/auth-context';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Header } from '@/components/layout/Header';
+
 
 export default function Home() {
+  const { isAuthenticated, isAuthInitialized } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthInitialized && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isAuthInitialized, router]);
+
+  if (!isAuthInitialized || !isAuthenticated) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="space-y-8">
+    <>
+    <Header />
+    <div className="space-y-8 mt-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           Choose Your Exam
@@ -34,5 +55,6 @@ export default function Home() {
         ))}
       </div>
     </div>
+    </>
   );
 }

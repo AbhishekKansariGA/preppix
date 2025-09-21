@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ClipboardList, Trophy, User, PenSquare } from 'lucide-react';
+import { ClipboardList, Trophy, User, PenSquare, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/auth-context';
+import { Button } from '../ui/button';
 
 const navLinks = [
   { href: '/', label: 'Mock Tests', icon: ClipboardList },
@@ -13,6 +15,9 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname();
+  const { user, logout, isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) return null;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -21,7 +26,7 @@ export function Header() {
           <PenSquare className="h-6 w-6 text-primary" />
           <span className="hidden font-bold sm:inline-block">ExamPrep Ace</span>
         </Link>
-        <nav className="flex items-center space-x-6 text-sm font-medium">
+        <nav className="flex flex-1 items-center space-x-6 text-sm font-medium">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -36,6 +41,13 @@ export function Header() {
             </Link>
           ))}
         </nav>
+        <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">Welcome, {user?.username}</span>
+            <Button variant="ghost" size="sm" onClick={logout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+            </Button>
+        </div>
       </div>
     </header>
   );

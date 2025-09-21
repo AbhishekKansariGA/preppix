@@ -1,15 +1,26 @@
 'use client';
 
-import { useParams, notFound } from 'next/navigation';
+import { useParams, notFound, useRouter } from 'next/navigation';
 import { useTestStore } from '@/hooks/use-test-store';
 import { ResultsClient } from '@/components/results/ResultsClient';
+import { useAuth } from '@/context/auth-context';
+import { useEffect } from 'react';
+import { Header } from '@/components/layout/Header';
 
 export default function ResultsPage() {
   const params = useParams();
   const { attemptId } = params;
   const { getAttemptById, attempts, isInitialized } = useTestStore();
+  const { isAuthenticated, isAuthInitialized } = useAuth();
+  const router = useRouter();
 
-  if (!isInitialized) {
+   useEffect(() => {
+    if (isAuthInitialized && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isAuthInitialized, router]);
+
+  if (!isInitialized || !isAuthInitialized || !isAuthenticated) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="text-lg">Loading results...</div>
@@ -29,5 +40,12 @@ export default function ResultsPage() {
     overallScore: a.scoreDetails.score,
   }));
 
-  return <ResultsClient attempt={attempt} testHistory={testHistory} />;
+  return (
+    <>
+      <Header />
+      <div className='mt-8'>
+        <ResultsClient attempt={attempt} testHistory={testHistory} />
+      </div>
+    </>
+  )
 }

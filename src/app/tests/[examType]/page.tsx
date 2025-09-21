@@ -1,8 +1,12 @@
+'use client';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getExamById, subjects } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
+import { useAuth } from '@/context/auth-context';
+import { useEffect } from 'react';
+import { Header } from '@/components/layout/Header';
 
 type Props = {
   params: { examType: string };
@@ -10,13 +14,27 @@ type Props = {
 
 export default function ExamTypePage({ params }: Props) {
   const exam = getExamById(params.examType);
+  const { isAuthenticated, isAuthInitialized } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isAuthInitialized && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isAuthInitialized, router]);
 
   if (!exam) {
     notFound();
   }
 
+  if (!isAuthInitialized || !isAuthenticated) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="space-y-8">
+    <>
+    <Header/>
+    <div className="space-y-8 mt-8">
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {exam.name} Mock Tests
@@ -44,5 +62,6 @@ export default function ExamTypePage({ params }: Props) {
         ))}
       </div>
     </div>
+    </>
   );
 }

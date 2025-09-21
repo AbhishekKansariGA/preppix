@@ -1,7 +1,12 @@
+'use client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy } from "lucide-react";
+import { useAuth } from "@/context/auth-context";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Header } from "@/components/layout/Header";
 
 const leaderboardData = [
   { rank: 1, name: "Arjun Sharma", score: 198.5, avatar: "AS" },
@@ -17,8 +22,22 @@ const leaderboardData = [
 ];
 
 export default function LeaderboardPage() {
+    const { isAuthenticated, isAuthInitialized } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (isAuthInitialized && !isAuthenticated) {
+            router.push('/login');
+        }
+    }, [isAuthenticated, isAuthInitialized, router]);
+
+    if (!isAuthInitialized || !isAuthenticated) {
+        return <div>Loading...</div>;
+    }
   return (
-    <Card>
+      <>
+      <Header />
+    <Card className="mt-8">
       <CardHeader className="flex flex-row items-center gap-4">
         <Trophy className="h-8 w-8 text-primary" />
         <CardTitle className="text-3xl font-bold">Leaderboard</CardTitle>
@@ -56,5 +75,6 @@ export default function LeaderboardPage() {
         </Table>
       </CardContent>
     </Card>
+    </>
   );
 }

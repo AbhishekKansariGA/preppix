@@ -6,16 +6,30 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { History, ArrowRight, BarChart, FileText } from 'lucide-react';
+import { useAuth } from '@/context/auth-context';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { Header } from '@/components/layout/Header';
 
 export default function AccountPage() {
   const { attempts, isInitialized, clearHistory } = useTestStore();
+  const { isAuthenticated, isAuthInitialized: isAuthInitialized } = useAuth();
+  const router = useRouter();
 
-  if (!isInitialized) {
+  useEffect(() => {
+    if (isAuthInitialized && !isAuthenticated) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isAuthInitialized, router]);
+
+  if (!isInitialized || !isAuthInitialized || !isAuthenticated) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="space-y-8">
+    <>
+    <Header/>
+    <div className="space-y-8 mt-8">
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl flex items-center gap-3">
@@ -78,5 +92,6 @@ export default function AccountPage() {
         </div>
       )}
     </div>
+    </>
   );
 }
