@@ -21,7 +21,7 @@ export default function ExamTypePage() {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
-  if (!isInitialized || !isAuthenticated) {
+  if (!isAuthInitialized || !isAuthenticated) {
     return <div>Loading...</div>;
   }
   
