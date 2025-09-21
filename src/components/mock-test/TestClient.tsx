@@ -209,7 +209,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
           <div className="space-y-6">
             <div className="flex justify-between items-start w-full">
                 <div className="text-lg font-semibold w-full pr-4">
-                {currentQuestion.question}
+                {currentQuestionIndex + 1}. {currentQuestion.question}
                 </div>
             </div>
             <RadioGroup
