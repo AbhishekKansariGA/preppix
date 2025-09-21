@@ -90,15 +90,15 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={handlePrev} disabled={currentQuestionIndex === 0}>
+          <Button variant="outline" onClick={handlePrev} disabled={currentQuestionIndex === 0} size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
           {currentQuestionIndex === questions.length - 1 ? (
-             <Button onClick={handleSubmit}>
+             <Button onClick={handleSubmit} size="sm">
                <Flag className="mr-2 h-4 w-4" /> Submit Test
              </Button>
           ) : (
-            <Button onClick={handleNext}>
+            <Button onClick={handleNext} size="sm">
               Next <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           )}
