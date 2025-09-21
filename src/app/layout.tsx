@@ -3,6 +3,7 @@ import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from '@/context/auth-context';
+import { GenkitLayout } from '@genkit-ai/next/layout';
 
 export const metadata: Metadata = {
   title: 'ExamPrep Ace',
@@ -23,13 +24,15 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background">
         <AuthProvider>
-          <div className="flex flex-col h-screen">
-            <Header/>
-            <main className="flex-1 overflow-y-auto container mx-auto px-4 py-8">
-              {children}
-            </main>
-          </div>
-          <Toaster />
+          <GenkitLayout>
+            <div className="flex flex-col h-screen">
+              <Header/>
+              <main className="flex-1 overflow-y-auto container mx-auto px-4 py-8">
+                {children}
+              </main>
+            </div>
+            <Toaster />
+          </GenkitLayout>
         </AuthProvider>
       </body>
     </html>
