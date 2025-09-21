@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Loader } from '../ui/loader';
 import { useToast } from '@/hooks/use-toast';
-import { getQuestionById } from '@/lib/data';
 
 interface TestClientProps {
   exam: Exam;
@@ -284,7 +283,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                 <Button variant="outline" size="sm" onClick={handleSubmit}>End Test</Button>
             </div>
           </div>
-          <Progress value={progress} className="mt-4" />
+          <Progress value={progress} className="mt-4 h-2" />
         </CardHeader>
         <CardContent className="min-h-[300px]">
           <div className="space-y-6">
