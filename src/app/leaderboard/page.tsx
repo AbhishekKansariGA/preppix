@@ -2,24 +2,15 @@
 'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useTestStore } from "@/hooks/use-test-store";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
-import { Button } from "@/components/ui/button";
-
-const moodData = [
-  { day: 'Mon', mood: 3, pv: 2400, amt: 2400 },
-  { day: 'Tue', mood: 4, pv: 1398, amt: 2210 },
-  { day: 'Wed', mood: 3.5, pv: 9800, amt: 2290 },
-  { day: 'Thu', mood: 5, pv: 3908, amt: 2000 },
-  { day: 'Fri', mood: 4, pv: 4800, amt: 2181 },
-  { day: 'Sat', mood: 4.5, pv: 3800, amt: 2500 },
-  { day: 'Sun', mood: 5, pv: 4300, amt: 2100 },
-];
-
+import { useEffect, useMemo } from "react";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { subjects } from "@/lib/data";
 
 export default function LeaderboardPage() {
+    const { attempts, isInitialized } = useTestStore();
     const { isAuthenticated, isAuthInitialized, user } = useAuth();
     const router = useRouter();
 
@@ -29,8 +20,49 @@ export default function LeaderboardPage() {
         }
     }, [isAuthenticated, isAuthInitialized, router]);
 
+    const subjectPerformance = useMemo(() => {
+        const performance: { [key: string]: { totalScore: number; count: number; accuracy: number, accuracyCount: number } } = {};
 
-    if (!isAuthInitialized || !isAuthenticated) {
+        subjects.forEach(s => {
+            performance[s.name] = { totalScore: 0, count: 0, accuracy: 0, accuracyCount: 0 };
+        });
+
+        attempts.forEach(attempt => {
+            if (performance[attempt.subjectName]) {
+                performance[attempt.subjectName].totalScore += attempt.scoreDetails.score;
+                performance[attempt.subjectName].count++;
+                if (attempt.scoreDetails.accuracy > 0) {
+                    performance[attempt.subjectName].accuracy += attempt.scoreDetails.accuracy;
+                    performance[attempt.subjectName].accuracyCount++;
+                }
+            }
+        });
+
+        return Object.keys(performance).map(subjectName => ({
+            name: subjectName,
+            averageScore: performance[subjectName].count > 0 ? performance[subjectName].totalScore / performance[subjectName].count : 0,
+            averageAccuracy: performance[subjectName].accuracyCount > 0 ? performance[subjectName].accuracy / performance[subjectName].accuracyCount : 0,
+        }));
+    }, [attempts]);
+
+    const overallStats = useMemo(() => {
+        if (attempts.length === 0) {
+            return { totalTests: 0, averageScore: 0, averageAccuracy: 0 };
+        }
+
+        const totalTests = attempts.length;
+        const totalScore = attempts.reduce((acc, a) => acc + a.scoreDetails.score, 0);
+        const totalAccuracy = attempts.reduce((acc, a) => acc + a.scoreDetails.accuracy, 0);
+        
+        return {
+            totalTests,
+            averageScore: totalScore / totalTests,
+            averageAccuracy: totalAccuracy / totalTests,
+        };
+    }, [attempts]);
+
+
+    if (!isAuthInitialized || !isInitialized || !isAuthenticated) {
         return null;
     }
   return (
@@ -41,43 +73,74 @@ export default function LeaderboardPage() {
                 <AvatarFallback>{user?.username?.[0]}</AvatarFallback>
             </Avatar>
             <div>
-                <h1 className="text-2xl font-bold">{user?.username}</h1>
-                <p className="text-muted-foreground">Here are your weekly stats.</p>
+                <h1 className="text-2xl font-bold">My Stats</h1>
+                <p className="text-muted-foreground">Here's your performance overview.</p>
             </div>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+            <StatCard title="Total Tests Taken" value={overallStats.totalTests} />
+            <StatCard title="Overall Average Score" value={`${overallStats.averageScore.toFixed(2)}`} />
+            <StatCard title="Overall Average Accuracy" value={`${overallStats.averageAccuracy.toFixed(2)}%`} />
         </div>
 
         <Card>
             <CardHeader>
-                <CardTitle>Mood Analysis</CardTitle>
-                <CardDescription>Your mood fluctuations over the week.</CardDescription>
+                <CardTitle>Subject-wise Performance</CardTitle>
+                <CardDescription>Your average score and accuracy in each subject.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={moodData}>
-                    <XAxis dataKey="day" stroke="hsl(var(--muted-foreground))" />
-                    <YAxis domain={[1, 5]} hide />
-                     <Tooltip
+                <BarChart data={subjectPerformance}>
+                    <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false}/>
+                    <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`}/>
+                    <Tooltip
                         contentStyle={{
                             backgroundColor: "hsl(var(--background))",
                             borderColor: "hsl(var(--border))"
                         }}
-                     />
-                    <Line type="monotone" dataKey="mood" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 6, fill: 'hsl(var(--primary))' }} />
-                </LineChart>
+                    />
+                    <Bar dataKey="averageScore" fill="hsl(var(--primary))" name="Avg. Score" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="averageAccuracy" fill="hsl(var(--primary) / 0.5)" name="Avg. Accuracy (%)" radius={[4, 4, 0, 0]} />
+                </BarChart>
                 </ResponsiveContainer>
             </CardContent>
         </Card>
         
         <Card>
             <CardHeader>
-                 <CardTitle>Quote of the day</CardTitle>
+                 <CardTitle>Recent Attempts</CardTitle>
             </CardHeader>
             <CardContent>
-                <blockquote className="border-l-4 border-primary pl-4 italic text-lg text-foreground">
-                    "Every day is a new opportunity for growth and positive change."
-                </blockquote>
+                {attempts.slice(0, 5).map(attempt => (
+                    <div key={attempt.id} className="flex justify-between items-center p-2 rounded-lg hover:bg-muted">
+                        <div>
+                            <p className="font-semibold">{attempt.examName} - {attempt.subjectName} {attempt.chapterName ? `(${attempt.chapterName})` : ''}</p>
+                            <p className="text-sm text-muted-foreground">{new Date(attempt.date).toLocaleString()}</p>
+                        </div>
+                        <div className="text-right">
+                             <p className="font-semibold">{attempt.scoreDetails.score.toFixed(2)}</p>
+                            <p className="text-sm text-muted-foreground">Accuracy: {attempt.scoreDetails.accuracy.toFixed(2)}%</p>
+                        </div>
+                    </div>
+                ))}
+                {attempts.length === 0 && <p className="text-muted-foreground text-center">No attempts yet.</p>}
             </CardContent>
         </Card>
     </div>
   );
+}
+
+
+function StatCard({ title, value }: { title: string, value: string | number }) {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+      </CardContent>
+    </Card>
+  )
 }

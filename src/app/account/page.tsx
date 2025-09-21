@@ -4,63 +4,169 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ChevronRight, LogOut, User, Settings, HelpCircle, Languages } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { toast } from '@/hooks/use-toast';
+import { exams } from '@/lib/data';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+const formSchema = z.object({
+    dob: z.string().optional(),
+    qualifications: z.string().optional(),
+    category: z.string().optional(),
+    preparingExam: z.string().optional(),
+});
 
 export default function AccountPage() {
-  const { user, isAuthenticated, isAuthInitialized, logout } = useAuth();
+  const { user, isAuthenticated, isAuthInitialized, updateUser } = useAuth();
   const router = useRouter();
   
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      dob: user?.dob || '',
+      qualifications: user?.qualifications || '',
+      category: user?.category || '',
+      preparingExam: user?.preparingExam || '',
+    },
+  });
+
   useEffect(() => {
     if (isAuthInitialized && !isAuthenticated) {
       router.push('/login');
     }
   }, [isAuthenticated, isAuthInitialized, router]);
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        dob: user.dob || '',
+        qualifications: user.qualifications || '',
+        category: user.category || '',
+        preparingExam: user.preparingExam || '',
+      });
+    }
+  }, [user, form]);
   
   if (!isAuthInitialized || !isAuthenticated || !user) {
     return null;
   }
   
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    updateUser(values);
+    toast({
+        title: "Profile Updated",
+        description: "Your information has been saved successfully.",
+    });
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-2xl mx-auto">
         <div className="flex flex-col items-center text-center">
-            <Avatar className="h-24 w-24 text-3xl mb-4 border-2 border-primary">
+            <Avatar className="h-24 w-24 text-3xl mb-4">
               <AvatarImage src={`https://api.dicebear.com/8.x/initials/svg?seed=${user.username}`} />
-              <AvatarFallback className="bg-primary/10">{user.username?.[0]?.toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{user.username?.[0]?.toUpperCase()}</AvatarFallback>
             </Avatar>
             <h1 className="text-3xl font-bold">{user.username}</h1>
-            <div className="flex items-center gap-2 mt-2">
-                <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span className="text-sm text-muted-foreground">Happy</span>
-            </div>
+            <p className="text-muted-foreground">{user.mobile}</p>
         </div>
 
-        <div className="space-y-2">
-            <MenuItem icon={Settings} label="Settings" />
-            <MenuItem icon={Languages} label="Language" />
-            <MenuItem icon={HelpCircle} label="FAQ" />
-        </div>
-
-        <Button variant="ghost" onClick={logout} className="w-full text-red-400 hover:bg-red-900/40 hover:text-red-300 mt-8 justify-start p-4 text-base">
-            <LogOut className="mr-3 h-5 w-5" />
-            Logout
-        </Button>
+        <Card>
+            <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>Update your personal details here.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <FormField
+                            control={form.control}
+                            name="dob"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Date of Birth</FormLabel>
+                                <FormControl>
+                                <Input type="date" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="qualifications"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Highest Qualification</FormLabel>
+                                <FormControl>
+                                <Input placeholder="e.g., B.Tech" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category</FormLabel>
+                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                        <SelectValue placeholder="Select your category" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="general">General</SelectItem>
+                                        <SelectItem value="obc">OBC</SelectItem>
+                                        <SelectItem value="sc">SC</SelectItem>
+                                        <SelectItem value="st">ST</SelectItem>
+                                        <SelectItem value="ews">EWS</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="preparingExam"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Preparing for</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                    <SelectValue placeholder="Select an exam" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {exams.map((exam) => (
+                                    <SelectItem key={exam.id} value={exam.id}>
+                                        {exam.name}
+                                    </SelectItem>
+                                    ))}
+                                </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                    </div>
+                    <Button type="submit">Save Changes</Button>
+                </form>
+                </Form>
+            </CardContent>
+        </Card>
     </div>
   );
-}
-
-const MenuItem = ({ icon: Icon, label }: { icon: React.ElementType, label: string }) => {
-    return (
-         <button className="w-full flex items-center justify-between p-4 rounded-lg hover:bg-card">
-            <div className="flex items-center gap-4">
-                <Icon className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">{label}</span>
-            </div>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
-        </button>
-    )
 }

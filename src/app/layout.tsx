@@ -6,8 +6,8 @@ import { AuthProvider } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Calm',
-  description: 'Find your balance.',
+  title: 'ExamPrep Ace',
+  description: 'Your partner in cracking competitive exams.',
 };
 
 export default function RootLayout({
@@ -22,11 +22,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={cn("font-body antialiased bg-background")}>
+      <body className={cn("font-body antialiased")}>
         <AuthProvider>
-            <div className="flex flex-col h-screen">
+            <div className="relative flex min-h-screen flex-col">
               <Header/>
-              <main className="flex-1 overflow-y-auto container mx-auto px-4 py-8">
+              <main className="flex-1 container mx-auto px-4 py-8 mt-16">
                 {children}
               </main>
             </div>
