@@ -13,7 +13,7 @@ export function Header() {
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
   
-  if (pathname === '/login' || pathname.startsWith('/tests/')) {
+  if (pathname === '/login') {
     return null;
   }
 
