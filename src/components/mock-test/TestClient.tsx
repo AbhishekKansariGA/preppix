@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, Languages } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, Languages, RotateCcw } from 'lucide-react';
 import { getTranslation } from '@/lib/actions';
 import { Skeleton } from '../ui/skeleton';
 
@@ -44,6 +44,7 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     setCurrentLanguage('en');
     if (translationAbortController.current) {
       translationAbortController.current.abort();
+      translationAbortController.current = null;
       setIsTranslating(false);
     }
   }, [currentQuestionIndex]);
@@ -83,8 +84,8 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     } finally {
       if (!abortController.signal.aborted) {
         setIsTranslating(false);
+        translationAbortController.current = null;
       }
-      translationAbortController.current = null;
     }
   };
 
@@ -95,6 +96,16 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
       prev.map(a =>
         a.questionId === currentQuestion.id
           ? { ...a, selectedOption: selectedOption }
+          : a
+      )
+    );
+  };
+  
+  const handleClearSelection = () => {
+    setAnswers(prev =>
+      prev.map(a =>
+        a.questionId === currentQuestion.id
+          ? { ...a, selectedOption: null }
           : a
       )
     );
@@ -147,7 +158,7 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
           <div className="space-y-6">
             <div className="flex justify-between items-start">
               <div className="text-lg font-semibold w-full pr-4">
-                 {isTranslating ? (
+                 {isTranslating && currentLanguage === 'en' ? (
                    <div className='space-y-2'>
                       <Skeleton className="h-6 w-full" />
                       <Skeleton className="h-6 w-3/4" />
@@ -162,7 +173,7 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
             </div>
             <RadioGroup
               key={currentQuestion.id}
-              value={currentAnswer?.selectedOption?.toString()}
+              value={currentAnswer?.selectedOption?.toString() ?? ""}
               onValueChange={handleOptionChange}
             >
               {currentQuestion.options.map((option, index) => (
@@ -176,10 +187,17 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
             </RadioGroup>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-between items-center">
           <Button variant="outline" onClick={handlePrev} disabled={currentQuestionIndex === 0} size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" /> Previous
           </Button>
+
+          {currentAnswer?.selectedOption !== null && (
+            <Button variant="ghost" onClick={handleClearSelection} size="sm" className="text-muted-foreground">
+                <RotateCcw className="mr-2 h-4 w-4" /> Clear
+            </Button>
+          )}
+
           {currentQuestionIndex === questions.length - 1 ? (
              <Button onClick={handleSubmit} size="sm">
                <Flag className="mr-2 h-4 w-4" /> Submit
