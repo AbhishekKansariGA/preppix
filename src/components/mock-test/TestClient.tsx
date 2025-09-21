@@ -10,15 +10,36 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, Languages, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, Languages, RotateCcw, Clock } from 'lucide-react';
 import { getTranslation } from '@/lib/actions';
 import { Skeleton } from '../ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 interface TestClientProps {
   exam: Exam;
   subject: Omit<Subject, 'icon'>;
   questions: Question[];
   chapter?: Chapter;
+}
+
+const getTestDuration = (examId: string): number => {
+    switch (examId) {
+        case 'cgl':
+        case 'chsl':
+            return 10 * 60; // 10 minutes
+        case 'mts':
+            return 15 * 60; // 15 minutes
+        default:
+            return 10 * 60; // Default 10 minutes
+    }
 }
 
 export function TestClient({ exam, subject, questions, chapter }: TestClientProps) {
@@ -30,10 +51,33 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
   const [isTranslating, setIsTranslating] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id));
+  const [isTimeUp, setIsTimeUp] = useState(false);
   
   const translationAbortController = useRef<AbortController | null>(null);
 
   const currentQuestion = questions[currentQuestionIndex];
+  
+  const handleSubmit = () => {
+    const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id);
+    router.push(`/results/${newAttemptId}`);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setIsTimeUp(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
@@ -123,11 +167,6 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     }
   };
 
-  const handleSubmit = () => {
-    const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id);
-    router.push(`/results/${newAttemptId}`);
-  };
-
   if (answers.length === 0) {
       return <div>Preparing test...</div>
   }
@@ -141,16 +180,42 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     
   const testTitle = chapter ? `${exam.name} - ${subject.name} (${chapter.name})` : `${exam.name} - ${subject.name}`;
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
+       <AlertDialog open={isTimeUp}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Time's Up!</AlertDialogTitle>
+            <AlertDialogDescription>
+              Your time for the test has run out. Your answers will now be submitted automatically.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={handleSubmit}>View Results</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center flex-wrap gap-4">
             <div>
               <CardTitle className="text-2xl">{testTitle}</CardTitle>
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
             </div>
-            <Button variant="outline" size="sm" onClick={() => router.back()}>End Test</Button>
+            <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10">
+                    <Clock className="h-5 w-5" />
+                    <span>{formatTime(timeLeft)}</span>
+                </div>
+                <Button variant="outline" size="sm" onClick={() => router.back()}>End Test</Button>
+            </div>
           </div>
           <Progress value={progress} className="mt-4" />
         </CardHeader>
@@ -212,3 +277,5 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     </div>
   );
 }
+
+    
