@@ -199,7 +199,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   
   if (!currentQuestion) {
       // This should not happen with static questions, but as a fallback
-      return <Loader text="Loading question..." />;
+      return <Loader />;
   }
 
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
@@ -233,7 +233,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-             {isSubmitting ? <Loader text="Redirecting to results..."/> : <AlertDialogAction onClick={handleSubmit}>View Results</AlertDialogAction>}
+             {isSubmitting ? <Loader /> : <AlertDialogAction onClick={handleSubmit}>View Results</AlertDialogAction>}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -326,3 +326,5 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
+
+    
