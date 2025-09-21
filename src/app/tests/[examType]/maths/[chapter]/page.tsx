@@ -1,18 +1,20 @@
 'use client'
-import { getExamById, getSubjectById, getQuestions } from '@/lib/data';
+import { getExamById, getSubjectById, getQuestions, getChapterById } from '@/lib/data';
 import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 
-export default function TestPage() {
+export default function MathsChapterTestPage() {
   const params = useParams();
   const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
-  const subjectId = Array.isArray(params.subject) ? params.subject[0] : params.subject;
-  
+  const chapterId = Array.isArray(params.chapter) ? params.chapter[0] : params.chapter;
+  const subjectId = 'maths';
+
   const exam = getExamById(examType);
   const subjectData = getSubjectById(subjectId);
-  const questions = getQuestions(examType, subjectId);
+  const chapterData = chapterId ? getChapterById(subjectId, chapterId) : undefined;
+  const questions = getQuestions(examType, subjectId, chapterId);
   const { isAuthenticated, isAuthInitialized } = useAuth();
   const router = useRouter();
 
@@ -22,13 +24,8 @@ export default function TestPage() {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
-  if (!exam || !subjectData || questions.length === 0) {
+  if (!exam || !subjectData || !chapterData || questions.length === 0) {
     notFound();
-  }
-  
-  if (subjectId === 'maths') {
-      // This page is for full subject tests, not chapter tests for maths
-      notFound();
   }
 
   if (!isAuthInitialized || !isAuthenticated) {
@@ -43,6 +40,7 @@ export default function TestPage() {
       exam={exam}
       subject={subject}
       questions={questions}
+      chapter={chapterData}
     />
     </div>
   );
