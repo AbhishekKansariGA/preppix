@@ -107,9 +107,19 @@ export default function AccountPage() {
                             render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Highest Qualification</FormLabel>
-                                <FormControl>
-                                <Input placeholder="e.g., B.Tech" {...field} />
-                                </FormControl>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                        <SelectValue placeholder="Select your qualification" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="10th">10th</SelectItem>
+                                        <SelectItem value="12th">12th</SelectItem>
+                                        <SelectItem value="graduate">Graduate</SelectItem>
+                                        <SelectItem value="post-graduate">Post Graduate</SelectItem>
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                             )}
