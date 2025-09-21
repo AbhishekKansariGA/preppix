@@ -31,7 +31,6 @@ interface TestClientProps {
 }
 
 const TOTAL_QUESTIONS = 10;
-const MAX_GENERATION_ATTEMPTS = 20; // Allow for retries
 
 const getTestDuration = (examId: string, isChapterTest: boolean): number => {
     if (isChapterTest) {
@@ -71,16 +70,20 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     setIsLoading(true);
     const generatedQuestions: Question[] = [];
     const questionTexts = new Set<string>();
-    let attempts = 0;
 
-    while (generatedQuestions.length < TOTAL_QUESTIONS && attempts < MAX_GENERATION_ATTEMPTS) {
-      attempts++;
+    while (generatedQuestions.length < TOTAL_QUESTIONS) {
       try {
         let question = await getNewQuestion({
           exam: exam.name,
           subject: subject.name,
           chapter: chapter?.name,
         });
+        
+        if (!question) {
+          console.error(`Failed to generate question, retrying...`);
+          await new Promise(resolve => setTimeout(resolve, 500));
+          continue;
+        }
 
         // Ensure question is unique
         if (questionTexts.has(question.question)) {
@@ -98,24 +101,14 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
         generatedQuestions.push(question);
       } catch (error) {
-        console.error(`Failed to generate or translate question on attempt ${attempts}, retrying...`, error);
+        console.error(`Failed to generate or translate question, retrying...`, error);
         // Wait for a short duration before retrying to avoid spamming the service
         await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
     
-    if (generatedQuestions.length < TOTAL_QUESTIONS) {
-        toast({
-            title: "Error loading test",
-            description: "Could not generate all questions after multiple attempts. Please try again later.",
-            variant: "destructive"
-        });
-        setQuestions([]);
-    } else {
-        setQuestions(generatedQuestions);
-        setAnswers(generatedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-    }
-
+    setQuestions(generatedQuestions);
+    setAnswers(generatedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
     setIsLoading(false);
   }, [exam.name, subject.name, chapter?.name, lang, toast]);
 
@@ -310,5 +303,3 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
-
-    
