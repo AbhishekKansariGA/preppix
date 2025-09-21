@@ -53,7 +53,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert question creator for Indian competitive exams like SSC CGL, CHSL, and MTS.
 Generate a unique and relevant multiple-choice question for the following subject and chapter, tailored for the specified exam.
 Ensure the question is of a suitable difficulty level for the exam.
-For the question, provide 4 options and the index of the correct answer.
+For the question, provide a unique ID, 4 options, and the index of the correct answer.
 
 Exam: {{exam}}
 Subject: {{subject}}
