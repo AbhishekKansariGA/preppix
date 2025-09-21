@@ -65,7 +65,7 @@ export default function ExamTypePage() {
 
               return (
                 <Link href={href} key={subject.id} className="group">
-                    <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer">
+                    <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer">
                     <CardHeader className='items-center text-center'>
                         <div className='p-4 bg-primary/10 rounded-full mb-4'>
                         <subject.icon className="h-10 w-10 text-primary" />

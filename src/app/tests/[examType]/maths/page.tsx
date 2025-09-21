@@ -60,7 +60,7 @@ export default function MathsChapterPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {subject.chapters.map((chapter) => (
              <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
-                <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer">
+                <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer">
                   <CardHeader>
                     <CardTitle className="text-xl font-semibold font-poppins text-primary">{chapter.name}</CardTitle>
                   </CardHeader>
