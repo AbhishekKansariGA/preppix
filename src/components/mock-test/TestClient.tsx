@@ -30,15 +30,20 @@ interface TestClientProps {
   chapter?: Chapter;
 }
 
-const getTestDuration = (examId: string): number => {
-    switch (examId) {
-        case 'cgl':
-        case 'chsl':
-            return 10 * 60; // 10 minutes
-        case 'mts':
-            return 15 * 60; // 15 minutes
-        default:
-            return 10 * 60; // Default 10 minutes
+const getTestDuration = (examId: string, isChapterTest: boolean): number => {
+    if (isChapterTest) {
+        switch (examId) {
+            case 'cgl':
+            case 'chsl':
+                return 10 * 60; // 10 minutes
+            case 'mts':
+                return 15 * 60; // 15 minutes
+            default:
+                return 10 * 60; // Default 10 minutes for chapter tests
+        }
+    } else {
+        // For full subject tests
+        return 60 * 60; // 60 minutes
     }
 }
 
@@ -52,7 +57,7 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
   const [isTranslating, setIsTranslating] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id));
+  const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   
   const translationAbortController = useRef<AbortController | null>(null);
@@ -181,8 +186,13 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const testTitle = chapter ? `${exam.name} - ${subject.name} (${chapter.name})` : `${exam.name} - ${subject.name}`;
 
   const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
