@@ -67,7 +67,7 @@ export default function MathsChapterPage() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {subject.chapters.map((chapter) => (
-             <DialogTrigger asChild key={chapter.id} onSelect={() => openDialog(chapter.id)}>
+             <DialogTrigger asChild key={chapter.id} onClick={() => openDialog(chapter.id)}>
                 <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer group">
                   <CardHeader>
                     <CardTitle className="text-xl font-semibold">{chapter.name}</CardTitle>
@@ -98,10 +98,9 @@ export default function MathsChapterPage() {
                     </div>
                 </RadioGroup>
             </div>
-            <Button onClick={handleStartTest}>Confirm & Start Test</Button>
+            <Button onClick={handleStartTest} disabled={!selectedChapter}>Confirm & Start Test</Button>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
-
