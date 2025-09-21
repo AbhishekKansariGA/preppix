@@ -7,7 +7,7 @@ import { ClipboardList, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '@/context/auth-context';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 
 export function Header() {
   const pathname = usePathname();
@@ -37,10 +37,12 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left">
+             <SheetHeader>
+              <SheetTitle className="sr-only">Menu</SheetTitle>
+            </SheetHeader>
             <div className="flex flex-col space-y-4 p-4">
               <Link href="/" className="mb-4 flex items-center space-x-2">
                 <ClipboardList className="h-6 w-6 text-primary" />
-                <span className="font-bold">ExamPrep Ace</span>
               </Link>
               {navLinks.map(link => (
                 <SheetClose asChild key={link.href}>
