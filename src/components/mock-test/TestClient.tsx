@@ -69,6 +69,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     setIsLoading(true);
     const questionTexts = new Set<string>();
     const uniqueQuestions: Question[] = [];
+    
     const promises = Array.from({ length: TOTAL_QUESTIONS }).map(() => 
         getNewQuestion({
             exam: exam.name,
@@ -86,7 +87,6 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
             }
         }
         
-        // If we still don't have enough unique questions, fetch more sequentially.
         while (uniqueQuestions.length < TOTAL_QUESTIONS) {
             const question = await getNewQuestion({
                 exam: exam.name,
