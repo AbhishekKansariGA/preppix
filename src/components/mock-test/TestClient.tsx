@@ -95,7 +95,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
           </Button>
           {currentQuestionIndex === questions.length - 1 ? (
              <Button onClick={handleSubmit} size="sm">
-               <Flag className="mr-2 h-4 w-4" /> Submit Test
+               <Flag className="mr-2 h-4 w-4" /> Submit
              </Button>
           ) : (
             <Button onClick={handleNext} size="sm">
