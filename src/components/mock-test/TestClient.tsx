@@ -144,7 +144,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
   
@@ -163,9 +163,11 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
         currentQuestion.question,
         ...currentQuestion.options
       ];
+
+      const targetLanguage = subject.id === 'english' ? 'Hindi' : 'English';
       
       const translatedTexts = await Promise.all(
-        textsToTranslate.map(text => getTranslation({ text, targetLanguage: 'Hindi' }))
+        textsToTranslate.map(text => getTranslation({ text, targetLanguage }))
       );
 
       const [translatedQ, ...translatedOps] = translatedTexts;
@@ -207,6 +209,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   
   const showTranslated = isTranslated[currentQuestion.id];
   const displayQuestion = showTranslated ? translatedQuestions[currentQuestion.id] : currentQuestion;
+  const targetLanguage = subject.id === 'english' ? 'Hindi' : 'English';
     
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -265,7 +268,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
           <div className="space-y-6">
             <div className="flex justify-between items-start w-full">
                 <div className="text-lg font-semibold w-full pr-4">
-                {currentQuestionIndex + 1}. {displayQuestion?.question}
+                  {currentQuestionIndex + 1}. {displayQuestion?.question}
                 </div>
                  <TooltipProvider>
                   <Tooltip>
@@ -280,7 +283,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{showTranslated ? 'Show in English' : 'Translate to Hindi'}</p>
+                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'Hindi'}` : `Translate to ${targetLanguage}`}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -326,5 +329,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
+
+    
 
     
