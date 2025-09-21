@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ClipboardList, LogOut, ChevronDown } from 'lucide-react';
+import { ClipboardList, LogOut, ChevronDown, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '@/context/auth-context';
@@ -77,6 +77,18 @@ export function Header() {
                 </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
+
+          <Link
+            href="/leaderboard"
+            className={cn(
+              'transition-colors hover:text-foreground/80',
+              pathname === '/leaderboard'
+                ? 'text-foreground'
+                : 'text-foreground/60'
+            )}
+          >
+            Leaderboard
+          </Link>
 
           <Link
             href="/account"
