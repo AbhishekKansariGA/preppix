@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Exam, Subject, Question, UserAnswer, Chapter } from '@/lib/types';
 import { useTestStore } from '@/hooks/use-test-store';
@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Loader } from '../ui/loader';
+import { useToast } from '@/hooks/use-toast';
 
 interface TestClientProps {
   exam: Exam;
@@ -51,29 +52,29 @@ const getTestDuration = (examId: string, isChapterTest: boolean): number => {
 export function TestClient({ exam, subject, questions: initialQuestions, chapter }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
+  const { toast } = useToast();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   
-  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const [testLanguage, setTestLanguage] = useState('en');
   const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
-  const [isTranslating, setIsTranslating] = useState(false);
+  const [isTranslating, setIsTranslating] = useState<Record<number, boolean>>({});
 
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   
   const translationAbortController = useRef<AbortController | null>(null);
 
-  // Memoize questions to prevent re-renders from using stale props
   const questions = useMemo(() => initialQuestions, [initialQuestions]);
 
   const currentQuestion = questions[currentQuestionIndex];
   
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (answers.length > 0) {
       const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id);
       router.push(`/results/${newAttemptId}`);
     }
-  };
+  }, [addAttempt, answers, chapter?.id, exam.id, subject.id, router]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -91,58 +92,67 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
   }, []);
 
   useEffect(() => {
-    if (questions.length > 0) {
+    if (isTimeUp) {
+      handleSubmit();
+    }
+  }, [isTimeUp, handleSubmit]);
+
+  useEffect(() => {
+    if (questions.length > 0 && answers.length === 0) {
       setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
     }
-  }, [questions]);
+  }, [questions, answers]);
   
-  useEffect(() => {
-    // Reset language and cancel any ongoing translation when question changes
-    setCurrentLanguage('en');
-    if (translationAbortController.current) {
-      translationAbortController.current.abort();
-      translationAbortController.current = null;
-      setIsTranslating(false);
-    }
-  }, [currentQuestionIndex]);
-
-
-  const handleTranslate = async () => {
-    if (currentLanguage === 'hi') {
-      setCurrentLanguage('en');
-      return;
-    }
-
-    if (translatedQuestions[currentQuestion.id]) {
-      setCurrentLanguage('hi');
-      return;
-    }
+  const translateQuestion = useCallback(async (questionId: number, questionText: string) => {
+    if (translatedQuestions[questionId]) return;
+    
+    setIsTranslating(prev => ({ ...prev, [questionId]: true }));
     
     if (translationAbortController.current) {
-        translationAbortController.current.abort();
+      translationAbortController.current.abort();
     }
     const abortController = new AbortController();
     translationAbortController.current = abortController;
 
-    setIsTranslating(true);
     try {
-      const translation = await getTranslation({ text: currentQuestion.question, targetLanguage: 'Hindi' });
-      
-      if (abortController.signal.aborted) {
-          return;
-      }
-      
-      setTranslatedQuestions(prev => ({...prev, [currentQuestion.id]: translation}));
-      setCurrentLanguage('hi');
+      const translation = await getTranslation({ text: questionText, targetLanguage: 'Hindi' }, abortController.signal);
+      if (abortController.signal.aborted) return;
+      setTranslatedQuestions(prev => ({...prev, [questionId]: translation}));
     } catch (error: any) {
       if (error.name !== 'AbortError') {
         console.error("Translation failed:", error);
+        toast({
+          title: "Translation Failed",
+          description: "Could not translate the question. Please try again.",
+          variant: "destructive",
+        });
+        setTestLanguage('en'); // Revert to English if translation fails
       }
     } finally {
       if (!abortController.signal.aborted) {
-        setIsTranslating(false);
+        setIsTranslating(prev => ({ ...prev, [questionId]: false }));
         translationAbortController.current = null;
       }
+    }
+  }, [translatedQuestions, toast]);
+  
+  useEffect(() => {
+    // When question changes, abort any ongoing translation
+    if (translationAbortController.current) {
+      translationAbortController.current.abort();
+    }
+    // If test language is Hindi, translate the new question
+    if (testLanguage === 'hi' && currentQuestion) {
+      translateQuestion(currentQuestion.id, currentQuestion.question);
+    }
+  }, [currentQuestionIndex, currentQuestion, testLanguage, translateQuestion]);
+
+
+  const handleLanguageToggle = () => {
+    const newLang = testLanguage === 'en' ? 'hi' : 'en';
+    setTestLanguage(newLang);
+    if (newLang === 'hi' && currentQuestion) {
+      translateQuestion(currentQuestion.id, currentQuestion.question);
     }
   };
 
@@ -186,8 +196,9 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
 
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-
-  const displayQuestion = currentLanguage === 'hi' && translatedQuestions[currentQuestion.id] 
+  
+  const isCurrentQuestionTranslating = isTranslating[currentQuestion.id];
+  const displayQuestion = testLanguage === 'hi' && translatedQuestions[currentQuestion.id] 
     ? translatedQuestions[currentQuestion.id] 
     : currentQuestion.question;
     
@@ -241,7 +252,7 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
           <div className="space-y-6">
             <div className="flex justify-between items-start">
               <div className="text-lg font-semibold w-full pr-4">
-                 {isTranslating && currentLanguage === 'en' ? (
+                 {isCurrentQuestionTranslating ? (
                    <div className='space-y-2'>
                       <Skeleton className="h-6 w-full" />
                       <Skeleton className="h-6 w-3/4" />
@@ -250,7 +261,7 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
                   displayQuestion
                 )}
               </div>
-              <Button variant="ghost" size="icon" onClick={handleTranslate} disabled={isTranslating} className="shrink-0">
+              <Button variant="ghost" size="icon" onClick={handleLanguageToggle} disabled={isCurrentQuestionTranslating} className="shrink-0">
                 <Languages className="h-5 w-5" />
               </Button>
             </div>
@@ -295,5 +306,3 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
     </div>
   );
 }
-
-    
