@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Exam, Subject, Question, UserAnswer, Chapter } from '@/lib/types';
 import { useTestStore } from '@/hooks/use-test-store';
@@ -48,7 +48,7 @@ const getTestDuration = (examId: string, isChapterTest: boolean): number => {
     }
 }
 
-export function TestClient({ exam, subject, questions, chapter }: TestClientProps) {
+export function TestClient({ exam, subject, questions: initialQuestions, chapter }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -62,6 +62,9 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const [isTimeUp, setIsTimeUp] = useState(false);
   
   const translationAbortController = useRef<AbortController | null>(null);
+
+  // Memoize questions to prevent re-renders from using stale props
+  const questions = useMemo(() => initialQuestions, [initialQuestions]);
 
   const currentQuestion = questions[currentQuestionIndex];
   
@@ -86,7 +89,9 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   }, []);
 
   useEffect(() => {
-    setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
+    if (questions.length > 0) {
+      setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
+    }
   }, [questions]);
   
   useEffect(() => {
@@ -173,7 +178,7 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     }
   };
 
-  if (answers.length === 0) {
+  if (answers.length === 0 || !currentQuestion) {
       return <Loader text="Preparing your test..." />;
   }
 
@@ -288,5 +293,3 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     </div>
   );
 }
-
-    
