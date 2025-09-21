@@ -11,7 +11,8 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, Languages, ChevronLeft } from 'lucide-react';
-import { getTranslation, getNewQuestion } from '@/lib/actions';
+import { getTranslation } from '@/lib/actions';
+import { getPreloadedQuestions } from '@/lib/question-cache';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -67,42 +68,22 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
-    const questionTexts = new Set<string>();
-    const uniqueQuestions: Question[] = [];
-    
-    const promises = Array.from({ length: TOTAL_QUESTIONS }).map(() => 
-        getNewQuestion({
-            exam: exam.name,
-            subject: subject.name,
-            chapter: chapter?.name,
-        })
-    );
-
     try {
-        const results = await Promise.all(promises);
-        for (const question of results) {
-            if (question && !questionTexts.has(question.question)) {
-                questionTexts.add(question.question);
-                uniqueQuestions.push(question);
-            }
-        }
-        
-        while (uniqueQuestions.length < TOTAL_QUESTIONS) {
-            const question = await getNewQuestion({
-                exam: exam.name,
-                subject: subject.name,
-                chapter: chapter?.name,
+        const fetchedQuestions = await getPreloadedQuestions(exam.name, subject.name, chapter?.name);
+        if (fetchedQuestions.length >= TOTAL_QUESTIONS) {
+            const finalQuestions = fetchedQuestions.slice(0, TOTAL_QUESTIONS);
+            setQuestions(finalQuestions);
+            setAnswers(finalQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
+        } else {
+            toast({
+                title: "Error",
+                description: `Could not load enough questions for the test. Please try again. (Loaded: ${fetchedQuestions.length})`,
+                variant: "destructive"
             });
-            if (question && !questionTexts.has(question.question)) {
-                questionTexts.add(question.question);
-                uniqueQuestions.push(question);
-            }
+            setQuestions([]);
         }
-        
-        setQuestions(uniqueQuestions);
-        setAnswers(uniqueQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
     } catch (error) {
-        console.error("Failed to generate questions:", error);
+        console.error("Failed to fetch questions:", error);
         toast({
             title: "Error",
             description: "Could not load test. Please try again later.",
@@ -213,7 +194,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   };
   
   if (isLoading) {
-      return <Loader text="Generating new questions for you..." />;
+      return <Loader text="Preparing your test..." />;
   }
 
   if (questions.length === 0 && !isLoading) {
@@ -268,7 +249,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
             <div>
               <CardTitle className="text-2xl font-poppins">
                 {exam.name} - {subject.name}
-                {chapter && <span className="text-primary"> ({chapter.name})</span>}
+                {chapter && <span className="text-primary font-poppins"> ({chapter.name})</span>}
               </CardTitle>
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
             </div>

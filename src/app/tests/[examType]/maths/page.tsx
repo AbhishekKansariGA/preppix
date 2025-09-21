@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { Loader } from '@/components/ui/loader';
-import { getNewQuestion } from '@/lib/actions';
+import { preloadQuestions } from '@/lib/question-cache';
 
 export default function MathsChapterPage() {
   const params = useParams();
@@ -30,11 +30,7 @@ export default function MathsChapterPage() {
       console.log('Pre-loading questions for all math chapters...');
       subject.chapters.forEach(chapter => {
         // We don't need to wait for this to finish. It runs in the background.
-        getNewQuestion({
-          exam: exam.name,
-          subject: subject.name,
-          chapter: chapter.name,
-        });
+        preloadQuestions(exam.name, subject.name, chapter.name);
       });
     }
   }, [exam, subject]);

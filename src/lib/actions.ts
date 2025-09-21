@@ -5,7 +5,6 @@ import { adaptiveLearningPath, AdaptiveLearningPathInput } from '@/ai/flows/adap
 import { generateQuestion, GenerateQuestionInput } from '@/ai/flows/question-generation-flow';
 import { translateText, TranslateTextInput } from '@/ai/flows/translation-flow';
 import { Question } from './types';
-import { addQuestionToCache } from './data';
 
 
 export async function getAdaptiveLearningPath(input: AdaptiveLearningPathInput) {
@@ -31,7 +30,8 @@ export async function getTranslation(input: TranslateTextInput): Promise<string>
 
 
 export async function getNewQuestion(input: GenerateQuestionInput): Promise<Question | null> {
-  console.log("Generating new question from AI...");
+  // This function is now just a wrapper around the AI flow.
+  // The caching logic is handled in `question-cache.ts` to ensure clean separation.
   try {
     const result = await generateQuestion(input);
     
@@ -41,9 +41,6 @@ export async function getNewQuestion(input: GenerateQuestionInput): Promise<Ques
       id: Math.floor(Math.random() * 1000000) + Date.now(),
     };
     
-    // Add the newly generated question to the in-memory cache
-    addQuestionToCache(questionWithDynamicId);
-
     return questionWithDynamicId;
   } catch (error) {
     console.error("Error in getNewQuestion action:", error);
