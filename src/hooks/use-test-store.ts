@@ -87,15 +87,10 @@ export function useTestStore() {
     return attempts.find(attempt => attempt.id === id);
   }, [attempts]);
 
-  const clearHistory = useCallback(() => {
-    saveAttempts([]);
-  }, [saveAttempts]);
-
   return {
     attempts,
     isInitialized,
     addAttempt,
     getAttemptById,
-    clearHistory
   };
 }
