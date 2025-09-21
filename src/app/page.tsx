@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <div className="space-y-10">
       <div className="relative isolate overflow-hidden rounded-2xl bg-gray-900 border border-primary/20 shadow-2xl shadow-primary/10">
-        <div className="px-6 py-24 sm:px-24 sm:py-32 lg:px-8">
+        <div className="px-6 py-16 sm:px-24 sm:py-20 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             {user && (
               <p className="text-xl font-semibold leading-8 text-blue-400">
