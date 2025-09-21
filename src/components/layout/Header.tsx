@@ -41,7 +41,7 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">Welcome, {user?.username}</span>
+            <span className="text-sm font-bold text-primary">Welcome, {user?.username}</span>
         </div>
       </div>
     </header>
