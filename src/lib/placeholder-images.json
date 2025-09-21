@@ -1,3 +1,23 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "cgl",
+      "description": "SSC CGL exam placeholder image",
+      "imageUrl": "https://picsum.photos/seed/cgl/600/400",
+      "imageHint": "exam paper"
+    },
+    {
+      "id": "chsl",
+      "description": "SSC CHSL exam placeholder image",
+      "imageUrl": "https://picsum.photos/seed/chsl/600/400",
+      "imageHint": "student studying"
+    },
+    {
+      "id": "mts",
+      "description": "SSC MTS exam placeholder image",
+      "imageUrl": "https://picsum.photos/seed/mts/600/400",
+      "imageHint": "books library"
+    }
+  ]
 }
