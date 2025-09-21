@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Exam, Subject, Question, UserAnswer } from '@/lib/types';
 import { useTestStore } from '@/hooks/use-test-store';
@@ -9,7 +9,9 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, Languages } from 'lucide-react';
+import { getTranslation } from '@/lib/actions';
+import { Skeleton } from '../ui/skeleton';
 
 interface TestClientProps {
   exam: Exam;
@@ -24,12 +26,45 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
   const [answers, setAnswers] = useState<UserAnswer[]>(
     questions.map(q => ({ questionId: q.id, selectedOption: null }))
   );
+  
+  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const [translatedQuestion, setTranslatedQuestion] = useState<string | null>(null);
+  const [isTranslating, setIsTranslating] = useState(false);
+  
+  const currentQuestion = questions[currentQuestionIndex];
+
+  useEffect(() => {
+    // Reset translation when question changes
+    setTranslatedQuestion(null);
+    setCurrentLanguage('en');
+  }, [currentQuestionIndex]);
+
+
+  const handleTranslate = async () => {
+    if (currentLanguage === 'hi' && translatedQuestion) {
+      setCurrentLanguage('en');
+      return;
+    }
+
+    setIsTranslating(true);
+    try {
+      const translation = await getTranslation({ text: currentQuestion.question, targetLanguage: 'Hindi' });
+      setTranslatedQuestion(translation);
+      setCurrentLanguage('hi');
+    } catch (error) {
+      console.error("Translation failed:", error);
+      // Optionally, show an error to the user
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
 
   const handleOptionChange = (value: string) => {
     const selectedOption = parseInt(value, 10);
     setAnswers(prev =>
       prev.map(a =>
-        a.questionId === questions[currentQuestionIndex].id
+        a.questionId === currentQuestion.id
           ? { ...a, selectedOption: selectedOption }
           : a
       )
@@ -53,9 +88,10 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
     router.push(`/results/${newAttemptId}`);
   };
 
-  const currentQuestion = questions[currentQuestionIndex];
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  const displayQuestion = currentLanguage === 'hi' && translatedQuestion ? translatedQuestion : currentQuestion.question;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -72,7 +108,19 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
         </CardHeader>
         <CardContent className="min-h-[300px]">
           <div className="space-y-6">
-            <p className="text-lg font-semibold">{currentQuestion.question}</p>
+            <div className="flex justify-between items-start">
+              {isTranslating && currentLanguage === 'en' ? (
+                 <div className='space-y-2 w-full'>
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-6 w-1/2" />
+                 </div>
+              ) : (
+                <p className="text-lg font-semibold">{displayQuestion}</p>
+              )}
+              <Button variant="ghost" size="icon" onClick={handleTranslate} disabled={isTranslating} className="shrink-0 ml-4">
+                <Languages className="h-5 w-5" />
+              </Button>
+            </div>
             <RadioGroup
               key={currentQuestion.id} // Add key to force re-render
               value={currentAnswer?.selectedOption?.toString()}
