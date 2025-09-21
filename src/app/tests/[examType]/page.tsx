@@ -47,8 +47,8 @@ export default function ExamTypePage() {
                   : `/tests/${exam.id}/${subject.id}/test`;
 
               return (
-                <Link href={href} key={subject.id}>
-                    <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer group">
+                <Link href={href} key={subject.id} className="group">
+                    <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer">
                     <CardHeader className='items-center text-center'>
                         <div className='p-4 bg-primary/10 rounded-full mb-4'>
                         <subject.icon className="h-10 w-10 text-primary" />
@@ -56,7 +56,7 @@ export default function ExamTypePage() {
                         <CardTitle className="text-2xl font-semibold">{subject.name}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="mt-2 flex items-center justify-center text-primary font-semibold">
+                        <div className="mt-2 flex items-center justify-center text-blue-400 font-semibold">
                         <span>Start Test</span>
                         <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                         </div>

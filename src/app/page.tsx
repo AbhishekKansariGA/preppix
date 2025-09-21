@@ -63,9 +63,10 @@ export default function Home() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="ghost" className="w-full justify-between text-primary">
-                    Start Preparing <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Button>
+                  <div className="flex items-center text-blue-400 font-semibold">
+                    Start Preparing
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
                 </CardContent>
               </Card>
             </Link>

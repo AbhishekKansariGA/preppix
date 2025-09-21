@@ -43,15 +43,15 @@ export default function MathsChapterPage() {
       </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {subject.chapters.map((chapter) => (
-             <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id}>
-                <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer group">
+             <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
+                <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer">
                   <CardHeader>
                     <CardTitle className="text-xl font-semibold font-poppins text-primary">{chapter.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="mt-4 flex items-center justify-between text-primary font-semibold">
+                    <div className="mt-4 flex items-center text-blue-400 font-semibold">
                       <span>Start Test</span>
-                      <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </div>
                   </CardContent>
                 </Card>
