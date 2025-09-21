@@ -51,7 +51,7 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <p className="mb-4 text-muted-foreground">
-              Choose a subject below to start a mock test.
+              Choose a subject below to start a mock test or view all tests.
             </p>
              <Link href={`/tests/${examForUser.id}`}>
                 <Button>
@@ -62,22 +62,6 @@ export default function Home() {
           </CardContent>
         </Card>
       )}
-
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Quick Actions</h2>
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <ActionCard 
-            title="All Subjects" 
-            description="Browse all available subjects."
-            href={examForUser ? `/tests/${examForUser.id}` : '#'}
-          />
-          <ActionCard 
-            title="My Stats" 
-            description="Check your performance."
-            href="/leaderboard"
-          />
-        </div>
-      </div>
       
        {latestAttempt && (
         <div>
@@ -118,20 +102,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
-
-
-function ActionCard({ title, description, href }: { title: string, description: string, href: string }) {
-  return (
-    <Link href={href}>
-      <Card className="hover:bg-secondary/50 transition-colors h-full">
-        <CardHeader>
-          <CardTitle className="text-xl font-poppins">{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-        </CardHeader>
-      </Card>
-    </Link>
-  )
 }
 
 function SubjectCard({ subject, examId }: { subject: any, examId?: string }) {
