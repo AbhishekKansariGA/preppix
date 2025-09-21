@@ -5,6 +5,7 @@ import { adaptiveLearningPath, AdaptiveLearningPathInput } from '@/ai/flows/adap
 import { generateQuestion, GenerateQuestionInput } from '@/ai/flows/question-generation-flow';
 import { translateText, TranslateTextInput } from '@/ai/flows/translation-flow';
 import { Question } from './types';
+import { addQuestionToCache } from './data';
 
 
 export async function getAdaptiveLearningPath(input: AdaptiveLearningPathInput) {
@@ -32,7 +33,7 @@ async function withAbort<T>(promise: Promise<T>, signal?: AbortSignal): Promise<
 
 export async function getTranslation(input: TranslateTextInput, signal?: AbortSignal): Promise<string> {
     try {
-        const output = await withAbort(translateText(input), signal);
+        const output = await translateText(input);
         return output.translatedText;
     } catch (error) {
         console.error("Error in getTranslation action:", error);
@@ -46,11 +47,15 @@ export async function getNewQuestion(input: GenerateQuestionInput): Promise<Ques
   try {
     const result = await generateQuestion(input);
     
+    // Ensure the generated question has a truly unique ID.
     const questionWithDynamicId = {
       ...result.question,
-      id: Math.floor(Math.random() * 100000) + Date.now(), // Create a more dynamic ID
+      id: Math.floor(Math.random() * 1000000) + Date.now(),
     };
     
+    // Add the newly generated question to the in-memory cache
+    addQuestionToCache(questionWithDynamicId);
+
     return questionWithDynamicId;
   } catch (error) {
     console.error("Error in getNewQuestion action:", error);

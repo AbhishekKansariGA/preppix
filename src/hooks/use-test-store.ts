@@ -2,12 +2,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Attempt, UserAnswer } from '@/lib/types';
-import { getQuestionById, getExamById, getSubjectById, getChapterById } from '@/lib/data';
+import { Attempt, UserAnswer, Question } from '@/lib/types';
+import { getExamById, getSubjectById, getChapterById } from '@/lib/data';
 
 const STORE_KEY = 'examPrepAceAttempts';
 
-const calculateScore = (answers: UserAnswer[]) => {
+const calculateScore = (answers: UserAnswer[], allQuestions: Question[]) => {
   let correct = 0;
   let incorrect = 0;
   let attempted = 0;
@@ -15,7 +15,8 @@ const calculateScore = (answers: UserAnswer[]) => {
   answers.forEach(answer => {
     if (answer.selectedOption !== null) {
       attempted++;
-      const question = getQuestionById(answer.questionId);
+      // Find the question in the provided list of all questions for the attempt
+      const question = allQuestions.find(q => q.id === answer.questionId);
       if (question) {
         if (answer.selectedOption === question.correctAnswerIndex) {
           correct++;
@@ -25,9 +26,9 @@ const calculateScore = (answers: UserAnswer[]) => {
       }
     }
   });
-
+  
+  const totalQuestions = allQuestions.length > 0 ? allQuestions.length : answers.length;
   const score = correct * 2 - incorrect * 0.5;
-  const totalQuestions = answers.length;
   const totalScore = totalQuestions * 2;
   const accuracy = attempted > 0 ? (correct / attempted) * 100 : 0;
 
@@ -59,8 +60,12 @@ export function useTestStore() {
     }
   }, []);
   
-  const addAttempt = useCallback((examId: string, subjectId: string, answers: UserAnswer[], chapterId?: string): string => {
-    const scoreDetails = calculateScore(answers);
+  const addAttempt = useCallback((examId: string, subjectId: string, answers: UserAnswer[], chapterId?: string, allQuestions: Question[] = []): string => {
+    // Filter out dummy answers before calculating score
+    const validAnswers = answers.filter(a => a.questionId > 0);
+    const validQuestions = allQuestions.filter(q => validAnswers.some(a => a.questionId === q.id));
+
+    const scoreDetails = calculateScore(validAnswers, validQuestions);
     const exam = getExamById(examId);
     const subject = getSubjectById(subjectId);
     const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;
@@ -73,7 +78,8 @@ export function useTestStore() {
       subjectName: subject?.name || 'Unknown Subject',
       date: Date.now(),
       scoreDetails,
-      answers,
+      answers: validAnswers,
+      questions: validQuestions, // Store the actual questions with the attempt
       chapterId,
       chapterName: chapter?.name
     };

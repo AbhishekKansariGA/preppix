@@ -1,8 +1,8 @@
+
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Attempt } from '@/lib/types';
-import { getQuestionById } from '@/lib/data';
+import { Attempt, Question } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -25,7 +25,7 @@ type ResultsClientProps = {
 };
 
 export function ResultsClient({ attempt, testHistory }: ResultsClientProps) {
-  const { scoreDetails, answers } = attempt;
+  const { scoreDetails, answers, questions } = attempt;
 
   const chartData = [
     { name: 'Correct', value: scoreDetails.correct, fill: 'var(--color-correct)' },
@@ -99,7 +99,7 @@ export function ResultsClient({ attempt, testHistory }: ResultsClientProps) {
             </CardHeader>
             <CardContent className="space-y-6">
               {answers.map((answer, index) => {
-                const question = getQuestionById(answer.questionId);
+                const question = questions.find(q => q.id === answer.questionId);
                 if (!question) return null;
                 const isCorrect = answer.selectedOption === question.correctAnswerIndex;
                 const isAttempted = answer.selectedOption !== null;

@@ -1,3 +1,4 @@
+
 export type Exam = {
   id: string;
   name: string;
@@ -50,6 +51,7 @@ export interface Attempt {
   date: number;
   scoreDetails: ScoreDetails;
   answers: UserAnswer[];
+  questions: Question[]; // Add questions to the attempt
   chapterId?: string;
   chapterName?: string;
 }

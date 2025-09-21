@@ -1,3 +1,4 @@
+
 import { Exam, Subject, Question, Chapter } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 import { getNewQuestion } from './actions';
@@ -25,60 +26,18 @@ export const subjects: Subject[] = [
   { id: 'english', name: 'English', icon: Mic2 },
 ];
 
-let allQuestions: Question[] = [];
+// In-memory cache for questions to avoid re-fetching during a session.
+// Note: This is a simple cache and will be cleared on page refresh.
+const questionCache = new Map<number, Question>();
 
-// This function will now directly fetch new questions for a test session.
-export const populateQuestions = async (examId: string, subjectId: string, chapterId?: string): Promise<Question[]> => {
-    const exam = getExamById(examId);
-    const subject = getSubjectById(subjectId);
-    const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;
-    
-    if (!exam || !subject) return [];
-
-    const questionPromises = Array.from({ length: 10 }, () => 
-        getNewQuestion({
-            exam: exam.name,
-            subject: subject.name,
-            chapter: chapter?.name
-        })
-    );
-
-    const newQuestions = await Promise.all(questionPromises);
-    
-    // Add newly fetched questions to our global store to be accessible by getQuestionById
-    const existingQuestionIds = new Set(allQuestions.map(q => q.id));
-    const uniqueNewQuestions = newQuestions.filter(q => !existingQuestionIds.has(q.id));
-    allQuestions = [...allQuestions, ...uniqueNewQuestions];
-    
-    return newQuestions; // Return only the new questions for the current test
-};
-
-
-export const getQuestions = (examId: string, subjectId: string, chapterId?: string): Question[] => {
-    // This function is now less critical for starting a test, but can be used for other purposes.
-    // For simplicity, we'll keep its filtering logic, though it's not the primary source for tests anymore.
-    const exam = getExamById(examId);
-    const subject = getSubjectById(subjectId);
-    const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;
-    
-    if (!exam || !subject) return [];
-
-    let filteredQuestions = allQuestions.filter(q => 
-        q.exam === exam.name && 
-        q.subject === subject.name
-    );
-
-    if (chapter) {
-        filteredQuestions = filteredQuestions.filter(q => q.chapter === chapter.name);
-    } else if (subjectId !== 'maths') {
-        filteredQuestions = filteredQuestions.filter(q => !q.chapter);
+export function addQuestionToCache(question: Question) {
+    if (!questionCache.has(question.id)) {
+        questionCache.set(question.id, question);
     }
-    
-    return filteredQuestions;
-};
+}
 
 export const getQuestionById = (id: number): Question | undefined => {
-  return allQuestions.find(q => q.id === id);
+  return questionCache.get(id);
 }
 
 export const getExamById = (id: string) => exams.find(e => e.id === id);
