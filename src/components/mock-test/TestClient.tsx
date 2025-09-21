@@ -25,22 +25,35 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
   const [answers, setAnswers] = useState<UserAnswer[]>(
     questions.map(q => ({ questionId: q.id, selectedOption: null }))
   );
+  const [currentSelection, setCurrentSelection] = useState<string | undefined>(undefined);
 
-  const handleOptionChange = (questionId: number, optionIndex: number) => {
+  const handleOptionChange = (value: string) => {
+    const selectedOption = parseInt(value, 10);
+    setCurrentSelection(value);
     setAnswers(prev =>
-      prev.map(a => (a.questionId === questionId ? { ...a, selectedOption: optionIndex } : a))
+      prev.map(a =>
+        a.questionId === questions[currentQuestionIndex].id
+          ? { ...a, selectedOption: selectedOption }
+          : a
+      )
     );
   };
 
+  const navigateAndClear = (newIndex: number) => {
+    setCurrentQuestionIndex(newIndex);
+    const nextAnswer = answers.find(a => a.questionId === questions[newIndex].id);
+    setCurrentSelection(nextAnswer?.selectedOption?.toString());
+  }
+
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      navigateAndClear(currentQuestionIndex + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
+      navigateAndClear(currentQuestionIndex - 1);
     }
   };
 
@@ -50,7 +63,6 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
   };
 
   const currentQuestion = questions[currentQuestionIndex];
-  const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
@@ -70,8 +82,8 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
           <div className="space-y-6">
             <p className="text-lg font-semibold">{currentQuestion.question}</p>
             <RadioGroup
-              value={currentAnswer?.selectedOption?.toString()}
-              onValueChange={(value) => handleOptionChange(currentQuestion.id, parseInt(value))}
+              value={currentSelection}
+              onValueChange={handleOptionChange}
             >
               {currentQuestion.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-3 p-3 rounded-md border border-transparent transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/10">
