@@ -74,10 +74,14 @@ export function useTestStore() {
       answers,
     };
     
-    const updatedAttempts = [newAttempt, ...attempts];
-    saveAttempts(updatedAttempts);
+    setAttempts(prevAttempts => {
+        const updatedAttempts = [newAttempt, ...prevAttempts];
+        saveAttempts(updatedAttempts);
+        return updatedAttempts;
+    });
+
     return newAttempt.id;
-  }, [attempts, saveAttempts]);
+  }, [saveAttempts]);
 
   const getAttemptById = useCallback((id: string): Attempt | undefined => {
     return attempts.find(attempt => attempt.id === id);
