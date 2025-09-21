@@ -144,7 +144,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
   
@@ -181,6 +181,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
       }));
       setIsTranslated(prev => ({ ...prev, [questionId]: true }));
     } catch (error) {
+      console.error("Translation failed:", error);
       toast({
         title: "Translation Failed",
         description: "Could not translate the question. Please try again.",
@@ -283,7 +284,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'Hindi'}` : `Translate to ${targetLanguage}`}</p>
+                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'Original'}` : `Translate to ${targetLanguage}`}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -329,7 +330,3 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
-
-    
-
-    

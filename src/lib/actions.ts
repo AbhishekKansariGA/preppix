@@ -17,14 +17,8 @@ export async function getAdaptiveLearningPath(input: AdaptiveLearningPathInput) 
 }
 
 export async function getTranslation(input: TranslateTextInput): Promise<string> {
-    try {
-        const output = await translateText(input);
-        return output.translatedText;
-    } catch (error) {
-        console.error("Error in getTranslation action:", error);
-        // Return original text as a fallback
-        return input.text;
-    }
+    const output = await translateText(input);
+    return output.translatedText;
 }
 
 // AI-based question generation is disabled in favor of static questions.
