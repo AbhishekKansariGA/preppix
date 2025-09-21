@@ -68,27 +68,11 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true);
-    let generatedQuestions: (Question | null)[] = [];
     const questionTexts = new Set<string>();
+    const uniqueQuestions: Question[] = [];
 
-    const generationPromises = Array(TOTAL_QUESTIONS).fill(null).map(() => getNewQuestion({
-        exam: exam.name,
-        subject: subject.name,
-        chapter: chapter?.name,
-    }));
-
-    try {
-        generatedQuestions = await Promise.all(generationPromises);
-        let uniqueQuestions = generatedQuestions.filter((q): q is Question => {
-            if (q && !questionTexts.has(q.question)) {
-                questionTexts.add(q.question);
-                return true;
-            }
-            return false;
-        });
-
-        // If we didn't get enough unique questions, fetch more until we have enough
-        while (uniqueQuestions.length < TOTAL_QUESTIONS) {
+    while (uniqueQuestions.length < TOTAL_QUESTIONS) {
+        try {
             const question = await getNewQuestion({
                 exam: exam.name,
                 subject: subject.name,
@@ -99,31 +83,36 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                 questionTexts.add(question.question);
                 uniqueQuestions.push(question);
             }
+        } catch (error) {
+            console.error("Error fetching a question, retrying...", error);
         }
-        
-        uniqueQuestions = uniqueQuestions.slice(0, TOTAL_QUESTIONS);
+    }
 
+    try {
         if (lang === 'hi') {
-          const translationPromises = uniqueQuestions.map(q => 
-              getTranslation({ text: q.question, targetLanguage: 'Hindi' })
-          );
-          const translatedQuestions = await Promise.all(translationPromises);
-          
-          const optionsPromises = uniqueQuestions.flatMap(q => q.options.map(opt => getTranslation({ text: opt, targetLanguage: 'Hindi' })));
-          const translatedOptions = await Promise.all(optionsPromises);
+            const translationPromises = uniqueQuestions.map(q => 
+                getTranslation({ text: q.question, targetLanguage: 'Hindi' })
+            );
+            const translatedQuestions = await Promise.all(translationPromises);
+            
+            const optionsPromises = uniqueQuestions.flatMap(q => q.options.map(opt => getTranslation({ text: opt, targetLanguage: 'Hindi' })));
+            const translatedOptions = await Promise.all(optionsPromises);
 
-          uniqueQuestions = uniqueQuestions.map((q, i) => {
-              const optionsStartIndex = i * 4;
-              return {
-                  ...q,
-                  question: translatedQuestions[i],
-                  options: translatedOptions.slice(optionsStartIndex, optionsStartIndex + 4)
-              };
-          });
+            const finalQuestions = uniqueQuestions.map((q, i) => {
+                const optionsStartIndex = i * 4;
+                return {
+                    ...q,
+                    question: translatedQuestions[i],
+                    options: translatedOptions.slice(optionsStartIndex, optionsStartIndex + 4)
+                };
+            });
+            setQuestions(finalQuestions);
+            setAnswers(finalQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
+
+        } else {
+            setQuestions(uniqueQuestions);
+            setAnswers(uniqueQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
         }
-        
-        setQuestions(uniqueQuestions);
-        setAnswers(uniqueQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
     } catch (error) {
         console.error("Failed to generate or translate questions:", error);
         toast({
@@ -135,7 +124,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     } finally {
         setIsLoading(false);
     }
-  }, [exam.name, subject.name, chapter?.name, lang, toast]);
+}, [exam.name, subject.name, chapter?.name, lang, toast]);
 
 
   useEffect(() => {
