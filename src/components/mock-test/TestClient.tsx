@@ -29,7 +29,6 @@ interface TestClientProps {
   subject: Omit<Subject, 'icon'>;
   questions: Question[];
   chapter?: Chapter;
-  defaultLang?: string;
 }
 
 const getTestDuration = (examId: string, isChapterTest: boolean): number => {
@@ -49,7 +48,7 @@ const getTestDuration = (examId: string, isChapterTest: boolean): number => {
     }
 }
 
-export function TestClient({ exam, subject, questions: initialQuestions, chapter, defaultLang = 'en' }: TestClientProps) {
+export function TestClient({ exam, subject, questions: initialQuestions, chapter }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
   const { toast } = useToast();
@@ -91,27 +90,6 @@ export function TestClient({ exam, subject, questions: initialQuestions, chapter
       handleSubmit();
     }
   }, [isTimeUp, handleSubmit]);
-
-   useEffect(() => {
-    if (defaultLang === 'hi' && initialQuestions.length > 0) {
-      setIsTranslating(true);
-      Promise.all(
-        initialQuestions.map(async (q) => {
-          try {
-            const translatedText = await getTranslation({ text: q.question, targetLanguage: 'Hindi' });
-            return { ...q, question: translatedText };
-          } catch (error) {
-            console.error("Translation failed for a question:", error);
-            // Return original question on error
-            return q;
-          }
-        })
-      ).then(translatedQuestions => {
-        setQuestions(translatedQuestions);
-        setIsTranslating(false);
-      });
-    }
-  }, [defaultLang, initialQuestions]);
   
   useEffect(() => {
      if (initialQuestions.length > 0) {
