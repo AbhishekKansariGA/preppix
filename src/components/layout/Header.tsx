@@ -63,10 +63,10 @@ export function Header() {
                 Tests <ChevronDown className="h-4 w-4" />
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 max-h-60 overflow-y-auto hide-scrollbar">
+            <DropdownMenuContent className="w-48">
                 <DropdownMenuLabel>Select Exam</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuGroup>
+                <DropdownMenuGroup className="max-h-60 overflow-y-auto hide-scrollbar">
                 {exams.map((exam) => (
                     <Link href={`/tests/${exam.id}`} key={exam.id}>
                         <DropdownMenuItem>
