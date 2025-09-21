@@ -31,10 +31,13 @@ const formSchema = z.object({
   username: z.string().min(2, {
     message: 'Username must be at least 2 characters.',
   }),
+  password: z.string().min(8, {
+    message: 'Password must be at least 8 characters.',
+  }),
   mobile: z
     .string()
     .length(10, { message: 'Mobile number must be 10 digits.' })
-    .regex(/^\d{10}$/, { message: 'Mobile number must be numeric.' }),
+    .regex(/^[6-9]\d{9}$/, { message: 'Please enter a valid Indian mobile number.' }),
   preparingExam: z.string({
     required_error: 'Please select an exam.',
   }),
@@ -48,6 +51,7 @@ export default function LoginPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
+      password: '',
       mobile: '',
       preparingExam: '',
     },
@@ -60,7 +64,7 @@ export default function LoginPage() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    login(values.username, values.mobile, values.preparingExam);
+    login(values.username, values.password, values.mobile, values.preparingExam);
     router.push('/');
   }
   
@@ -93,10 +97,23 @@ export default function LoginPage() {
               />
               <FormField
                 control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Strong Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="********" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="mobile"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Mobile Number</FormLabel>
+                    <FormLabel>Indian Mobile Number</FormLabel>
                     <FormControl>
                       <Input
                         type="tel"

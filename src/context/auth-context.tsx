@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 interface User {
     username: string;
     mobile: string;
+    password?: string; // Optional for security reasons, don't want to expose it everywhere
     dob?: string;
     preparingExam?: string;
     qualifications?: string;
@@ -17,7 +18,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAuthInitialized: boolean;
   user: User | null;
-  login: (username: string, mobile: string, preparingExam: string) => void;
+  login: (username: string, password: string, mobile: string, preparingExam: string) => void;
   logout: () => void;
   updateUser: (data: Partial<Omit<User, 'username' | 'mobile'>>) => void;
 }
@@ -48,8 +49,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     checkAuth();
   }, [checkAuth]);
 
-  const login = (username: string, mobile: string, preparingExam: string) => {
-    const userData: User = { username, mobile, preparingExam };
+  const login = (username: string, password: string, mobile: string, preparingExam: string) => {
+    const userData: User = { username, password, mobile, preparingExam };
     localStorage.setItem('examPrepUser', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
@@ -86,5 +87,3 @@ export function useAuth() {
   }
   return context;
 }
-
-    
