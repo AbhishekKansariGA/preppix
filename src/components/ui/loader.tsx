@@ -1,4 +1,3 @@
-import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LoaderProps {
@@ -6,11 +5,10 @@ interface LoaderProps {
   text?: string;
 }
 
-export function Loader({ className, text }: LoaderProps) {
+export function Loader({ className, text = "Loading..." }: LoaderProps) {
   return (
     <div className={cn("flex flex-col items-center justify-center h-full gap-4 py-16", className)}>
-      <Loader2 className="h-10 w-10 animate-spin text-primary" />
-      {text && <p className="text-muted-foreground text-lg">{text}</p>}
+      <div className="animate-pulse text-lg text-muted-foreground">{text}</div>
     </div>
   );
 }
