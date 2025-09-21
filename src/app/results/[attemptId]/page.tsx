@@ -32,9 +32,17 @@ export default function ResultsPage() {
   if (!attempt) {
     notFound();
   }
+  
+  const testName = (a: typeof attempts[0]) => {
+      let name = `${a.examName} - ${a.subjectName}`;
+      if (a.chapterName) {
+        name += ` (${a.chapterName})`;
+      }
+      return name;
+  }
 
   const testHistory = attempts.map(a => ({
-    testName: `${a.examName} - ${a.subjectName}`,
+    testName: testName(a),
     subjectScores: { [a.subjectName]: a.scoreDetails.score },
     overallScore: a.scoreDetails.score,
   }));

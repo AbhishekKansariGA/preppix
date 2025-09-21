@@ -4,10 +4,16 @@ export type Exam = {
   description: string;
 };
 
+export type Chapter = {
+  id: string;
+  name: string;
+};
+
 export type Subject = {
   id: string;
   name: string;
   icon: React.ElementType;
+  chapters?: Chapter[];
 };
 
 export interface Question {
@@ -17,6 +23,7 @@ export interface Question {
   correctAnswerIndex: number;
   subject: string;
   exam: string;
+  chapter?: string;
 }
 
 export interface UserAnswer {
@@ -43,4 +50,6 @@ export interface Attempt {
   date: number;
   scoreDetails: ScoreDetails;
   answers: UserAnswer[];
+  chapterId?: string;
+  chapterName?: string;
 }

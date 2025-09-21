@@ -40,8 +40,12 @@ export default function ExamTypePage() {
         </p>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {subjects.map(subject => (
-          <Link href={`/tests/${exam.id}/${subject.id}`} key={subject.id} className="group">
+        {subjects.map(subject => {
+            const href = subject.id === 'maths' 
+                ? `/tests/${exam.id}/maths` 
+                : `/tests/${exam.id}/${subject.id}/test`;
+          return (
+          <Link href={href} key={subject.id} className="group">
             <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:bg-card/80 hover:shadow-primary/20 hover:shadow-lg">
               <CardHeader>
                 <subject.icon className="h-10 w-10 mb-4 text-primary" />
@@ -55,7 +59,7 @@ export default function ExamTypePage() {
               </CardContent>
             </Card>
           </Link>
-        ))}
+        )})}
       </div>
     </div>
   );

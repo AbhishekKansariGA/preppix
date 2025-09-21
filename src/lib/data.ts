@@ -1,4 +1,4 @@
-import { Exam, Subject, Question } from './types';
+import { Exam, Subject, Question, Chapter } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 
 export const exams: Exam[] = [
@@ -7,8 +7,18 @@ export const exams: Exam[] = [
   { id: 'mts', name: 'SSC MTS', description: 'Multi-Tasking Staff' },
 ];
 
+export const mathsChapters: Chapter[] = [
+    { id: 'percentage', name: 'Percentage' },
+    { id: 'profit-loss', name: 'Profit & Loss' },
+    { id: 'average', name: 'Average' },
+    { id: 'si-ci', name: 'Simple & Compound Interest' },
+    { id: 'discount', name: 'Discount' },
+    { id: 'boat-stream', name: 'Boat and Stream' },
+    { id: 'di', name: 'Data Interpretation' },
+];
+
 export const subjects: Subject[] = [
-  { id: 'maths', name: 'Maths', icon: Calculator },
+  { id: 'maths', name: 'Maths', icon: Calculator, chapters: mathsChapters },
   { id: 'gs', name: 'General Studies', icon: BookOpen },
   { id: 'reasoning', name: 'Reasoning', icon: BrainCircuit },
   { id: 'english', name: 'English', icon: Mic2 },
@@ -16,11 +26,16 @@ export const subjects: Subject[] = [
 
 const allQuestions: Question[] = [
   // Maths
-  { id: 1, exam: 'cgl', subject: 'maths', question: 'If a+b=5 and ab=6, find a^2 + b^2.', options: ['13', '14', '15', '12'], correctAnswerIndex: 0 },
-  { id: 2, exam: 'cgl', subject: 'maths', question: 'The average of 5 numbers is 27. If one number is excluded, the average becomes 25. The excluded number is?', options: ['35', '25', '45', '55'], correctAnswerIndex: 0 },
-  { id: 3, exam: 'chsl', subject: 'maths', question: 'What is the value of sin(30) + cos(60)?', options: ['1', '0.5', '1.5', '2'], correctAnswerIndex: 0 },
-  { id: 4, exam: 'mts', subject: 'maths', question: 'A man buys a toy for Rs. 25 and sells it for Rs. 30. Find his gain percent.', options: ['20%', '25%', '15%', '10%'], correctAnswerIndex: 0 },
-  { id: 5, exam: 'cgl', subject: 'maths', question: 'Simple interest on a certain sum for 2 years at 10% per annum is Rs. 1600. The sum is?', options: ['Rs. 8000', 'Rs. 10000', 'Rs. 4000', 'Rs. 16000'], correctAnswerIndex: 0 },
+  { id: 1, exam: 'cgl', subject: 'maths', chapter: 'profit-loss', question: 'If a+b=5 and ab=6, find a^2 + b^2.', options: ['13', '14', '15', '12'], correctAnswerIndex: 0 },
+  { id: 2, exam: 'cgl', subject: 'maths', chapter: 'average', question: 'The average of 5 numbers is 27. If one number is excluded, the average becomes 25. The excluded number is?', options: ['35', '25', '45', '55'], correctAnswerIndex: 0 },
+  { id: 3, exam: 'chsl', subject: 'maths', chapter: 'percentage', question: 'What is the value of sin(30) + cos(60)?', options: ['1', '0.5', '1.5', '2'], correctAnswerIndex: 0 },
+  { id: 4, exam: 'mts', subject: 'maths', chapter: 'profit-loss', question: 'A man buys a toy for Rs. 25 and sells it for Rs. 30. Find his gain percent.', options: ['20%', '25%', '15%', '10%'], correctAnswerIndex: 0 },
+  { id: 5, exam: 'cgl', subject: 'maths', chapter: 'si-ci', question: 'Simple interest on a certain sum for 2 years at 10% per annum is Rs. 1600. The sum is?', options: ['Rs. 8000', 'Rs. 10000', 'Rs. 4000', 'Rs. 16000'], correctAnswerIndex: 0 },
+  { id: 21, exam: 'cgl', subject: 'maths', chapter: 'percentage', question: 'If 20% of a = b, then b% of 20 is the same as:', options: ['4% of a', '5% of a', '20% of a', 'None of these'], correctAnswerIndex: 0 },
+  { id: 22, exam: 'chsl', subject: 'maths', chapter: 'average', question: 'The average of first 50 natural numbers is ?', options: ['25.30', '25.5', '25.00', '26'], correctAnswerIndex: 1 },
+  { id: 23, exam: 'mts', subject: 'maths', chapter: 'discount', question: 'A shopkeeper offers a 10% discount and still makes a profit of 26%. What is the cost price if the marked price is Rs. 280?', options: ['Rs. 200', 'Rs. 220', 'Rs. 250', 'Rs. 180'], correctAnswerIndex: 0 },
+  { id: 24, exam: 'cgl', subject: 'maths', chapter: 'boat-stream', question: 'A boat can travel with a speed of 13 km/hr in still water. If the speed of the stream is 4 km/hr, find the time taken by the boat to go 68 km downstream.', options: ['4 hours', '5 hours', '3 hours', '2 hours'], correctAnswerIndex: 0 },
+  { id: 25, exam: 'chsl', subject: 'maths', chapter: 'di', question: 'The pie chart shows the percentage of students in different classes. If total students are 1000, how many are in class 10? (Assume Class 10 is 25%)', options: ['250', '300', '200', '350'], correctAnswerIndex: 0 },
 
   // General Studies
   { id: 6, exam: 'cgl', subject: 'gs', question: 'Who is known as the "Father of the Indian Constitution"?', options: ['Mahatma Gandhi', 'Jawaharlal Nehru', 'Dr. B.R. Ambedkar', 'Sardar Patel'], correctAnswerIndex: 2 },
@@ -45,7 +60,10 @@ const allQuestions: Question[] = [
 ];
 
 
-export const getQuestions = (examId: string, subjectId: string): Question[] => {
+export const getQuestions = (examId: string, subjectId: string, chapterId?: string): Question[] => {
+    if (subjectId === 'maths' && chapterId) {
+        return allQuestions.filter(q => q.exam === examId && q.subject === subjectId && q.chapter === chapterId);
+    }
   return allQuestions.filter(q => q.exam === examId && q.subject === subjectId);
 };
 
@@ -55,3 +73,7 @@ export const getQuestionById = (id: number): Question | undefined => {
 
 export const getExamById = (id: string) => exams.find(e => e.id === id);
 export const getSubjectById = (id: string) => subjects.find(s => s.id === id);
+export const getChapterById = (subjectId: string, chapterId: string) => {
+    if (subjectId !== 'maths') return undefined;
+    return mathsChapters.find(c => c.id === chapterId);
+};

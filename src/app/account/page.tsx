@@ -218,32 +218,35 @@ export default function AccountPage() {
             </Card>
           ) : (
             <div className="space-y-4">
-              {attempts.map((attempt, index) => (
-                <Link href={`/results/${attempt.id}`} key={`${attempt.id}-${index}`}>
-                  <Card className="group transition-all hover:bg-card/80 hover:shadow-primary/20 hover:shadow-md">
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                         <div className="p-3 rounded-md bg-primary/10 text-primary">
-                            <BarChart className="h-6 w-6" />
-                         </div>
-                         <div>
-                          <p className="font-semibold text-lg">{attempt.examName} - {attempt.subjectName}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {format(new Date(attempt.date), 'MMMM d, yyyy - h:mm a')}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-6">
-                        <div className="text-right">
-                           <p className="text-sm text-muted-foreground">Score</p>
-                           <p className="font-bold text-xl text-primary">{attempt.scoreDetails.score.toFixed(2)}</p>
-                        </div>
-                        <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              ))}
+              {attempts.map((attempt, index) => {
+                  const title = attempt.chapterName ? `${attempt.examName} - ${attempt.subjectName} (${attempt.chapterName})` : `${attempt.examName} - ${attempt.subjectName}`;
+                  return (
+                    <Link href={`/results/${attempt.id}`} key={`${attempt.id}-${index}`}>
+                      <Card className="group transition-all hover:bg-card/80 hover:shadow-primary/20 hover:shadow-md">
+                        <CardContent className="p-4 flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                             <div className="p-3 rounded-md bg-primary/10 text-primary">
+                                <BarChart className="h-6 w-6" />
+                             </div>
+                             <div>
+                              <p className="font-semibold text-lg">{title}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {format(new Date(attempt.date), 'MMMM d, yyyy - h:mm a')}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-6">
+                            <div className="text-right">
+                               <p className="text-sm text-muted-foreground">Score</p>
+                               <p className="font-bold text-xl text-primary">{attempt.scoreDetails.score.toFixed(2)}</p>
+                            </div>
+                            <ArrowRight className="h-5 w-5 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  )
+              })}
             </div>
           )}
         </div>

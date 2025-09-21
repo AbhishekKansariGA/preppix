@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Exam, Subject, Question, UserAnswer } from '@/lib/types';
+import { Exam, Subject, Question, UserAnswer, Chapter } from '@/lib/types';
 import { useTestStore } from '@/hooks/use-test-store';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,9 +17,10 @@ interface TestClientProps {
   exam: Exam;
   subject: Omit<Subject, 'icon'>;
   questions: Question[];
+  chapter?: Chapter;
 }
 
-export function TestClient({ exam, subject, questions }: TestClientProps) {
+export function TestClient({ exam, subject, questions, chapter }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -79,12 +80,12 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
     }
   };
 
   const handleSubmit = () => {
-    const newAttemptId = addAttempt(exam.id, subject.id, answers);
+    const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id);
     router.push(`/results/${newAttemptId}`);
   };
 
@@ -92,6 +93,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
   const displayQuestion = currentLanguage === 'hi' && translatedQuestion ? translatedQuestion : currentQuestion.question;
+  const testTitle = chapter ? `${exam.name} - ${subject.name} (${chapter.name})` : `${exam.name} - ${subject.name}`;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -99,7 +101,7 @@ export function TestClient({ exam, subject, questions }: TestClientProps) {
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-2xl">{exam.name} - {subject.name}</CardTitle>
+              <CardTitle className="text-2xl">{testTitle}</CardTitle>
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
             </div>
             <Button variant="outline" size="sm" onClick={() => router.back()}>End Test</Button>

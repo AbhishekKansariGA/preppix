@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Attempt, UserAnswer } from '@/lib/types';
-import { getQuestionById, getExamById, getSubjectById } from '@/lib/data';
+import { getQuestionById, getExamById, getSubjectById, getChapterById } from '@/lib/data';
 
 const STORE_KEY = 'examPrepAceAttempts';
 
@@ -59,13 +59,14 @@ export function useTestStore() {
     }
   }, []);
   
-  const addAttempt = useCallback((examId: string, subjectId: string, answers: UserAnswer[]): string => {
+  const addAttempt = useCallback((examId: string, subjectId: string, answers: UserAnswer[], chapterId?: string): string => {
     const scoreDetails = calculateScore(answers);
     const exam = getExamById(examId);
     const subject = getSubjectById(subjectId);
+    const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;
 
     const newAttempt: Attempt = {
-      id: `${examId}-${subjectId}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      id: `${examId}-${subjectId}-${chapterId || 'all'}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       examId,
       subjectId,
       examName: exam?.name || 'Unknown Exam',
@@ -73,6 +74,8 @@ export function useTestStore() {
       date: Date.now(),
       scoreDetails,
       answers,
+      chapterId,
+      chapterName: chapter?.name
     };
     
     setAttempts(prevAttempts => {
