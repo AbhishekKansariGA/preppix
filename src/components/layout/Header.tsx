@@ -25,7 +25,7 @@ export function Header() {
           <PenSquare className="h-6 w-6 text-primary" />
           <span className="hidden font-bold sm:inline-block">ExamPrep Ace</span>
         </Link>
-        <nav className="flex flex-1 items-center space-x-6 text-sm font-medium overflow-x-auto">
+        <nav className="flex flex-1 items-center space-x-6 text-sm font-medium overflow-x-auto hide-scrollbar">
           {navLinks.map((link) => (
             <Link
               key={link.href}
