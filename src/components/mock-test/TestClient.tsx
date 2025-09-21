@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft, Languages } from 'lucide-react';
 import { getQuestions as fetchStaticQuestions } from '@/lib/data';
 import {
   AlertDialog,
@@ -23,11 +23,17 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Loader } from '../ui/loader';
 import { useToast } from '@/hooks/use-toast';
+import { getTranslation } from '@/lib/actions';
 
 interface TestClientProps {
   exam: Exam;
   subject: Omit<Subject, 'icon'>;
   chapter?: Chapter;
+}
+
+interface TranslatedQuestion {
+  question: string;
+  options: string[];
 }
 
 const getTestDuration = (examId: string, isChapterTest: boolean): number => {
@@ -59,6 +65,11 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, TranslatedQuestion>>({});
+  const [isTranslated, setIsTranslated] = useState<Record<number, boolean>>({});
+  const [isTranslating, setIsTranslating] = useState<Record<number, boolean>>({});
+
 
   useEffect(() => {
     const fetchedQuestions = fetchStaticQuestions(subject.id, chapter?.id);
@@ -136,6 +147,47 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     }
   };
   
+  const handleTranslate = async () => {
+    const questionId = currentQuestion.id;
+    
+    // If it's already translated, just toggle the view
+    if (translatedQuestions[questionId]) {
+      setIsTranslated(prev => ({ ...prev, [questionId]: !prev[questionId] }));
+      return;
+    }
+    
+    setIsTranslating(prev => ({ ...prev, [questionId]: true }));
+    try {
+      const textsToTranslate = [
+        currentQuestion.question,
+        ...currentQuestion.options
+      ];
+      
+      const translatedTexts = await Promise.all(
+        textsToTranslate.map(text => getTranslation({ text, targetLanguage: 'Hindi' }))
+      );
+
+      const [translatedQ, ...translatedOps] = translatedTexts;
+
+      setTranslatedQuestions(prev => ({
+        ...prev,
+        [questionId]: {
+          question: translatedQ,
+          options: translatedOps
+        }
+      }));
+      setIsTranslated(prev => ({ ...prev, [questionId]: true }));
+    } catch (error) {
+      toast({
+        title: "Translation Failed",
+        description: "Could not translate the question. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTranslating(prev => ({ ...prev, [questionId]: false }));
+    }
+  };
+
   if (questions.length === 0) {
       return <div className="text-center p-8">
           <CardTitle>Failed to load test</CardTitle>
@@ -151,6 +203,9 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  
+  const showTranslated = isTranslated[currentQuestion.id];
+  const displayQuestion = showTranslated ? translatedQuestions[currentQuestion.id] : currentQuestion;
     
   const formatTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
@@ -209,15 +264,26 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
           <div className="space-y-6">
             <div className="flex justify-between items-start w-full">
                 <div className="text-lg font-semibold w-full pr-4">
-                {currentQuestionIndex + 1}. {currentQuestion.question}
+                {currentQuestionIndex + 1}. {displayQuestion?.question}
                 </div>
+                 <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTranslate}
+                    disabled={isTranslating[currentQuestion.id]}
+                >
+                    <Languages className="mr-2 h-4 w-4" />
+                    {isTranslating[currentQuestion.id] 
+                        ? 'Translating...' 
+                        : (showTranslated ? 'English' : 'Translate')}
+                </Button>
             </div>
             <RadioGroup
               key={currentQuestion.id}
               value={currentAnswer?.selectedOption?.toString() ?? ""}
               onValueChange={handleOptionChange}
             >
-              {currentQuestion.options.map((option, index) => (
+              {displayQuestion?.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-3 p-3 rounded-md border border-transparent transition-all has-[:checked]:border-primary has-[:checked]:bg-primary/10">
                   <RadioGroupItem value={index.toString()} id={`option-${index}`} />
                   <Label htmlFor={`option-${index}`} className="text-base cursor-pointer flex-1">

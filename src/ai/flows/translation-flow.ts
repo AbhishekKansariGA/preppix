@@ -10,6 +10,8 @@
  */
 
 import {z} from 'genkit';
+import {ai} from '@/ai/genkit';
+
 
 const TranslateTextInputSchema = z.object({
   text: z.string().describe('The text to be translated.'),
@@ -25,9 +27,6 @@ const TranslateTextOutputSchema = z.object({
 export type TranslateTextOutput = z.infer<typeof TranslateTextOutputSchema>;
 
 
-// The actual AI call is commented out to use static data.
-/*
-import {ai} from '@/ai/genkit';
 export async function translateText(
   input: TranslateTextInput
 ): Promise<TranslateTextOutput> {
@@ -61,4 +60,3 @@ const translationFlow = ai.defineFlow(
     return output!;
   }
 );
-*/

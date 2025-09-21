@@ -2,6 +2,7 @@
 'use server';
 
 import { adaptiveLearningPath, AdaptiveLearningPathInput } from '@/ai/flows/adaptive-learning-path';
+import { translateText, TranslateTextInput } from '@/ai/flows/translation-flow';
 import { Question } from './types';
 
 
@@ -15,17 +16,16 @@ export async function getAdaptiveLearningPath(input: AdaptiveLearningPathInput) 
   }
 }
 
-// AI-based translation is disabled.
-// export async function getTranslation(input: TranslateTextInput): Promise<string> {
-//     try {
-//         const output = await translateText(input);
-//         return output.translatedText;
-//     } catch (error) {
-//         console.error("Error in getTranslation action:", error);
-//         // Return original text as a fallback
-//         return input.text;
-//     }
-// }
+export async function getTranslation(input: TranslateTextInput): Promise<string> {
+    try {
+        const output = await translateText(input);
+        return output.translatedText;
+    } catch (error) {
+        console.error("Error in getTranslation action:", error);
+        // Return original text as a fallback
+        return input.text;
+    }
+}
 
 // AI-based question generation is disabled in favor of static questions.
 // export async function getNewQuestion(input: GenerateQuestionInput): Promise<Question | null> {
