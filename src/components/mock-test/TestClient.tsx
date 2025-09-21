@@ -31,6 +31,7 @@ interface TestClientProps {
 }
 
 const TOTAL_QUESTIONS = 10;
+const MAX_GENERATION_ATTEMPTS = 20; // Allow for retries
 
 const getTestDuration = (examId: string, isChapterTest: boolean): number => {
     if (isChapterTest) {
@@ -70,48 +71,52 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     setIsLoading(true);
     const generatedQuestions: Question[] = [];
     const questionTexts = new Set<string>();
+    let attempts = 0;
 
-    try {
-      while (generatedQuestions.length < TOTAL_QUESTIONS) {
-        try {
-            let question = await getNewQuestion({
-                exam: exam.name,
-                subject: subject.name,
-                chapter: chapter?.name,
-            });
+    while (generatedQuestions.length < TOTAL_QUESTIONS && attempts < MAX_GENERATION_ATTEMPTS) {
+      attempts++;
+      try {
+        let question = await getNewQuestion({
+          exam: exam.name,
+          subject: subject.name,
+          chapter: chapter?.name,
+        });
 
-            // Ensure question is unique
-            if (questionTexts.has(question.question)) {
-                continue; // Skip if question text is a duplicate
-            }
-            questionTexts.add(question.question);
-
-            if (lang === 'hi') {
-                const translatedText = await getTranslation({ text: question.question, targetLanguage: 'Hindi' });
-                question.question = translatedText;
-            }
-
-            generatedQuestions.push(question);
-        } catch (error) {
-            console.error("Failed to generate a single question, retrying...", error);
-            // Optional: add a small delay before retrying
-            await new Promise(resolve => setTimeout(resolve, 500));
+        // Ensure question is unique
+        if (questionTexts.has(question.question)) {
+          console.log("Duplicate question generated, retrying...");
+          continue; // Skip if question text is a duplicate
         }
-      }
-      
-      setQuestions(generatedQuestions);
-      setAnswers(generatedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
+        questionTexts.add(question.question);
 
-    } catch (error) {
-      console.error("Failed to fetch questions:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load questions for the test. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+        if (lang === 'hi') {
+          const translatedText = await getTranslation({ text: question.question, targetLanguage: 'Hindi' });
+          const translatedOptions = await Promise.all(question.options.map(option => getTranslation({ text: option, targetLanguage: 'Hindi' })));
+          question.question = translatedText;
+          question.options = translatedOptions;
+        }
+
+        generatedQuestions.push(question);
+      } catch (error) {
+        console.error(`Failed to generate or translate question on attempt ${attempts}, retrying...`, error);
+        // Wait for a short duration before retrying to avoid spamming the service
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
+    
+    if (generatedQuestions.length < TOTAL_QUESTIONS) {
+        toast({
+            title: "Error loading test",
+            description: "Could not generate all questions after multiple attempts. Please try again later.",
+            variant: "destructive"
+        });
+        setQuestions([]);
+    } else {
+        setQuestions(generatedQuestions);
+        setAnswers(generatedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
+    }
+
+    setIsLoading(false);
   }, [exam.name, subject.name, chapter?.name, lang, toast]);
 
 
@@ -136,6 +141,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   }, [addAttempt, answers, chapter?.id, exam.id, subject.id, router, questions, toast]);
 
   useEffect(() => {
+    if (questions.length === 0) return;
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
@@ -148,7 +154,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [questions.length]);
 
   useEffect(() => {
     if (isTimeUp) {
