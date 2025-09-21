@@ -27,13 +27,13 @@ export const subjects: Subject[] = [
 
 let allQuestions: Question[] = [];
 
-// Function to populate questions, ideally from a dynamic source
-export const populateQuestions = async (examId: string, subjectId: string, chapterId?: string) => {
+// This function will now directly fetch new questions for a test session.
+export const populateQuestions = async (examId: string, subjectId: string, chapterId?: string): Promise<Question[]> => {
     const exam = getExamById(examId);
     const subject = getSubjectById(subjectId);
     const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;
     
-    if (!exam || !subject) return;
+    if (!exam || !subject) return [];
 
     const newQuestions = await getNewQuestions({
         exam: exam.name,
@@ -41,14 +41,18 @@ export const populateQuestions = async (examId: string, subjectId: string, chapt
         chapter: chapter?.name
     });
     
-    // Simple caching mechanism to avoid adding duplicate questions
+    // Add newly fetched questions to our global store to be accessible by getQuestionById
     const existingQuestionIds = new Set(allQuestions.map(q => q.id));
     const uniqueNewQuestions = newQuestions.filter(q => !existingQuestionIds.has(q.id));
     allQuestions = [...allQuestions, ...uniqueNewQuestions];
+    
+    return newQuestions; // Return only the new questions for the current test
 };
 
 
 export const getQuestions = (examId: string, subjectId: string, chapterId?: string): Question[] => {
+    // This function is now less critical for starting a test, but can be used for other purposes.
+    // For simplicity, we'll keep its filtering logic, though it's not the primary source for tests anymore.
     const exam = getExamById(examId);
     const subject = getSubjectById(subjectId);
     const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;
@@ -63,7 +67,6 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
     if (chapter) {
         filteredQuestions = filteredQuestions.filter(q => q.chapter === chapter.name);
     } else if (subjectId !== 'maths') {
-        // filter non-maths subjects without chapter
         filteredQuestions = filteredQuestions.filter(q => !q.chapter);
     }
     

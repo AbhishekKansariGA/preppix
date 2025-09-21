@@ -1,9 +1,10 @@
 'use client'
-import { getExamById, getSubjectById, getQuestions, getChapterById, populateQuestions } from '@/lib/data';
+import { getExamById, getSubjectById, getChapterById, populateQuestions } from '@/lib/data';
 import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect, useState } from 'react';
+import { Question } from '@/lib/types';
 
 export default function MathsChapterTestPage() {
   const params = useParams();
@@ -11,6 +12,7 @@ export default function MathsChapterTestPage() {
   const chapterId = Array.isArray(params.chapter) ? params.chapter[0] : params.chapter;
   const subjectId = 'maths';
   const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState<Question[]>([]);
 
   const exam = getExamById(examType);
   const subjectData = getSubjectById(subjectId);
@@ -28,7 +30,8 @@ export default function MathsChapterTestPage() {
   useEffect(() => {
     const fetchQuestions = async () => {
         setIsLoading(true);
-        await populateQuestions(examType, subjectId, chapterId);
+        const newQuestions = await populateQuestions(examType, subjectId, chapterId);
+        setQuestions(newQuestions);
         setIsLoading(false);
     }
     if (exam && subjectData && chapterData) {
@@ -43,8 +46,6 @@ export default function MathsChapterTestPage() {
   if (!isAuthInitialized || !isAuthenticated || isLoading) {
       return <div>Loading...</div>;
   }
-  
-  const questions = getQuestions(examType, subjectId, chapterId);
   
   if (questions.length === 0) {
     return <div>No questions available for this chapter. Please try again later.</div>
