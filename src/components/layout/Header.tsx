@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 const navLinks = [
   { href: '/', label: 'Dashboard' },
   { href: '/leaderboard', label: 'My Stats' },
+  { href: '/account', label: 'Account' },
 ];
 
 export function Header() {
