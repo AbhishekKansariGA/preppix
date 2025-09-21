@@ -30,9 +30,6 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <ClipboardList className="h-6 w-6 text-primary" />
-          <span className="font-bold sm:inline-block">
-            ExamPrep Ace
-          </span>
         </Link>
         <nav className="flex items-center space-x-6 text-sm font-medium whitespace-nowrap overflow-x-auto hide-scrollbar">
           {navLinks.map(link => (
