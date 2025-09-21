@@ -17,39 +17,22 @@ export async function getAdaptiveLearningPath(input: AdaptiveLearningPathInput) 
   }
 }
 
-async function withTimeout<T>(promise: Promise<T>, ms: number, signal?: AbortSignal): Promise<T> {
+async function withAbort<T>(promise: Promise<T>, signal?: AbortSignal): Promise<T> {
   return new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => {
-      reject(new Error('Operation timed out'));
-    }, ms);
-
-    const cleanup = () => {
-      clearTimeout(timeout);
-    };
-
     if (signal) {
       signal.addEventListener('abort', () => {
-        cleanup();
         reject(new DOMException('Aborted', 'AbortError'));
       });
     }
 
-    promise.then(
-      (value) => {
-        cleanup();
-        resolve(value);
-      },
-      (error) => {
-        cleanup();
-        reject(error);
-      }
-    );
+    promise.then(resolve, reject);
   });
 }
 
+
 export async function getTranslation(input: TranslateTextInput, signal?: AbortSignal): Promise<string> {
     try {
-        const output = await withTimeout(translateText(input), 5000, signal);
+        const output = await withAbort(translateText(input), signal);
         return output.translatedText;
     } catch (error) {
         console.error("Error in getTranslation action:", error);
