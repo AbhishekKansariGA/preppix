@@ -1,10 +1,12 @@
-"use client";
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import { Attempt, UserAnswer } from '@/lib/types';
 import { getQuestionById, getExamById, getSubjectById } from '@/lib/data';
 
 const STORE_KEY = 'examPrepAceAttempts';
+
+let attemptCounter = 0;
 
 const calculateScore = (answers: UserAnswer[]) => {
   let correct = 0;
@@ -64,7 +66,7 @@ export function useTestStore() {
     const subject = getSubjectById(subjectId);
 
     const newAttempt: Attempt = {
-      id: `${Date.now()}-${examId}-${subjectId}-${Math.random()}`,
+      id: `${Date.now()}-${examId}-${subjectId}-${attemptCounter++}`,
       examId,
       subjectId,
       examName: exam?.name || 'Unknown Exam',
