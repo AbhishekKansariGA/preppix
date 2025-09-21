@@ -24,33 +24,35 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const router = useRouter();
   const { addAttempt } = useTestStore();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<UserAnswer[]>(
-    questions.map(q => ({ questionId: q.id, selectedOption: null }))
-  );
+  const [answers, setAnswers] = useState<UserAnswer[]>([]);
   
   const [currentLanguage, setCurrentLanguage] = useState('en');
-  const [translatedQuestion, setTranslatedQuestion] = useState<string | null>(null);
+  const [translatedQuestions, setTranslatedQuestions] = useState<Record<number, string>>({});
   const [isTranslating, setIsTranslating] = useState(false);
   
   const currentQuestion = questions[currentQuestionIndex];
 
   useEffect(() => {
-    // Reset translation when question changes
-    setTranslatedQuestion(null);
-    setCurrentLanguage('en');
-  }, [currentQuestionIndex]);
-
+    // Initialize answers state when questions are loaded/changed
+    setAnswers(questions.map(q => ({ questionId: q.id, selectedOption: null })))
+  }, [questions]);
+  
 
   const handleTranslate = async () => {
-    if (currentLanguage === 'hi' && translatedQuestion) {
+    if (currentLanguage === 'hi') {
       setCurrentLanguage('en');
+      return;
+    }
+
+    if (translatedQuestions[currentQuestion.id]) {
+      setCurrentLanguage('hi');
       return;
     }
 
     setIsTranslating(true);
     try {
       const translation = await getTranslation({ text: currentQuestion.question, targetLanguage: 'Hindi' });
-      setTranslatedQuestion(translation);
+      setTranslatedQuestions(prev => ({...prev, [currentQuestion.id]: translation}));
       setCurrentLanguage('hi');
     } catch (error) {
       console.error("Translation failed:", error);
@@ -75,12 +77,14 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentLanguage('en');
     }
   };
 
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      setCurrentLanguage('en');
     }
   };
 
@@ -89,10 +93,17 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
     router.push(`/results/${newAttemptId}`);
   };
 
+  if (answers.length === 0) {
+      return <div>Preparing test...</div>
+  }
+
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
-  const displayQuestion = currentLanguage === 'hi' && translatedQuestion ? translatedQuestion : currentQuestion.question;
+  const displayQuestion = currentLanguage === 'hi' && translatedQuestions[currentQuestion.id] 
+    ? translatedQuestions[currentQuestion.id] 
+    : currentQuestion.question;
+    
   const testTitle = chapter ? `${exam.name} - ${subject.name} (${chapter.name})` : `${exam.name} - ${subject.name}`;
 
   return (

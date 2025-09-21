@@ -1,18 +1,18 @@
 'use client'
-import { getExamById, getSubjectById, getQuestions } from '@/lib/data';
+import { getExamById, getSubjectById, getQuestions, populateQuestions } from '@/lib/data';
 import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function TestPage() {
   const params = useParams();
   const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
   const subjectId = Array.isArray(params.subject) ? params.subject[0] : params.subject;
+  const [isLoading, setIsLoading] = useState(true);
   
   const exam = getExamById(examType);
   const subjectData = getSubjectById(subjectId);
-  const questions = getQuestions(examType, subjectId);
   const { isAuthenticated, isAuthInitialized } = useAuth();
   const router = useRouter();
 
@@ -22,7 +22,19 @@ export default function TestPage() {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
-  if (!exam || !subjectData || questions.length === 0) {
+  useEffect(() => {
+    const fetchQuestions = async () => {
+        setIsLoading(true);
+        await populateQuestions(examType, subjectId);
+        setIsLoading(false);
+    }
+    if (exam && subjectData) {
+        fetchQuestions();
+    }
+  }, [examType, subjectId, exam, subjectData]);
+
+
+  if (!exam || !subjectData) {
     notFound();
   }
   
@@ -31,8 +43,14 @@ export default function TestPage() {
       notFound();
   }
 
-  if (!isAuthInitialized || !isAuthenticated) {
+  if (!isAuthInitialized || !isAuthenticated || isLoading) {
       return <div>Loading...</div>;
+  }
+  
+  const questions = getQuestions(examType, subjectId);
+
+  if (questions.length === 0) {
+      return <div>No questions available. Please try again later.</div>
   }
 
   const { icon: Icon, ...subject } = subjectData;
