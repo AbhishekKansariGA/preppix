@@ -5,7 +5,6 @@ import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
-import { Loader } from '@/components/ui/loader';
 
 export default function MathsChapterTestPage() {
   const params = useParams();
@@ -31,7 +30,7 @@ export default function MathsChapterTestPage() {
   }
 
   if (!isAuthInitialized || !isAuthenticated) {
-      return <Loader text="Preparing your test..." />;
+      return null;
   }
 
   const { icon: Icon, ...subject } = subjectData;

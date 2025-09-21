@@ -1,6 +1,10 @@
 
 'use server';
 
+// This file is no longer in use as all questions are now static and fetched directly from data.ts.
+// The logic is preserved here in comments for potential future re-activation.
+
+/*
 import { Question } from './types';
 import { getNewQuestion as generateNewQuestion } from './actions';
 
@@ -78,3 +82,4 @@ export async function getPreloadedQuestions(exam: string, subject: string, chapt
 
     return questions || [];
 }
+*/

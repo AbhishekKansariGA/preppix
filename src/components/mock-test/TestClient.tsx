@@ -10,9 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, Languages, ChevronLeft } from 'lucide-react';
-import { getTranslation } from '@/lib/actions';
-import { getPreloadedQuestions } from '@/lib/question-cache';
+import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft } from 'lucide-react';
+import { getQuestions as fetchStaticQuestions } from '@/lib/data';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,7 +20,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { Loader } from '../ui/loader';
 import { useToast } from '@/hooks/use-toast';
 
@@ -30,8 +29,6 @@ interface TestClientProps {
   subject: Omit<Subject, 'icon'>;
   chapter?: Chapter;
 }
-
-const TOTAL_QUESTIONS = 10;
 
 const getTestDuration = (examId: string, isChapterTest: boolean): number => {
     if (isChapterTest) {
@@ -62,43 +59,12 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchQuestions = useCallback(async () => {
-    setIsLoading(true);
-    try {
-        const fetchedQuestions = await getPreloadedQuestions(exam.name, subject.name, chapter?.name);
-        if (fetchedQuestions.length >= TOTAL_QUESTIONS) {
-            const finalQuestions = fetchedQuestions.slice(0, TOTAL_QUESTIONS);
-            setQuestions(finalQuestions);
-            setAnswers(finalQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-        } else {
-            toast({
-                title: "Error",
-                description: `Could not load enough questions for the test. Please try again. (Loaded: ${fetchedQuestions.length})`,
-                variant: "destructive"
-            });
-            setQuestions([]);
-        }
-    } catch (error) {
-        console.error("Failed to fetch questions:", error);
-        toast({
-            title: "Error",
-            description: "Could not load test. Please try again later.",
-            variant: "destructive"
-        });
-        setQuestions([]);
-    } finally {
-        setIsLoading(false);
-    }
-}, [exam.name, subject.name, chapter?.name, toast]);
-
 
   useEffect(() => {
-    fetchQuestions();
-  }, [fetchQuestions]);
+    const fetchedQuestions = fetchStaticQuestions(subject.id, chapter?.id);
+    setQuestions(fetchedQuestions);
+    setAnswers(fetchedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
+  }, [subject.id, chapter?.id]);
 
 
   const currentQuestion = useMemo(() => questions[currentQuestionIndex], [questions, currentQuestionIndex]);
@@ -169,46 +135,19 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
-
-  const handleTranslate = async () => {
-    if (!currentQuestion) return;
-    setIsTranslating(true);
-    try {
-        const translatedQuestionPromise = getTranslation({ text: currentQuestion.question, targetLanguage: 'Hindi' });
-        const translatedOptionsPromises = currentQuestion.options.map(opt => getTranslation({ text: opt, targetLanguage: 'Hindi' }));
-        
-        const [translatedQuestion, ...translatedOptions] = await Promise.all([translatedQuestionPromise, ...translatedOptionsPromises]);
-
-        setQuestions(prevQuestions => prevQuestions.map((q, index) => {
-            if(index === currentQuestionIndex) {
-                return { ...q, question: translatedQuestion, options: translatedOptions };
-            }
-            return q;
-        }));
-
-    } catch (error) {
-        toast({ title: "Translation Failed", description: "Could not translate the question.", variant: "destructive" });
-    } finally {
-        setIsTranslating(false);
-    }
-  };
   
-  if (isLoading) {
-      return <Loader text="Preparing your test..." />;
-  }
-
-  if (questions.length === 0 && !isLoading) {
+  if (questions.length === 0) {
       return <div className="text-center p-8">
           <CardTitle>Failed to load test</CardTitle>
-          <CardDescription>Could not generate any questions. Please try again later.</CardDescription>
+          <CardDescription>Could not find any questions for this test. Please go back.</CardDescription>
           <Button onClick={() => router.back()} className="mt-4">Go Back</Button>
       </div>;
   }
   
   if (!currentQuestion) {
+      // This should not happen with static questions, but as a fallback
       return <Loader text="Loading question..." />;
   }
-
 
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
@@ -272,9 +211,6 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                 <div className="text-lg font-semibold w-full pr-4">
                 {currentQuestion.question}
                 </div>
-                <Button variant="ghost" size="sm" onClick={handleTranslate} disabled={isTranslating}>
-                    <Languages className="mr-2 h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate'}
-                </Button>
             </div>
             <RadioGroup
               key={currentQuestion.id}

@@ -1,17 +1,14 @@
+
 'use server';
 
 /**
  * @fileOverview This file implements a text translation flow.
+ * This file is currently not in use as translation functionality is disabled.
  *
- * @requires genkit
- * @requires z
- *
- * @exports translateText - A function that translates text from a source language to a target language.
  * @exports TranslateTextInput - The input type for the translateText function.
  * @exports TranslateTextOutput - The return type for the translateText function.
  */
 
-import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const TranslateTextInputSchema = z.object({
@@ -27,6 +24,10 @@ const TranslateTextOutputSchema = z.object({
 });
 export type TranslateTextOutput = z.infer<typeof TranslateTextOutputSchema>;
 
+
+// The actual AI call is commented out to use static data.
+/*
+import {ai} from '@/ai/genkit';
 export async function translateText(
   input: TranslateTextInput
 ): Promise<TranslateTextOutput> {
@@ -60,3 +61,4 @@ const translationFlow = ai.defineFlow(
     return output!;
   }
 );
+*/

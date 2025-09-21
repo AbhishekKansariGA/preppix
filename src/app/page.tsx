@@ -7,8 +7,6 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Loader } from '@/components/ui/loader';
 
 export default function Home() {
   const { user, isAuthenticated, isAuthInitialized } = useAuth();
@@ -52,7 +50,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {exams.map((exam) => (
             <Link href={`/tests/${exam.id}`} key={exam.id} className="group">
-              <Card className="h-full border-secondary bg-secondary/30 transition-all duration-300 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1">
+              <Card className="h-full border-secondary bg-secondary/30 transition-all duration-300 hover:bg-secondary/60">
                 <CardHeader className="flex-row items-center gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
                     <BookOpen className="h-6 w-6" />

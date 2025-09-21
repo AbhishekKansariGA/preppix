@@ -7,8 +7,6 @@ import { getExamById, subjects } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
-import { Loader } from '@/components/ui/loader';
-import { preloadQuestions } from '@/lib/question-cache';
 
 export default function ExamTypePage() {
   const params = useParams();
@@ -23,23 +21,8 @@ export default function ExamTypePage() {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
-  useEffect(() => {
-    // Pre-load questions for all subjects on this page
-    if (exam) {
-        console.log('Pre-loading questions for all subjects...');
-        subjects.forEach(subject => {
-            if (subject.id === 'maths') {
-                // For maths, preload for each chapter individually on the chapters page
-                return;
-            }
-            // We don't need to wait for this to finish. It runs in the background.
-            preloadQuestions(exam.name, subject.name);
-        });
-    }
-  }, [exam]);
-
   if (!isAuthInitialized || !isAuthenticated) {
-    return <Loader text="Loading subjects..." />;
+    return null;
   }
   
   if (!exam) {

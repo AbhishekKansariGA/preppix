@@ -7,8 +7,6 @@ import { getExamById, getSubjectById } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
-import { Loader } from '@/components/ui/loader';
-import { preloadQuestions } from '@/lib/question-cache';
 
 export default function MathsChapterPage() {
   const params = useParams();
@@ -24,19 +22,8 @@ export default function MathsChapterPage() {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
-  useEffect(() => {
-    // Pre-load questions for all chapters on this page
-    if (exam && subject?.chapters) {
-      console.log('Pre-loading questions for all math chapters...');
-      subject.chapters.forEach(chapter => {
-        // We don't need to wait for this to finish. It runs in the background.
-        preloadQuestions(exam.name, subject.name, chapter.name);
-      });
-    }
-  }, [exam, subject]);
-
   if (!isAuthInitialized || !isAuthenticated) {
-    return <Loader text="Loading chapters..." />;
+    return null;
   }
 
   if (!exam || !subject || !subject.chapters) {

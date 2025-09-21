@@ -1,18 +1,17 @@
+
 'use server';
 
 /**
  * @fileOverview This file implements a question generation flow for mock tests.
+ * This file is currently not in use as questions are static.
  *
- * @requires genkit
- * @requires z
- *
- * @exports generateQuestion - A function that generates a new question for a given subject and chapter.
  * @exports GenerateQuestionInput - The input type for the generateQuestion function.
  * @exports GenerateQuestionOutput - The return type for the generateQuestion function.
  */
 
-import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+
+// Schemas are kept for type consistency, but the flow is disabled.
 
 const GenerateQuestionInputSchema = z.object({
     subject: z.string().describe('The subject for which to generate a question (e.g., "Maths", "English").'),
@@ -38,10 +37,12 @@ const GenerateQuestionOutputSchema = z.object({
 
 export type GenerateQuestionOutput = z.infer<typeof GenerateQuestionOutputSchema>;
 
+// The actual AI call is commented out to use static data.
+/*
+import {ai} from '@/ai/genkit';
 export async function generateQuestion(input: GenerateQuestionInput): Promise<GenerateQuestionOutput> {
   return questionGenerationFlow(input);
 }
-
 const prompt = ai.definePrompt({
   name: 'questionGenerationPrompt',
   input: {
@@ -76,3 +77,4 @@ const questionGenerationFlow = ai.defineFlow(
     return output!;
   }
 );
+*/
