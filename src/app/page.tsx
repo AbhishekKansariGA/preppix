@@ -1,11 +1,12 @@
 'use client';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { exams } from '@/lib/data';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { user, isAuthenticated, isAuthInitialized } = useAuth();
@@ -18,42 +19,60 @@ export default function Home() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   if (!isAuthInitialized || !isAuthenticated) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+          <div className="text-lg">Loading...</div>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        {user && (
-            <h2 className="text-2xl font-bold font-poppins mb-4 text-primary">
-                Welcome, {user.username}!
+    <div className="space-y-10">
+      <div className="relative isolate overflow-hidden rounded-2xl bg-gray-900 border border-primary/20 shadow-2xl shadow-primary/10">
+        <div className="px-6 py-24 sm:px-24 sm:py-32 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            {user && (
+              <p className="text-lg font-semibold leading-8 text-primary">
+                Welcome back, {user.username}!
+              </p>
+            )}
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-5xl font-poppins">
+              Ready to Ace Your Exam?
             </h2>
-        )}
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Choose Your Exam
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Select an exam to start your preparation journey.
-        </p>
+            <p className="mt-6 text-lg leading-8 text-gray-300">
+              Select an exam below and kickstart your preparation journey with our tailored mock tests.
+            </p>
+          </div>
+        </div>
+        <div className="absolute top-0 -z-10 h-full w-full bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
       </div>
-
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {exams.map((exam) => (
-          <Link href={`/tests/${exam.id}`} key={exam.id} className="group">
-            <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:bg-card/80 hover:shadow-primary/20 hover:shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-2xl font-semibold">{exam.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{exam.description}</p>
-                <div className="mt-4 flex items-center justify-between text-primary">
-                  <span>Start Preparing</span>
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+      
+      <div>
+        <h3 className="text-2xl font-bold tracking-tight text-foreground mb-6">
+          Choose Your Exam
+        </h3>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {exams.map((exam) => (
+            <Link href={`/tests/${exam.id}`} key={exam.id} className="group">
+              <Card className="h-full border-secondary bg-secondary/30 transition-all duration-300 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg hover:-translate-y-1">
+                <CardHeader className="flex-row items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <BookOpen className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-xl font-semibold">{exam.name}</CardTitle>
+                    <CardDescription className="text-sm">{exam.description}</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Button variant="ghost" className="w-full justify-between text-primary">
+                    Start Preparing <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

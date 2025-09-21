@@ -32,7 +32,7 @@ export default function ExamTypePage() {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-poppins">
           {exam.name} Mock Tests
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
@@ -46,15 +46,17 @@ export default function ExamTypePage() {
                 : `/tests/${exam.id}/${subject.id}/test`;
           return (
           <Link href={href} key={subject.id} className="group">
-            <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:bg-card/80 hover:shadow-primary/20 hover:shadow-lg">
-              <CardHeader>
-                <subject.icon className="h-10 w-10 mb-4 text-primary" />
+            <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg">
+              <CardHeader className='items-center text-center'>
+                <div className='p-4 bg-primary/10 rounded-full mb-4'>
+                  <subject.icon className="h-10 w-10 text-primary" />
+                </div>
                 <CardTitle className="text-2xl font-semibold">{subject.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="mt-4 flex items-center justify-between text-primary">
+                <div className="mt-2 flex items-center justify-center text-primary font-semibold">
                   <span>Start Test</span>
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </CardContent>
             </Card>

@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/auth-context';
 import { useRouter } from 'next/navigation';
 import { PenSquare } from 'lucide-react';
@@ -68,17 +68,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <Card className="w-full max-w-md border-secondary bg-secondary/30">
         <CardHeader className="text-center">
-            <div className="flex justify-center items-center mb-4">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
                 <PenSquare className="h-8 w-8 text-primary" />
             </div>
-          <CardTitle className="text-3xl font-bold text-primary">Welcome to ExamPrep Ace</CardTitle>
+          <CardTitle className="text-3xl font-bold font-poppins text-foreground">Welcome to ExamPrep Ace</CardTitle>
+          <CardDescription>Enter your credentials to access your account</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="username"
@@ -125,8 +126,8 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                Sign In
               </Button>
             </form>
           </Form>

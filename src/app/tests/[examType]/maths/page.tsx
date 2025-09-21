@@ -32,7 +32,7 @@ export default function MathsChapterPage() {
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-poppins">
           {exam.name} - {subject.name} Chapters
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
@@ -42,12 +42,12 @@ export default function MathsChapterPage() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {subject.chapters.map((chapter) => (
           <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
-            <Card className="h-full transform transition-all duration-300 hover:scale-105 hover:bg-card/80 hover:shadow-primary/20 hover:shadow-lg">
+            <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg">
               <CardHeader>
-                <CardTitle className="text-2xl font-semibold">{chapter.name}</CardTitle>
+                <CardTitle className="text-xl font-semibold">{chapter.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="mt-4 flex items-center justify-between text-primary">
+                <div className="mt-4 flex items-center justify-between text-primary font-semibold">
                   <span>Start Test</span>
                   <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>

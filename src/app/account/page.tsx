@@ -77,26 +77,26 @@ export default function AccountPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row gap-8 items-start">
-        <Card className="w-full md:w-1/3">
+        <Card className="w-full md:w-1/3 border-secondary bg-secondary/30">
           <CardHeader className="items-center text-center">
-            <Avatar className="h-24 w-24 text-3xl mb-4">
-              <AvatarFallback>{user.username?.[0]?.toUpperCase()}</AvatarFallback>
+            <Avatar className="h-24 w-24 text-3xl mb-4 border-2 border-primary">
+              <AvatarFallback className="bg-primary/10">{user.username?.[0]?.toUpperCase()}</AvatarFallback>
             </Avatar>
             <CardTitle>{user.username}</CardTitle>
             <CardDescription>{user.mobile}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span className="text-muted-foreground">Date of Birth:</span>
               <span className="font-medium">{user.dob ? format(new Date(user.dob), 'PPP') : 'N/A'}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span className="text-muted-foreground">Preparing for:</span>
               <span className="font-medium">{user.preparingExam || 'N/A'}</span>
             </div>
-            <div className="flex justify-between text-right">
+            <div className="flex justify-between items-center py-2">
               <span className="text-muted-foreground">Qualifications:</span>
-              <span className="font-medium ">{user.qualifications || 'N/A'}</span>
+              <span className="font-medium text-right">{user.qualifications || 'N/A'}</span>
             </div>
              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
               <DialogTrigger asChild>
@@ -104,7 +104,7 @@ export default function AccountPage() {
                   <Edit className="mr-2 h-4 w-4" /> Edit Profile
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="border-secondary bg-background">
                 <DialogHeader>
                   <DialogTitle>Edit Profile</DialogTitle>
                 </DialogHeader>
@@ -180,13 +180,13 @@ export default function AccountPage() {
                       )}
                     />
                   <DialogFooter>
-                    <Button type="submit">Save Changes</Button>
+                    <Button type="submit" className="bg-primary text-primary-foreground">Save Changes</Button>
                   </DialogFooter>
                 </form>
                 </Form>
               </DialogContent>
             </Dialog>
-            <Button variant="ghost" onClick={logout} className="w-full">
+            <Button variant="ghost" onClick={logout} className="w-full text-red-400 hover:bg-red-900/40 hover:text-red-300 mt-2">
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>
@@ -194,14 +194,14 @@ export default function AccountPage() {
         </Card>
 
         <div className="w-full md:w-2/3">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-6">
             <History className="h-8 w-8 text-primary" />
             <h2 className="text-3xl font-bold tracking-tight text-foreground">
               My Past Attempts
             </h2>
           </div>
           {attempts.length === 0 ? (
-            <Card className="text-center py-16">
+            <Card className="text-center py-16 border-dashed border-secondary">
               <CardHeader>
                 <CardTitle>No attempts yet!</CardTitle>
                 <CardDescription>
@@ -209,7 +209,7 @@ export default function AccountPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button asChild>
+                <Button asChild className="bg-primary text-primary-foreground">
                   <Link href="/">
                     <FileText className="mr-2 h-4 w-4" /> Go to Mock Tests
                   </Link>
@@ -222,7 +222,7 @@ export default function AccountPage() {
                   const title = attempt.chapterName ? `${attempt.examName} - ${attempt.subjectName} (${attempt.chapterName})` : `${attempt.examName} - ${attempt.subjectName}`;
                   return (
                     <Link href={`/results/${attempt.id}`} key={`${attempt.id}-${index}`}>
-                      <Card className="group transition-all hover:bg-card/80 hover:shadow-primary/20 hover:shadow-md">
+                      <Card className="group transition-all bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-md hover:border-secondary">
                         <CardContent className="p-4 flex items-center justify-between">
                           <div className="flex items-center gap-4">
                              <div className="p-3 rounded-md bg-primary/10 text-primary">
