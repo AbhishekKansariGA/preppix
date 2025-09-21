@@ -28,6 +28,7 @@ const profileSchema = z.object({
   dob: z.date().optional(),
   preparingExam: z.string().optional(),
   qualifications: z.string().optional(),
+  category: z.string().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -44,6 +45,7 @@ export default function AccountPage() {
       dob: user?.dob ? new Date(user.dob) : undefined,
       preparingExam: user?.preparingExam || '',
       qualifications: user?.qualifications || '',
+      category: user?.category || '',
     },
   });
 
@@ -59,6 +61,7 @@ export default function AccountPage() {
             dob: user.dob ? new Date(user.dob) : undefined,
             preparingExam: user.preparingExam || '',
             qualifications: user.qualifications || '',
+            category: user.category || '',
         });
     }
   }, [user, form]);
@@ -95,9 +98,13 @@ export default function AccountPage() {
               <span className="text-muted-foreground">Preparing for:</span>
               <span className="font-medium">{user.preparingExam || 'N/A'}</span>
             </div>
-            <div className="flex justify-between items-center py-2">
+            <div className="flex justify-between items-center py-2 border-b border-border/50">
               <span className="text-muted-foreground">Qualifications:</span>
               <span className="font-medium text-right">{user.qualifications || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between items-center py-2">
+              <span className="text-muted-foreground">Category:</span>
+              <span className="font-medium">{user.category || 'N/A'}</span>
             </div>
              <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
               <DialogTrigger asChild>
@@ -180,6 +187,29 @@ export default function AccountPage() {
                         </FormItem>
                       )}
                     />
+                  <FormField
+                      control={form.control}
+                      name="category"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Label>Category</Label>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select your category" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="UR">UR (Unreserved)</SelectItem>
+                              <SelectItem value="EWS">EWS (Economically Weaker Section)</SelectItem>
+                              <SelectItem value="OBC">OBC (Other Backward Class)</SelectItem>
+                              <SelectItem value="SC">SC (Scheduled Caste)</SelectItem>
+                              <SelectItem value="ST">ST (Scheduled Tribe)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
                   <DialogFooter>
                     <Button type="submit" className="bg-primary text-primary-foreground">Save Changes</Button>
                   </DialogFooter>
@@ -255,3 +285,5 @@ export default function AccountPage() {
     </div>
   );
 }
+
+    

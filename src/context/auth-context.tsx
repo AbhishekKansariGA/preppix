@@ -10,6 +10,7 @@ interface User {
     dob?: string;
     preparingExam?: string;
     qualifications?: string;
+    category?: string;
 }
 
 interface AuthContextType {
@@ -85,3 +86,5 @@ export function useAuth() {
   }
   return context;
 }
+
+    
