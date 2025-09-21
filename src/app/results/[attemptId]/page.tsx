@@ -5,6 +5,7 @@ import { useTestStore } from '@/hooks/use-test-store';
 import { ResultsClient } from '@/components/results/ResultsClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
+import { Loader } from '@/components/ui/loader';
 
 export default function ResultsPage() {
   const params = useParams();
@@ -20,11 +21,7 @@ export default function ResultsPage() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   if (!isInitialized || !isAuthInitialized || !isAuthenticated) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg">Loading results...</div>
-      </div>
-    );
+    return <Loader text="Loading results..." />;
   }
 
   const attempt = getAttemptById(Array.isArray(attemptId) ? attemptId[0] : attemptId);

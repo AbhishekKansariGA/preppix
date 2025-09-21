@@ -6,6 +6,7 @@ import { getExamById, getSubjectById } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
+import { Loader } from '@/components/ui/loader';
 
 export default function MathsChapterPage() {
   const params = useParams();
@@ -22,7 +23,7 @@ export default function MathsChapterPage() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   if (!isAuthInitialized || !isAuthenticated) {
-    return <div>Loading...</div>;
+    return <Loader text="Loading chapters..." />;
   }
 
   if (!exam || !subject || !subject.chapters) {

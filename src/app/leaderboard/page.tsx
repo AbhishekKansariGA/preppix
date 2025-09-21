@@ -7,6 +7,7 @@ import { Trophy } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Loader } from "@/components/ui/loader";
 
 const allUsers = [
   "Arjun Sharma", "Priya Singh", "Rohan Kumar", "Sneha Patel", "Vikram Reddy",
@@ -50,7 +51,7 @@ export default function LeaderboardPage() {
     }, []);
 
     if (!isAuthInitialized || !isAuthenticated) {
-        return <div>Loading...</div>;
+        return <Loader text="Loading leaderboard..." />;
     }
   return (
     <Card>

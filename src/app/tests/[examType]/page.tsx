@@ -6,6 +6,7 @@ import { getExamById, subjects } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
+import { Loader } from '@/components/ui/loader';
 
 export default function ExamTypePage() {
   const params = useParams();
@@ -21,7 +22,7 @@ export default function ExamTypePage() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   if (!isAuthInitialized || !isAuthenticated) {
-    return <div>Loading...</div>;
+    return <Loader text="Loading subjects..." />;
   }
   
   if (!exam) {

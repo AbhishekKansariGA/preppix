@@ -4,6 +4,7 @@ import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
+import { Loader } from '@/components/ui/loader';
 
 export default function TestPage() {
   const params = useParams();
@@ -33,7 +34,7 @@ export default function TestPage() {
   }
 
   if (!isAuthInitialized || !isAuthenticated) {
-      return <div>Loading...</div>;
+      return <Loader text="Preparing your test..." />;
   }
 
   const { icon: Icon, ...subject } = subjectData;

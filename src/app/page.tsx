@@ -7,6 +7,7 @@ import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Loader } from '@/components/ui/loader';
 
 export default function Home() {
   const { user, isAuthenticated, isAuthInitialized } = useAuth();
@@ -19,11 +20,7 @@ export default function Home() {
   }, [isAuthenticated, isAuthInitialized, router]);
 
   if (!isAuthInitialized || !isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-          <div className="text-lg">Loading...</div>
-      </div>
-    );
+    return <Loader text="Getting things ready..." />;
   }
 
   return (

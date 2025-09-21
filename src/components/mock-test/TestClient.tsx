@@ -22,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Loader } from '../ui/loader';
 
 interface TestClientProps {
   exam: Exam;
@@ -173,7 +174,7 @@ export function TestClient({ exam, subject, questions, chapter }: TestClientProp
   };
 
   if (answers.length === 0) {
-      return <div>Preparing test...</div>
+      return <Loader text="Preparing your test..." />;
   }
 
   const currentAnswer = answers.find(a => a.questionId === currentQuestion.id);

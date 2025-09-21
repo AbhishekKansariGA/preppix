@@ -5,6 +5,7 @@ import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect, useState } from 'react';
 import { Question } from '@/lib/types';
+import { Loader } from '@/components/ui/loader';
 
 export default function MathsChapterTestPage() {
   const params = useParams();
@@ -44,7 +45,7 @@ export default function MathsChapterTestPage() {
   }
 
   if (!isAuthInitialized || !isAuthenticated || isLoading) {
-      return <div>Loading...</div>;
+      return <Loader text="Generating new questions for your test..." />;
   }
   
   if (questions.length === 0) {

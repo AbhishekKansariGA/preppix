@@ -22,6 +22,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
+import { Loader } from '@/components/ui/loader';
 
 const profileSchema = z.object({
   dob: z.date().optional(),
@@ -63,7 +64,7 @@ export default function AccountPage() {
   }, [user, form]);
 
   if (!isInitialized || !isAuthInitialized || !isAuthenticated || !user) {
-    return <div>Loading...</div>;
+    return <Loader text="Loading account details..." />;
   }
   
   const handleProfileUpdate = (values: ProfileFormValues) => {
