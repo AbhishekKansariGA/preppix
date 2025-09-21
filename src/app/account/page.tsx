@@ -269,7 +269,7 @@ export default function AccountPage() {
                              <div>
                               <p className="font-semibold text-lg">
                                 {attempt.examName} - {attempt.subjectName}
-                                {attempt.chapterName && <span className="text-primary"> ({attempt.chapterName})</span>}
+                                {attempt.chapterName && <span className="text-primary font-poppins"> ({attempt.chapterName})</span>}
                               </p>
                               <p className="text-sm text-muted-foreground">
                                 {format(new Date(attempt.date), 'MMMM d, yyyy - h:mm a')}

@@ -42,7 +42,7 @@ export function ResultsClient({ attempt, testHistory }: ResultsClientProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-poppins">
           Test Results: {attempt.examName} - {attempt.subjectName}
           {attempt.chapterName && <span className="text-primary"> ({attempt.chapterName})</span>}
         </h1>

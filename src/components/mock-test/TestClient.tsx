@@ -266,7 +266,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
         <CardHeader>
           <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
-              <CardTitle className="text-2xl">
+              <CardTitle className="text-2xl font-poppins">
                 {exam.name} - {subject.name}
                 {chapter && <span className="text-primary"> ({chapter.name})</span>}
               </CardTitle>

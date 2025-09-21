@@ -46,7 +46,7 @@ export default function MathsChapterPage() {
              <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id}>
                 <Card className="h-full transform transition-all duration-300 hover:scale-105 bg-secondary/30 hover:bg-secondary/60 hover:shadow-primary/20 hover:shadow-lg cursor-pointer group">
                   <CardHeader>
-                    <CardTitle className="text-xl font-semibold">{chapter.name}</CardTitle>
+                    <CardTitle className="text-xl font-semibold font-poppins text-primary">{chapter.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="mt-4 flex items-center justify-between text-primary font-semibold">
