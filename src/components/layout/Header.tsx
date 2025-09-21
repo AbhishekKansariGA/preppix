@@ -62,7 +62,7 @@ export function Header() {
                 <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 max-h-60 overflow-y-auto hide-scrollbar">
+            <DropdownMenuContent className="w-48">
                <DropdownMenuGroup>
                 {exams.map((exam) => (
                   <DropdownMenuItem key={exam.id} asChild>
