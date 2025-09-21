@@ -1,3 +1,4 @@
+
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -61,18 +62,16 @@ export default function LeaderboardPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[80px]">Rank</TableHead>
+              <TableHead className="w-[50px] text-center">Rank</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead className="text-right">Score</TableHead>
+              <TableHead className="text-right w-[100px]">Score</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {leaderboardData.slice(0, 5).map((user, index) => (
               <TableRow key={user.rank} className={index < 3 ? "bg-primary/10" : ""}>
-                <TableCell className="font-medium text-lg">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
-                    {user.rank}
-                  </div>
+                <TableCell className="font-medium text-lg text-center">
+                  {user.rank}
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
