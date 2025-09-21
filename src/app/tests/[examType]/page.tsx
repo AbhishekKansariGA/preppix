@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getExamById, subjects } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
@@ -8,12 +8,10 @@ import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 
-type Props = {
-  params: { examType: string };
-};
-
-export default function ExamTypePage({ params }: Props) {
-  const exam = getExamById(params.examType);
+export default function ExamTypePage() {
+  const params = useParams();
+  const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
+  const exam = getExamById(examType);
   const { isAuthenticated, isAuthInitialized } = useAuth();
   const router = useRouter();
 
@@ -23,13 +21,14 @@ export default function ExamTypePage({ params }: Props) {
     }
   }, [isAuthenticated, isAuthInitialized, router]);
 
+  if (!isInitialized || !isAuthenticated) {
+    return <div>Loading...</div>;
+  }
+  
   if (!exam) {
     notFound();
   }
 
-  if (!isAuthInitialized || !isAuthenticated) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>
