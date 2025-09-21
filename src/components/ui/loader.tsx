@@ -8,7 +8,7 @@ interface LoaderProps {
 
 export function Loader({ className, text }: LoaderProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center h-full gap-4", !text && "py-0", text && "py-16", className)}>
+    <div className={cn("flex flex-col items-center justify-center", text ? "h-full gap-4 py-16" : "py-0", className)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -23,7 +23,6 @@ export function Loader({ className, text }: LoaderProps) {
         >
           <path d="M21 12a9 9 0 1 1-6.219-8.56" />
         </svg>
-      {text && <div className="animate-pulse text-lg text-muted-foreground">{text}</div>}
     </div>
   );
 }
