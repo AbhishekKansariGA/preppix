@@ -1,17 +1,16 @@
 'use client'
 import { getExamById, getSubjectById, getQuestions } from '@/lib/data';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, useParams } from 'next/navigation';
 import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 
-type Props = {
-  params: { examType: string; subject: string };
-};
+export default function TestPage() {
+  const params = useParams();
+  const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
+  const subjectId = Array.isArray(params.subject) ? params.subject[0] : params.subject;
 
-export default function TestPage({ params }: Props) {
-  const { examType, subject: subjectId } = params;
   const exam = getExamById(examType);
   const subjectData = getSubjectById(subjectId);
   const questions = getQuestions(examType, subjectId);
