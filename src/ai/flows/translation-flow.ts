@@ -3,8 +3,8 @@
 
 /**
  * @fileOverview This file implements a text translation flow.
- * This file is currently not in use as translation functionality is disabled.
  *
+ * @exports translateText - A function that translates text to a target language.
  * @exports TranslateTextInput - The input type for the translateText function.
  * @exports TranslateTextOutput - The return type for the translateText function.
  */
@@ -41,7 +41,7 @@ const prompt = ai.definePrompt({
   output: {
     schema: TranslateTextOutputSchema,
   },
-  prompt: `Translate the following text to {{targetLanguage}}. Do not translate proper nouns or technical terms that should remain in English.
+  prompt: `Translate the following text to {{targetLanguage}}. Do not translate proper nouns or technical terms that should remain in their original language.
 
 Text to translate:
 "{{text}}"
