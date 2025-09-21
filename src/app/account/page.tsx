@@ -38,9 +38,6 @@ export default function AccountPage() {
           </p>
         </div>
         <div className="flex gap-2">
-        {attempts.length > 0 && (
-          <Button variant="destructive" onClick={clearHistory}>Clear History</Button>
-        )}
         <Button variant="ghost" onClick={logout}>
             <LogOut className="mr-2 h-4 w-4" />
             Logout
