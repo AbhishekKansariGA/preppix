@@ -6,8 +6,6 @@ import { getQuestionById, getExamById, getSubjectById } from '@/lib/data';
 
 const STORE_KEY = 'examPrepAceAttempts';
 
-let attemptCounter = 0;
-
 const calculateScore = (answers: UserAnswer[]) => {
   let correct = 0;
   let incorrect = 0;
@@ -66,7 +64,7 @@ export function useTestStore() {
     const subject = getSubjectById(subjectId);
 
     const newAttempt: Attempt = {
-      id: `${Date.now()}-${examId}-${subjectId}-${attemptCounter++}`,
+      id: `${examId}-${subjectId}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       examId,
       subjectId,
       examName: exam?.name || 'Unknown Exam',
