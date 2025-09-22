@@ -71,7 +71,7 @@ export function Header() {
         
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <ClipboardList className="h-6 w-6 text-primary" />
-          <span className="font-bold hidden sm:inline-block">Preppix</span>
+          <span className="font-bold">Preppix</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium whitespace-nowrap overflow-x-auto hide-scrollbar">
