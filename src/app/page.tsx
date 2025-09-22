@@ -33,10 +33,13 @@ export default function Home() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl font-poppins">
-          Hello, {user?.username || 'Guest'}!
+        <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl font-poppins">
+          Welcome to Preppix
         </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
+        <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          Hello, {user?.username || 'Guest'}!
+        </h2>
+        <p className="mt-2 text-lg text-muted-foreground">
           {examForUser 
             ? `Ready to ace the ${examForUser.name}? Let's get started.`
             : "Let's start your preparation journey."
