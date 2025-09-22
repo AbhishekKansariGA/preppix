@@ -46,6 +46,7 @@ export function Header() {
             <div className="flex flex-col space-y-2 p-4 pt-0">
               <Link href="/" className="mb-4 flex items-center space-x-2">
                 <ClipboardList className="h-8 w-8 text-primary" />
+                <span className="font-bold text-xl">Preppix</span>
               </Link>
               {navLinks.map(link => (
                 <SheetClose asChild key={link.href}>
@@ -70,6 +71,7 @@ export function Header() {
         
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <ClipboardList className="h-6 w-6 text-primary" />
+          <span className="font-bold hidden sm:inline-block">Preppix</span>
         </Link>
         
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium whitespace-nowrap overflow-x-auto hide-scrollbar">

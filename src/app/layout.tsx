@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
@@ -6,7 +7,7 @@ import { AuthProvider } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'ExamPrep Ace',
+  title: 'Preppix',
   description: 'Your partner in cracking competitive exams.',
 };
 
