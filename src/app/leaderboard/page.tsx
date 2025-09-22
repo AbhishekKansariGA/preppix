@@ -13,6 +13,7 @@ import { Attempt, Category } from '@/lib/types';
 import { exams, subjects, leaderboardCutoffs, categories as categoryData } from '@/lib/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 // Expanded dummy data to include exam, subject, and category
 const dummyTopCandidates: { username: string; score: number; exam: string; subject: string; category: Category['id'] }[] = [
@@ -199,5 +200,3 @@ export default function LeaderboardPage() {
     </div>
   );
 }
-
-    
