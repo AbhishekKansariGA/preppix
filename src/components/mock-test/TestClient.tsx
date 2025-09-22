@@ -15,11 +15,13 @@ import { getQuestions as fetchStaticQuestions } from '@/lib/data';
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Loader } from '../ui/loader';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
@@ -65,6 +67,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [isTranslated, setIsTranslated] = useState<Record<number, boolean>>({});
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
 
   useEffect(() => {
@@ -218,7 +221,23 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                     <Clock className="h-5 w-5" />
                     <span>{formatTime(timeLeft)}</span>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleSubmit}>End Test</Button>
+                <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="sm">End Test</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure you want to end the test?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Your progress will be submitted, and you will be taken to the results page. You cannot resume this test later.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleSubmit}>Submit</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
             </div>
           </div>
           <Progress value={progress} className="mt-4 h-2" />
@@ -276,7 +295,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
           )}
 
           {currentQuestionIndex === questions.length - 1 ? (
-             <Button onClick={handleSubmit} size="sm" disabled={isSubmitting}>
+             <Button onClick={() => setShowConfirmation(true)} size="sm" disabled={isSubmitting}>
                <Flag className="mr-2 h-4 w-4" /> Submit
              </Button>
           ) : (
