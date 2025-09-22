@@ -7,11 +7,12 @@ import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { exams, subjects } from '@/lib/data';
-import { ArrowRight, Trophy } from 'lucide-react';
+import { ArrowRight, Trophy, AlertTriangle, User } from 'lucide-react';
 import { useTestStore } from '@/hooks/use-test-store';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
-  const { user, isAuthenticated, isAuthInitialized } = useAuth();
+  const { user, isAuthenticated, isAuthInitialized, isProfileComplete } = useAuth();
   const router = useRouter();
   const { attempts } = useTestStore();
 
@@ -43,6 +44,28 @@ export default function Home() {
         </p>
       </div>
 
+      {!isProfileComplete && (
+        <Card className="border-yellow-500/50 bg-yellow-500/10">
+          <CardHeader className="flex flex-row items-center gap-4">
+              <AlertTriangle className="h-8 w-8 text-yellow-500" />
+              <div>
+                <CardTitle className="text-yellow-400">Update Your Profile</CardTitle>
+                <CardDescription className="text-yellow-400/80">
+                  Please update your personal information to start taking mock tests.
+                </CardDescription>
+              </div>
+          </CardHeader>
+          <CardContent>
+            <Link href="/account">
+              <Button variant="outline" className="border-yellow-500/50 bg-transparent hover:bg-yellow-500/20 text-yellow-400">
+                <User className="mr-2 h-4 w-4" />
+                Go to Account Page
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      )}
+
       {examForUser && (
         <Card className="bg-gradient-to-r from-primary/10 to-primary/20">
           <CardHeader>
@@ -53,8 +76,8 @@ export default function Home() {
             <p className="mb-4 text-muted-foreground">
               Choose a subject below to start a mock test or view all tests.
             </p>
-             <Link href={`/tests/${examForUser.id}`}>
-                <Button>
+             <Link href={`/tests/${examForUser.id}`} className={cn(!isProfileComplete && "pointer-events-none")}>
+                <Button disabled={!isProfileComplete}>
                   <span>View All Mock Tests</span>
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -105,12 +128,15 @@ export default function Home() {
 }
 
 function SubjectCard({ subject, examId }: { subject: any, examId?: string }) {
-  const href = examId 
+  const { isProfileComplete } = useAuth();
+  const isClickable = examId && isProfileComplete;
+
+  const href = isClickable 
     ? ((subject.chapters || subject.chapterGroups || subject.mixedTests) ? `/tests/${examId}/${subject.id}` : `/tests/${examId}/${subject.id}/test`)
     : '#';
 
   return (
-    <Link href={href} className={!examId ? 'pointer-events-none' : ''}>
+    <Link href={href} className={cn(!isClickable && 'pointer-events-none opacity-50')}>
         <Card className="h-full hover:bg-secondary/50 transition-colors">
             <CardHeader className="flex flex-row items-center gap-4">
                 <div className="p-3 bg-primary/10 rounded-lg">

@@ -11,7 +11,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose 
 
 export function Header() {
   const pathname = usePathname();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isProfileComplete } = useAuth();
   
   if (pathname === '/login' || pathname === '/otp-verify') {
     return null;
@@ -25,13 +25,16 @@ export function Header() {
     { href: `/tests/chsl`, label: 'SSC CHSL', icon: FileText },
     { href: `/tests/mts`, label: 'SSC MTS', icon: FileText },
   ];
+  
+  const showRedDot = isAuthenticated && !isProfileComplete;
 
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="md:hidden mr-2">
+            <Button variant="ghost" size="icon" className="md:hidden mr-2 relative">
+              {showRedDot && <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-red-500" />}
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open Menu</span>
             </Button>
@@ -49,14 +52,15 @@ export function Header() {
                   <Link
                     href={link.href}
                     className={cn(
-                      'flex items-center gap-3 text-lg font-medium transition-colors hover:text-primary p-2 rounded-md',
+                      'relative flex items-center gap-3 text-lg font-medium transition-colors hover:text-primary p-2 rounded-md',
                       pathname === link.href
                         ? 'text-primary bg-secondary'
                         : 'text-foreground/80'
                     )}
                   >
                     <link.icon className="h-5 w-5" />
-                    {link.label}
+                    <span>{link.label}</span>
+                     {link.href === '/account' && showRedDot && <span className="absolute right-4 h-2 w-2 rounded-full bg-red-500" />}
                   </Link>
                 </SheetClose>
               ))}
@@ -74,7 +78,7 @@ export function Header() {
               key={link.href}
               href={link.href}
               className={cn(
-                'flex items-center gap-2 transition-colors hover:text-foreground/80',
+                'relative flex items-center gap-2 transition-colors hover:text-foreground/80',
                 pathname === link.href
                   ? 'text-foreground'
                   : 'text-foreground/60'
@@ -82,6 +86,7 @@ export function Header() {
             >
               <link.icon className="h-4 w-4" />
               {link.label}
+              {link.href === '/account' && showRedDot && <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />}
             </Link>
           ))}
         </nav>
