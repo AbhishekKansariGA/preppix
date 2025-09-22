@@ -101,7 +101,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Username</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your username" {...field} />
+                      <Input placeholder="Enter your username" {...field} autoComplete="off" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,7 +114,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>Strong Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter your password" {...field} />
+                      <Input type="password" placeholder="Enter your password" {...field} autoComplete="new-password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,6 +131,7 @@ export default function LoginPage() {
                         type="tel"
                         placeholder="Enter your mobile number"
                         {...field}
+                        autoComplete="off"
                       />
                     </FormControl>
                     <FormMessage />
