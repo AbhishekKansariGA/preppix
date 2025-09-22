@@ -42,8 +42,8 @@ export default function ExamTypePage() {
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {subjects.map(subject => {
-              const href = subject.id === 'maths' 
-                  ? `/tests/${exam.id}/maths`
+              const href = (subject.chapters || subject.chapterGroups)
+                  ? `/tests/${exam.id}/${subject.id}`
                   : `/tests/${exam.id}/${subject.id}/test`;
 
               return (
