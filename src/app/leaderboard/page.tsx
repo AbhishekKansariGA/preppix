@@ -84,18 +84,18 @@ const dummyTopCandidates: { username: string; score: number; exam: string; subje
   { username: 'Siddharth Rana', score: 16.5, exam: 'mts', subject: 'maths', category: 'general' },
   // SSC MTS - GS
   { username: 'Sunita Devi', score: 49.0, exam: 'mts', subject: 'gs', category: 'ews' },
-  { username: 'Pankaj Tripathi', score: 48.0, exam: 'mts', subject: 'gs', category: 'general' },
-  { username: 'Radhika Apte', score: 47.5, exam: 'mts', subject: 'gs', category: 'obc' },
-  { username: 'Nawazuddin Siddiqui', score: 47.0, exam: 'mts', subject: 'gs', category: 'general' },
-  { username: 'Konkona Sen Sharma', score: 46.5, exam: 'mts', subject: 'gs', category: 'sc' },
-  { username: 'Manoj Bajpayee', score: 46.0, exam: 'mts', subject: 'gs', category: 'general' },
+  { username: 'Ravi Verma', score: 48.0, exam: 'mts', subject: 'gs', category: 'general' },
+  { username: 'Meena Kumari', score: 47.5, exam: 'mts', subject: 'gs', category: 'obc' },
+  { username: 'Ramesh Yadav', score: 47.0, exam: 'mts', subject: 'gs', category: 'general' },
+  { username: 'Priya Chauhan', score: 46.5, exam: 'mts', subject: 'gs', category: 'sc' },
+  { username: 'Suresh Kumar', score: 46.0, exam: 'mts', subject: 'gs', category: 'general' },
   // SSC MTS - Reasoning
-  { username: 'Manoj Tiwari', score: 46.5, exam: 'mts', subject: 'reasoning', category: 'general' },
-  { username: 'Swara Bhaskar', score: 46.0, exam: 'mts', subject: 'reasoning', category: 'general' },
-  { username: 'Abhay Deol', score: 45.0, exam: 'mts', subject: 'reasoning', category: 'obc' },
-  { username: 'Kalki Koechlin', score: 44.5, exam: 'mts', subject: 'reasoning', category: 'sc' },
-  { username: 'Irrfan Khan', score: 44.0, exam: 'mts', subject: 'reasoning', category: 'st' },
-  { username: 'Richa Chadha', score: 43.5, exam: 'mts', subject: 'reasoning', category: 'ews' },
+  { username: 'Sunil Verma', score: 46.5, exam: 'mts', subject: 'reasoning', category: 'general' },
+  { username: 'Kavita Singh', score: 46.0, exam: 'mts', subject: 'reasoning', category: 'general' },
+  { username: 'Anil Mehta', score: 45.0, exam: 'mts', subject: 'reasoning', category: 'obc' },
+  { username: 'Pooja Gupta', score: 44.5, exam: 'mts', subject: 'reasoning', category: 'sc' },
+  { username: 'Rakesh Sharma', score: 44.0, exam: 'mts', subject: 'reasoning', category: 'st' },
+  { username: 'Sarita Devi', score: 43.5, exam: 'mts', subject: 'reasoning', category: 'ews' },
   // SSC MTS - English
   { username: 'Ranjeet Singh', score: 48.5, exam: 'mts', subject: 'english', category: 'general' },
   { username: 'Divya Khanna', score: 48.0, exam: 'mts', subject: 'english', category: 'general' },
@@ -280,3 +280,5 @@ export default function LeaderboardPage() {
     </div>
   );
 }
+
+    
