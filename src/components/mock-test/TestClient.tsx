@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft, Languages } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft, Languages, Pause, Play } from 'lucide-react';
 import { getQuestions as fetchStaticQuestions } from '@/lib/data';
 import {
   AlertDialog,
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Loader } from '../ui/loader';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { cn } from '@/lib/utils';
 
 interface TestClientProps {
   exam: Exam;
@@ -65,6 +66,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   
   const [isTranslated, setIsTranslated] = useState<Record<number, boolean>>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -91,7 +93,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   }, [addAttempt, answers, chapter?.id, exam.id, subject.id, router, questions]);
 
   useEffect(() => {
-    if (questions.length === 0) return;
+    if (questions.length === 0 || isPaused) return;
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
@@ -104,7 +106,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [questions.length]);
+  }, [questions.length, isPaused]);
 
   useEffect(() => {
     if (isTimeUp) {
@@ -151,6 +153,10 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
       setIsTranslated(prev => ({ ...prev, [questionId]: !prev[questionId] }));
     }
   };
+  
+  const togglePause = () => {
+      setIsPaused(prev => !prev);
+  }
 
   if (questions.length === 0) {
       return <div className="text-center p-8">
@@ -203,7 +209,16 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <Card>
+      <Card className="relative">
+        {isPaused && (
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex flex-col justify-center items-center gap-4">
+                <h2 className="text-2xl font-bold text-primary">Test Paused</h2>
+                <Button onClick={togglePause}>
+                    <Play className="mr-2 h-4 w-4"/>
+                    Resume Test
+                </Button>
+            </div>
+        )}
         <CardHeader>
           <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
@@ -217,10 +232,22 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                 <Button variant="outline" size="icon" onClick={() => router.back()}>
                     <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <div className="flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10">
+                <div className={cn("flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10", isPaused && "animate-pulse")}>
                     <Clock className="h-5 w-5" />
                     <span>{formatTime(timeLeft)}</span>
                 </div>
+                 <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                       <Button variant="outline" size="icon" onClick={togglePause}>
+                           {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                       </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isPaused ? 'Resume Test' : 'Pause Test'}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" size="sm">End Test</Button>
