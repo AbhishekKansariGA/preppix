@@ -136,14 +136,17 @@ export default function LeaderboardPage() {
   
   const examDetails = exams.find(e => e.id === selectedExam);
   const subjectDetails = subjects.find(s => s.id === selectedSubject);
-  const cutoffScore = leaderboardCutoffs[selectedExam]?.[selectedSubject] ?? 10;
+  
+  const userCategory = (user?.category as Category['id']) || 'general';
+  const cutoffScore = leaderboardCutoffs[selectedExam]?.[selectedSubject]?.[userCategory] ?? 10;
+
 
   const userBestScore = userBestAttempt ? userBestAttempt.scoreDetails.score : 0;
   
   const leaderboardData = dummyTopCandidates.filter(c => c.exam === selectedExam && c.subject === selectedSubject)
                                               .map(c => ({...c, categoryName: categoryData.find(cat => cat.id === c.category)?.name || 'N/A' }));
   
-  if (userBestScore > cutoffScore) {
+  if (userBestScore > (leaderboardCutoffs[selectedExam]?.[selectedSubject]?.[userCategory] ?? 0)) {
       const userEntry = { 
           username: user.username, 
           score: userBestScore, 
@@ -153,7 +156,10 @@ export default function LeaderboardPage() {
           categoryName: categoryData.find(cat => cat.id === user.category)?.name || 'N/A',
           isCurrentUser: true 
       };
-      leaderboardData.push(userEntry);
+      // Avoid adding duplicate user entry
+      if (!leaderboardData.some(c => 'isCurrentUser' in c)) {
+        leaderboardData.push(userEntry);
+      }
   }
 
   leaderboardData.sort((a, b) => b.score - a.score);
@@ -202,7 +208,7 @@ export default function LeaderboardPage() {
       <Card>
         <CardHeader>
           <CardTitle className='text-primary'>{examDetails?.name} - {subjectDetails?.name}</CardTitle>
-           <CardDescription>Top 5 rankers based on highest score. Cut-off: <span className='font-bold text-foreground'>{cutoffScore.toFixed(2)}</span></CardDescription>
+           <CardDescription>Top 5 rankers based on highest score. Your category cut-off: <span className='font-bold text-foreground'>{cutoffScore.toFixed(2)}</span></CardDescription>
         </CardHeader>
         <CardContent>
           {leaderboardData.length > 0 ? (
@@ -263,12 +269,12 @@ export default function LeaderboardPage() {
                   For the selected test ({examDetails?.name} - {subjectDetails?.name}), you need a score greater than {cutoffScore.toFixed(2)} to appear. 
                   {userBestAttempt ? ` Your current best is ${userBestScore.toFixed(2)}.` : " You haven't attempted this test yet."}
                 </CardDescription>
+                </CardHeader>
                 <CardContent>
                   <Link href={`/tests/${selectedExam}/${selectedSubject}`}>
                       <Button className="mt-4">Take Test Now</Button>
                   </Link>
                 </CardContent>
-            </CardHeader>
         </Card>
       )}
     </div>

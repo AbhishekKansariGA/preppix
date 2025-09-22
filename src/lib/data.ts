@@ -17,24 +17,24 @@ export const categories: Category[] = [
     { id: 'ews', name: 'EWS' },
 ];
 
-export const leaderboardCutoffs: Record<string, Record<string, number>> = {
+export const leaderboardCutoffs: Record<string, Record<string, Record<Category['id'], number>>> = {
   cgl: {
-    maths: 15,
-    gs: 12,
-    reasoning: 14,
-    english: 13,
+    maths:     { general: 18, obc: 17, sc: 16, st: 15, ews: 17.5 },
+    gs:        { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
+    reasoning: { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
+    english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
   },
   chsl: {
-    maths: 14,
-    gs: 11,
-    reasoning: 13,
-    english: 12,
+    maths:     { general: 18, obc: 17, sc: 16, st: 15, ews: 17.5 },
+    gs:        { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
+    reasoning: { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
+    english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
   },
   mts: {
-    maths: 13,
-    gs: 10,
-    reasoning: 12,
-    english: 11,
+    maths:     { general: 18, obc: 17, sc: 16, st: 15, ews: 17.5 },
+    gs:        { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
+    reasoning: { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
+    english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
   }
 };
 
