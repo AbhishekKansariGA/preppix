@@ -7,7 +7,7 @@ import { getExamById, getSubjectById, getChapterById } from '@/lib/data';
 
 const STORE_KEY = 'examPrepAceAttempts';
 
-const calculateScore = (answers: UserAnswer[], allQuestions: Question[]) => {
+const calculateScore = (answers: UserAnswer[], allQuestions: Question[], subjectId: string) => {
   let correct = 0;
   let incorrect = 0;
   let attempted = 0;
@@ -28,8 +28,20 @@ const calculateScore = (answers: UserAnswer[], allQuestions: Question[]) => {
   });
   
   const totalQuestions = allQuestions.length > 0 ? allQuestions.length : answers.length;
-  const score = correct * 2 - incorrect * 0.5;
-  const totalScore = totalQuestions * 2;
+  
+  let score = 0;
+  let totalScore = 0;
+
+  if (subjectId === 'maths') {
+    // Maths: +2 for correct, 0 for incorrect
+    score = correct * 2;
+    totalScore = totalQuestions * 2;
+  } else {
+    // Other subjects: +2 for correct, -0.5 for incorrect
+    score = correct * 2 - incorrect * 0.5;
+    totalScore = totalQuestions * 2;
+  }
+  
   const accuracy = attempted > 0 ? (correct / attempted) * 100 : 0;
 
   return { totalQuestions, attempted, correct, incorrect, score, totalScore, accuracy };
@@ -65,7 +77,7 @@ export function useTestStore() {
     const validAnswers = answers.filter(a => a.questionId > 0);
     const validQuestions = allQuestions.filter(q => validAnswers.some(a => a.questionId === q.id));
 
-    const scoreDetails = calculateScore(validAnswers, validQuestions);
+    const scoreDetails = calculateScore(validAnswers, validQuestions, subjectId);
     const exam = getExamById(examId);
     const subject = getSubjectById(subjectId);
     const chapter = chapterId ? getChapterById(subjectId, chapterId) : undefined;

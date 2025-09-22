@@ -39,7 +39,7 @@ export default function MathsChapterPage() {
           {exam.name} - {subject.name} Chapters
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Choose a chapter to start the test.
+          Choose a chapter to start the test. Each test has 10 questions and is for 20 marks.
         </p>
       </div>
       
@@ -48,7 +48,7 @@ export default function MathsChapterPage() {
             <h2 className="text-2xl font-bold tracking-tight mb-4 text-primary">{group.title}</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {group.chapters.map((chapter) => (
-                <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
+                <Link href={`/tests/${exam.id}/maths/${chapter.id}/test`} key={chapter.id} className="group">
                     <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
                     <CardHeader className='flex-1'>
                         <CardTitle className="text-xl font-semibold font-poppins text-foreground">{chapter.name}</CardTitle>

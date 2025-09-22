@@ -1,47 +1,26 @@
 
 'use client'
-import { getExamById, getSubjectById, getChapterById } from '@/lib/data';
-import { notFound, useRouter, useParams } from 'next/navigation';
-import { TestClient } from '@/components/mock-test/TestClient';
-import { useAuth } from '@/context/auth-context';
+
+// This page is now obsolete as the link structure has been changed to 
+// /tests/[examType]/maths/[chapter]/test
+// The logic is moved to src/app/tests/[examType]/maths/[chapter]/test/page.tsx
+// To avoid breaking anything, we just redirect.
+
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function MathsChapterTestPage() {
-  const params = useParams();
-  const examType = Array.isArray(params.examType) ? params.examType[0] : params.examType;
-  const chapterId = Array.isArray(params.chapter) ? params.chapter[0] : params.chapter;
-  const subjectId = 'maths';
+export default function RedirectPage() {
+    const router = useRouter();
+    const params = useParams();
 
-  const exam = getExamById(examType);
-  const subjectData = getSubjectById(subjectId);
-  const chapterData = chapterId ? getChapterById(subjectId, chapterId) : undefined;
-  
-  const { isAuthenticated, isAuthInitialized } = useAuth();
-  const router = useRouter();
+    useEffect(() => {
+        const { examType, chapter } = params;
+        if (examType && chapter) {
+            router.replace(`/tests/${examType}/maths/${chapter}/test`);
+        } else {
+            router.replace('/');
+        }
+    }, [params, router]);
 
-  useEffect(() => {
-    if (isAuthInitialized && !isAuthenticated) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, isAuthInitialized, router]);
-
-  if (!exam || !subjectData || !chapterData) {
-    notFound();
-  }
-
-  if (!isAuthInitialized || !isAuthenticated) {
-      return null;
-  }
-
-  const { icon: Icon, ...subject } = subjectData;
-
-  return (
-    <div className='mt-8'>
-    <TestClient
-      exam={exam}
-      subject={subject}
-      chapter={chapterData}
-    />
-    </div>
-  );
+    return null;
 }

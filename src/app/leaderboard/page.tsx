@@ -20,15 +20,15 @@ const dummyTopCandidates: { username: string; score: number; exam: string; subje
   // CGL
   { username: 'Rohan Sharma', score: 19.5, exam: 'cgl', subject: 'maths', category: 'general' },
   { username: 'Priya Patel', score: 18.0, exam: 'cgl', subject: 'maths', category: 'obc' },
-  { username: 'Amit Singh', score: 17.5, exam: 'cgl', subject: 'english', category: 'general' },
-  { username: 'Sneha Verma', score: 16.0, exam: 'cgl', subject: 'gs', category: 'sc' },
-  { username: 'Vikram Rathore', score: 15.5, exam: 'cgl', subject: 'reasoning', category: 'st' },
+  { username: 'Amit Singh', score: 47.5, exam: 'cgl', subject: 'english', category: 'general' },
+  { username: 'Sneha Verma', score: 46.0, exam: 'cgl', subject: 'gs', category: 'sc' },
+  { username: 'Vikram Rathore', score: 45.5, exam: 'cgl', subject: 'reasoning', category: 'st' },
   // CHSL
   { username: 'Anjali Kumari', score: 18.5, exam: 'chsl', subject: 'maths', category: 'obc' },
-  { username: 'Rajesh Kumar', score: 17.0, exam: 'chsl', subject: 'english', category: 'general' },
+  { username: 'Rajesh Kumar', score: 47.0, exam: 'chsl', subject: 'english', category: 'general' },
   // MTS
-  { username: 'Sunita Devi', score: 19.0, exam: 'mts', subject: 'gs', category: 'ews' },
-  { username: 'Manoj Tiwari', score: 16.5, exam: 'mts', subject: 'reasoning', category: 'general' },
+  { username: 'Sunita Devi', score: 49.0, exam: 'mts', subject: 'gs', category: 'ews' },
+  { username: 'Manoj Tiwari', score: 46.5, exam: 'mts', subject: 'reasoning', category: 'general' },
 ];
 
 export default function LeaderboardPage() {
@@ -128,12 +128,12 @@ export default function LeaderboardPage() {
       <Card>
         <CardHeader>
           <CardTitle className='text-primary'>{examDetails?.name} - {subjectDetails?.name}</CardTitle>
-           <CardDescription>Top rankers based on highest score. Cut-off: <span className='font-bold text-foreground'>{cutoffScore.toFixed(2)}</span></CardDescription>
+           <CardDescription>Top 5 rankers based on highest score. Cut-off: <span className='font-bold text-foreground'>{cutoffScore.toFixed(2)}</span></CardDescription>
         </CardHeader>
         <CardContent>
           {leaderboardData.length > 0 ? (
             <div className="space-y-4">
-              {leaderboardData.slice(0, 10).map((candidate, index) => {
+              {leaderboardData.slice(0, 5).map((candidate, index) => {
                 const rank = index + 1;
                 const isCurrentUser = 'isCurrentUser' in candidate && candidate.isCurrentUser;
                 
