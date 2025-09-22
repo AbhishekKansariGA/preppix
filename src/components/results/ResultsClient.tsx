@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, CheckCircle2, Lightbulb, PieChart, Sparkles, Star, X, XCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Home, Lightbulb, PieChart, Redo, Sparkles, Star, X, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   ChartContainer,
@@ -18,6 +18,7 @@ import {
 import { Pie, PieChart as RechartsPieChart } from "recharts";
 import { getAdaptiveLearningPath } from '@/lib/actions';
 import { AdaptiveLearningPathInput } from '@/ai/flows/adaptive-learning-path';
+import Link from 'next/link';
 
 type ResultsClientProps = {
   attempt: Attempt;
@@ -136,6 +137,20 @@ export function ResultsClient({ attempt, testHistory }: ResultsClientProps) {
            <AdaptiveLearningSuggestions testHistory={testHistory} />
         </TabsContent>
       </Tabs>
+      <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+        <Link href="/">
+          <Button variant="outline" className="w-full">
+            <Home className="mr-2 h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        </Link>
+        <Link href={`/tests/${attempt.examId}`}>
+          <Button className="w-full">
+            <Redo className="mr-2 h-4 w-4" />
+            Take Another Test
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -211,3 +226,5 @@ function AdaptiveLearningSuggestions({ testHistory }: { testHistory: AdaptiveLea
         </Card>
     );
 }
+
+    
