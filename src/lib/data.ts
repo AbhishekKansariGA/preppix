@@ -19,19 +19,19 @@ export const categories: Category[] = [
 
 export const leaderboardCutoffs: Record<string, Record<string, Record<Category['id'], number>>> = {
   cgl: {
-    maths:     { general: 18, obc: 17, sc: 16, st: 15, ews: 17.5 },
+    maths:     { general: 15, obc: 14, sc: 13, st: 12, ews: 14.5 },
     gs:        { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
     reasoning: { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
     english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
   },
   chsl: {
-    maths:     { general: 18, obc: 17, sc: 16, st: 15, ews: 17.5 },
+    maths:     { general: 15, obc: 14, sc: 13, st: 12, ews: 14.5 },
     gs:        { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
     reasoning: { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
     english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
   },
   mts: {
-    maths:     { general: 18, obc: 17, sc: 16, st: 15, ews: 17.5 },
+    maths:     { general: 15, obc: 14, sc: 13, st: 12, ews: 14.5 },
     gs:        { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
     reasoning: { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
     english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },

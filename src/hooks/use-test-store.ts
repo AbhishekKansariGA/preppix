@@ -29,18 +29,9 @@ const calculateScore = (answers: UserAnswer[], allQuestions: Question[], subject
   
   const totalQuestions = allQuestions.length > 0 ? allQuestions.length : answers.length;
   
-  let score = 0;
-  let totalScore = 0;
-
-  if (subjectId === 'maths') {
-    // Maths: +2 for correct, 0 for incorrect
-    score = correct * 2;
-    totalScore = totalQuestions * 2;
-  } else {
-    // Other subjects: +2 for correct, -0.5 for incorrect
-    score = correct * 2 - incorrect * 0.5;
-    totalScore = totalQuestions * 2;
-  }
+  // All subjects: +2 for correct, -0.5 for incorrect
+  const score = correct * 2 - incorrect * 0.5;
+  const totalScore = totalQuestions * 2;
   
   const accuracy = attempted > 0 ? (correct / attempted) * 100 : 0;
 
