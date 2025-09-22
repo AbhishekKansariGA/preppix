@@ -4,7 +4,7 @@ import { Exam, Subject, Question, Chapter, MixedTest, Category } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 import { mathsQuestions } from './questions/maths';
 import { allGsQuestions } from './questions/gs';
-import { reasoningQuestions } from './questions/reasoning';
+import { allReasoningQuestions } from './questions/reasoning';
 import { englishQuestions } from './questions/english';
 
 
@@ -75,6 +75,11 @@ export const gsMixedTests: MixedTest[] = Array.from({ length: 10 }, (_, i) => ({
     name: `Test ${i + 1}`
 }));
 
+export const reasoningMixedTests: MixedTest[] = Array.from({ length: 10 }, (_, i) => ({
+    id: `test-${i + 1}`,
+    name: `Test ${i + 1}`
+}));
+
 
 export const subjects: Subject[] = [
   { 
@@ -92,7 +97,12 @@ export const subjects: Subject[] = [
     icon: BookOpen,
     mixedTests: gsMixedTests
   },
-  { id: 'reasoning', name: 'Reasoning', icon: BrainCircuit },
+  { 
+    id: 'reasoning', 
+    name: 'Reasoning', 
+    icon: BrainCircuit,
+    mixedTests: reasoningMixedTests
+  },
   { id: 'english', name: 'English', icon: Mic2 },
 ];
 
@@ -121,13 +131,16 @@ const fullTestQuestions = (questions: Question[], count: number) => {
 
 const staticQuestions: { [key: string]: Question[] } = {
   ...mathsQuestions,
-  ...gsMixedTests.reduce((acc, test, index) => {
-    // For each test, take 25 questions from the shuffled allGsQuestions
+  ...gsMixedTests.reduce((acc, test) => {
     const testQuestions = shuffle([...allGsQuestions]).slice(0, 25);
     acc[`gs-${test.id}`] = testQuestions;
     return acc;
   }, {} as { [key: string]: Question[] }),
-  'reasoning': fullTestQuestions(reasoningQuestions, 25),
+  ...reasoningMixedTests.reduce((acc, test) => {
+    const testQuestions = shuffle([...allReasoningQuestions]).slice(0, 25);
+    acc[`reasoning-${test.id}`] = testQuestions;
+    return acc;
+  }, {} as { [key: string]: Question[] }),
   'english': fullTestQuestions(englishQuestions, 25),
 };
 
@@ -150,7 +163,7 @@ export const getChapterById = (subjectId: string, chapterId: string) => {
     const subject = subjects.find(s => s.id === subjectId);
     if (!subject) return undefined;
     
-    if (subject.id === 'gs' && subject.mixedTests) {
+    if ((subject.id === 'gs' || subject.id === 'reasoning') && subject.mixedTests) {
         return subject.mixedTests.find(t => t.id === chapterId);
     }
 
