@@ -7,6 +7,7 @@ import { getExamById, getSubjectById } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function MathsChapterPage() {
   const params = useParams();
@@ -43,15 +44,15 @@ export default function MathsChapterPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {subject.chapters.map((chapter) => (
              <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
-                <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer">
-                  <CardHeader>
+                <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
+                  <CardHeader className='flex-1'>
                     <CardTitle className="text-xl font-semibold font-poppins text-primary">{chapter.name}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="mt-4 flex items-center text-blue-400 font-semibold">
+                    <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
                       <span>Start Test</span>
                       <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </div>
+                    </Button>
                   </CardContent>
                 </Card>
             </Link>

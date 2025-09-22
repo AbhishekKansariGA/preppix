@@ -7,6 +7,7 @@ import { getExamById, subjects } from '@/lib/data';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function ExamTypePage() {
   const params = useParams();
@@ -47,18 +48,18 @@ export default function ExamTypePage() {
 
               return (
                 <Link href={href} key={subject.id} className="group">
-                    <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer">
-                    <CardHeader className='items-center text-center'>
+                    <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
+                    <CardHeader className='items-center text-center flex-1'>
                         <div className='p-4 bg-primary/10 rounded-full mb-4'>
                         <subject.icon className="h-10 w-10 text-primary" />
                         </div>
                         <CardTitle className="text-2xl font-semibold">{subject.name}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="mt-2 flex items-center justify-center text-blue-400 font-semibold">
-                        <span>Start Test</span>
-                        <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                        </div>
+                        <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
+                            <span>Start Test</span>
+                            <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Button>
                     </CardContent>
                     </Card>
                 </Link>
