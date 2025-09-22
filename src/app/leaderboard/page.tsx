@@ -57,9 +57,9 @@ const dummyTopCandidates: { username: string; score: number; exam: string; subje
   { username: 'Rajesh Kumar', score: 47.0, exam: 'chsl', subject: 'english', category: 'general' },
   { username: 'Divya Singh', score: 46.0, exam: 'chsl', subject: 'english', category: 'obc' },
   { username: 'Sunil Kumar', score: 45.5, exam: 'chsl', subject: 'english', category: 'general' },
-  { username: 'Raveena Tandon', score: 45.0, exam: 'chsl', subject: 'english', category: 'sc' },
-  { username: 'Akshay Kumar', score: 44.5, exam: 'chsl', subject: 'english', category: 'ews' },
-  { username: 'Karisma Kapoor', score: 44.0, exam: 'chsl', subject: 'english', category: 'general' },
+  { username: 'Reena Tandon', score: 45.0, exam: 'chsl', subject: 'english', category: 'sc' },
+  { username: 'Aakash Kumar', score: 44.5, exam: 'chsl', subject: 'english', category: 'ews' },
+  { username: 'Kiran Kapoor', score: 44.0, exam: 'chsl', subject: 'english', category: 'general' },
    // SSC CHSL - GS
   { username: 'Ananya Sharma', score: 45.0, exam: 'chsl', subject: 'gs', category: 'general' },
   { username: 'Ishaan Khatri', score: 44.0, exam: 'chsl', subject: 'gs', category: 'obc' },
