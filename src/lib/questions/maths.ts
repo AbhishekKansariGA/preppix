@@ -2,32 +2,30 @@
 import { Question } from '../types';
 
 export const mathsQuestions: { [key: string]: Question[] } = {
-  'maths-percentages': Array.from({ length: 10 }, (_, i) => ({
-    id: 100 + i,
-    question: `If a number is increased by ${10 + i}%, by what percentage must the new number be decreased to return to the original number?`,
-    options: [`${((100 * (10 + i)) / (110 + i)).toFixed(2)}%`, `${20 + i}%`, `${15 + i}%`, `${25 + i}%`],
-    correctAnswerIndex: 0,
-    subject: 'Maths',
-    exam: 'SSC CGL',
-    chapter: 'Percentages',
-    translation: {
-      question: `यदि किसी संख्या में ${10 + i}% की वृद्धि की जाती है, तो मूल संख्या पर वापस आने के लिए नई संख्या में कितने प्रतिशत की कमी करनी होगी?`,
-      options: [`${((100 * (10 + i)) / (110 + i)).toFixed(2)}%`, `${20 + i}%`, `${15 + i}%`, `${25 + i}%`]
-    }
-  })),
-  'maths-profit-loss-discount': Array.from({ length: 10 }, (_, i) => ({
-    id: 200 + i,
-    question: `A shopkeeper sells an item for Rs. ${550 + i*10} at a profit of 10%. What is the cost price?`,
-    options: [`Rs. ${500 + i*9}`, `Rs. ${500 + i*10}`, `Rs. ${475 + i*10}`, `Rs. ${450 + i*10}`],
-    correctAnswerIndex: 1,
-    subject: 'Maths',
-    exam: 'SSC CGL',
-    chapter: 'Profit, Loss and Discount',
-     translation: {
-        question: `एक दुकानदार 10% के लाभ पर एक वस्तु को ${550 + i*10} रुपये में बेचता है। लागत मूल्य क्या है?`,
-        options: [`रु. ${500 + i*9}`, `रु. ${500 + i*10}`, `रु. ${475 + i*10}`, `रु. ${450 + i*10}`]
-    }
-  })),
+  'maths-percentages': [
+    { id: 100, question: "What is 20% of 150?", options: ["20", "25", "30", "35"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 101, question: "If a number is increased from 40 to 50, what is the percentage increase?", options: ["20%", "25%", "30%", "10%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 102, question: "A man's salary is Rs. 800. It increases by 10%. What is his new salary?", options: ["810", "880", "900", "980"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 103, question: "Out of 40 students in a class, 30 are present. What percentage of students are absent?", options: ["25%", "75%", "10%", "30%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 104, question: "If 30% of a number is 60, what is the number?", options: ["180", "200", "210", "18"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 105, question: "A fruit seller had some apples. He sells 40% apples and still has 420 apples. Originally, he had:", options: ["588 apples", "600 apples", "672 apples", "700 apples"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 106, question: "If the price of a book is first decreased by 25% and then increased by 20%, then the net change in the price will be:", options: ["10% decrease", "5% decrease", "No change", "5% increase"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 107, question: "In an election between two candidates, one got 55% of the total valid votes, 20% of the votes were invalid. If the total number of votes was 7500, the number of valid votes that the other candidate got, was:", options: ["2700", "2900", "3000", "3100"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 108, question: "A student has to secure 35% marks to pass. He got 80 marks and failed by 60 marks. The maximum marks are:", options: ["200", "300", "400", "500"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+    { id: 109, question: "If A's income is 50% less than that of B, then B's income is what percent more than that of A?", options: ["125%", "100%", "75%", "50%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CGL', chapter: 'Percentages' },
+  ],
+  'maths-profit-loss-discount': [
+    { id: 200, question: "A man buys a toy for Rs. 25 and sells it for Rs. 30. Find his gain percent.", options: ["20%", "25%", "15%", "30%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 201, question: "If the cost price of 12 pens is equal to the selling price of 8 pens, the gain percent is:", options: ["25%", "33.33%", "50%", "66.66%"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 202, question: "A shopkeeper sells an article at a loss of 12.5%. If the selling price is Rs. 630, find the cost price.", options: ["Rs. 700", "Rs. 720", "Rs. 750", "Rs. 800"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 203, question: "The marked price of a shirt is Rs. 940 and the shopkeeper allows a discount of 15%. Find the selling price of the shirt.", options: ["Rs. 799", "Rs. 800", "Rs. 819", "Rs. 829"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 204, question: "A trader marks his goods at 20% above the cost price. He allows his customers a discount of 8% on marked price. Find out his profit percent.", options: ["10.4%", "11.4%", "12.4%", "13.4%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 205, question: "By selling an article for Rs. 100, a man gains Rs. 15. Then, his gain % is:", options: ["15%", "12.5%", "17.64%", "18.75%"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 206, question: "A dishonest dealer professes to sell his goods at cost price, but he uses a weight of 960 g for the kg weight. Find his gain percent.", options: ["4%", "4.16%", "5%", "3.84%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 207, question: "Find a single discount equivalent to a series of discounts of 20%, 10% and 5%.", options: ["31.6%", "32.4%", "33.2%", "34.5%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 208, question: "If the cost price is 95% of the selling price, what is the profit percent?", options: ["4%", "4.75%", "5%", "5.26%"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+    { id: 209, question: "A person sold a horse at a gain of 15%. Had he bought it for 25% less and sold it for Rs. 60 less, he would have made a profit of 32%. The cost price of the horse was:", options: ["Rs. 370", "Rs. 372", "Rs. 375", "Rs. 378"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CGL', chapter: 'Profit, Loss and Discount' },
+  ],
   'maths-averages': Array.from({ length: 10 }, (_, i) => ({
     id: 300 + i,
     question: `The average of 5 consecutive numbers is ${15 + i}. What is the largest number?`,
