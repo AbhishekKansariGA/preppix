@@ -17,6 +17,7 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   isAuthInitialized: boolean;
+  isProfileComplete: boolean;
   user: User | null;
   login: (username: string, password: string, mobile: string, preparingExam: string) => void;
   logout: () => void;
@@ -29,14 +30,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isProfileComplete, setIsProfileComplete] = useState(false);
   const router = useRouter();
 
   const checkAuth = useCallback(() => {
     try {
       const storedUser = localStorage.getItem('examPrepUser');
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
         setIsAuthenticated(true);
+        // Check if profile is complete
+        if (parsedUser.dob && parsedUser.qualifications && parsedUser.category) {
+            setIsProfileComplete(true);
+        } else {
+            setIsProfileComplete(false);
+        }
       }
     } catch (error) {
       console.error("Failed to parse user from localStorage", error);
@@ -54,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('examPrepUser', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
+    setIsProfileComplete(false); // New user profile is incomplete
     router.push('/');
   };
 
@@ -61,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('examPrepUser');
     setUser(null);
     setIsAuthenticated(false);
+    setIsProfileComplete(false);
     router.push('/login');
   };
 
@@ -69,12 +80,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const updatedUser = { ...user, ...data };
         setUser(updatedUser);
         localStorage.setItem('examPrepUser', JSON.stringify(updatedUser));
+        // Re-check profile completeness
+        if (updatedUser.dob && updatedUser.qualifications && updatedUser.category) {
+            setIsProfileComplete(true);
+        } else {
+            setIsProfileComplete(false);
+        }
     }
   };
 
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isAuthInitialized, updateUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isAuthInitialized, updateUser, isProfileComplete }}>
       {children}
     </AuthContext.Provider>
   );
