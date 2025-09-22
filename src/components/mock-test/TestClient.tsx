@@ -38,7 +38,10 @@ interface TranslatedQuestion {
   options: string[];
 }
 
-const getTestDuration = (examId: string, isChapterTest: boolean): number => {
+const getTestDuration = (examId: string, subjectId: string, isChapterTest: boolean): number => {
+    if (subjectId === 'gs') {
+        return 15 * 60; // 15 minutes for all GS tests
+    }
     if (isChapterTest) {
         switch (examId) {
             case 'cgl':
@@ -63,7 +66,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<UserAnswer[]>([]);
   
-  const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, !!chapter));
+  const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, subject.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);

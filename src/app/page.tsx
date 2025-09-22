@@ -106,7 +106,7 @@ export default function Home() {
 
 function SubjectCard({ subject, examId }: { subject: any, examId?: string }) {
   const href = examId 
-    ? ((subject.chapters || subject.chapterGroups) ? `/tests/${examId}/${subject.id}` : `/tests/${examId}/${subject.id}/test`)
+    ? ((subject.chapters || subject.chapterGroups || subject.mixedTests) ? `/tests/${examId}/${subject.id}` : `/tests/${examId}/${subject.id}/test`)
     : '#';
 
   return (

@@ -16,12 +16,18 @@ export type ChapterGroup = {
   chapters: Chapter[];
 }
 
+export type MixedTest = {
+    id: string;
+    name: string;
+}
+
 export type Subject = {
   id: string;
   name: string;
   icon: React.ElementType;
   chapters?: Chapter[];
   chapterGroups?: ChapterGroup[];
+  mixedTests?: MixedTest[];
 };
 
 export interface Question {
