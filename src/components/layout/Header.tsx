@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ClipboardList, Menu } from 'lucide-react';
+import { ClipboardList, Menu, LayoutDashboard, Trophy, User, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { useAuth } from '@/context/auth-context';
@@ -13,17 +13,17 @@ export function Header() {
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
   
-  if (pathname === '/login') {
+  if (pathname === '/login' || pathname === '/otp-verify') {
     return null;
   }
 
   const navLinks = [
-    { href: '/', label: 'Dashboard' },
-    { href: '/leaderboard', label: 'Leaderboard' },
-    { href: '/account', label: 'Account' },
-    { href: `/tests/cgl`, label: 'SSC CGL' },
-    { href: `/tests/chsl`, label: 'SSC CHSL' },
-    { href: `/tests/mts`, label: 'SSC MTS' },
+    { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { href: '/leaderboard', label: 'Leaderboard', icon: Trophy },
+    { href: '/account', label: 'Account', icon: User },
+    { href: `/tests/cgl`, label: 'SSC CGL', icon: FileText },
+    { href: `/tests/chsl`, label: 'SSC CHSL', icon: FileText },
+    { href: `/tests/mts`, label: 'SSC MTS', icon: FileText },
   ];
 
   return (
@@ -36,25 +36,26 @@ export function Header() {
               <span className="sr-only">Open Menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
-             <SheetHeader>
+          <SheetContent side="left" className="p-0">
+             <SheetHeader className='p-4'>
               <SheetTitle className="sr-only">Menu</SheetTitle>
             </SheetHeader>
-            <div className="flex flex-col space-y-4 p-4">
+            <div className="flex flex-col space-y-2 p-4 pt-0">
               <Link href="/" className="mb-4 flex items-center space-x-2">
-                <ClipboardList className="h-6 w-6 text-primary" />
+                <ClipboardList className="h-8 w-8 text-primary" />
               </Link>
               {navLinks.map(link => (
                 <SheetClose asChild key={link.href}>
                   <Link
                     href={link.href}
                     className={cn(
-                      'text-lg font-medium transition-colors hover:text-primary p-2 rounded-md',
+                      'flex items-center gap-3 text-lg font-medium transition-colors hover:text-primary p-2 rounded-md',
                       pathname === link.href
                         ? 'text-primary bg-secondary'
                         : 'text-foreground/80'
                     )}
                   >
+                    <link.icon className="h-5 w-5" />
                     {link.label}
                   </Link>
                 </SheetClose>
@@ -73,12 +74,13 @@ export function Header() {
               key={link.href}
               href={link.href}
               className={cn(
-                'transition-colors hover:text-foreground/80',
+                'flex items-center gap-2 transition-colors hover:text-foreground/80',
                 pathname === link.href
                   ? 'text-foreground'
                   : 'text-foreground/60'
               )}
             >
+              <link.icon className="h-4 w-4" />
               {link.label}
             </Link>
           ))}

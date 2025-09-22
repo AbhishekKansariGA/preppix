@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Check, CheckCircle2, Lightbulb, PieChart, Star, X, XCircle } from 'lucide-react';
+import { ArrowRight, Check, CheckCircle2, Lightbulb, PieChart, Sparkles, Star, X, XCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   ChartContainer,
@@ -177,7 +177,7 @@ function AdaptiveLearningSuggestions({ testHistory }: { testHistory: AdaptiveLea
             <CardContent className="text-center">
                 {!suggestions && (
                     <Button onClick={handleGeneratePath} disabled={isLoading}>
-                        {isLoading ? "Generating..." : "Generate My Learning Path"}
+                        {isLoading ? "Generating..." : <> <Sparkles className='w-4 h-4 mr-2'/> Generate My Learning Path</>}
                     </Button>
                 )}
                  {error && <p className="mt-4 text-red-500">{error}</p>}

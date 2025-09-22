@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
 import { exams } from '@/lib/data';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { LogOut } from 'lucide-react';
+import { LogOut, Save } from 'lucide-react';
 
 const formSchema = z.object({
     dob: z.string().optional(),
@@ -173,7 +173,10 @@ export default function AccountPage() {
                             )}
                         />
                     </div>
-                    <Button type="submit">Save Changes</Button>
+                    <Button type="submit">
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Changes
+                    </Button>
                 </form>
                 </Form>
             </CardContent>
