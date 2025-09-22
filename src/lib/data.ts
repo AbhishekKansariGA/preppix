@@ -1,6 +1,6 @@
 
 
-import { Exam, Subject, Question, Chapter, MixedTest } from './types';
+import { Exam, Subject, Question, Chapter, MixedTest, Category } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 
 export const exams: Exam[] = [
@@ -8,6 +8,36 @@ export const exams: Exam[] = [
   { id: 'chsl', name: 'SSC CHSL', description: 'Combined Higher Secondary Level' },
   { id: 'mts', name: 'SSC MTS', description: 'Multi-Tasking Staff' },
 ];
+
+export const categories: Category[] = [
+    { id: 'general', name: 'General' },
+    { id: 'obc', name: 'OBC' },
+    { id: 'sc', name: 'SC' },
+    { id: 'st', name: 'ST' },
+    { id: 'ews', name: 'EWS' },
+];
+
+export const leaderboardCutoffs: Record<string, Record<string, number>> = {
+  cgl: {
+    maths: 15,
+    gs: 12,
+    reasoning: 14,
+    english: 13,
+  },
+  chsl: {
+    maths: 14,
+    gs: 11,
+    reasoning: 13,
+    english: 12,
+  },
+  mts: {
+    maths: 13,
+    gs: 10,
+    reasoning: 12,
+    english: 11,
+  }
+};
+
 
 export const arithmeticChapters: Chapter[] = [
     { id: 'number-system', name: 'Number System' },
@@ -288,15 +318,15 @@ export const staticQuestions: { [key: string]: Question[] } = {
   })),
   'maths-trigonometry': Array.from({ length: 10 }, (_, i) => ({
     id: 1900 + i,
-    question: `If sin(A) = ${(3+i/10).toFixed(2)}, what is the value of cos(A)?`,
-    options: [`${Math.sqrt(1 - ((3+i/10))**2).toFixed(2)}`, `${Math.sqrt(1 - ((3+i/10)+0.1)**2).toFixed(2)}`, `${Math.sqrt(1 - ((3+i/10)+0.2)**2).toFixed(2)}`, `${Math.sqrt(1 - ((3+i/10)-0.1)**2).toFixed(2)}`],
+    question: `If sin(A) = ${(0.3+i/20).toFixed(2)}, what is the value of cos(A)?`,
+    options: [`${Math.sqrt(1 - (0.3+i/20)**2).toFixed(2)}`, `${Math.sqrt(1 - ((0.3+i/20)+0.1)**2).toFixed(2)}`, `${Math.sqrt(1 - ((0.3+i/20)+0.2)**2).toFixed(2)}`, `${Math.sqrt(1 - ((0.3+i/20)-0.1)**2).toFixed(2)}`],
     correctAnswerIndex: 0,
     subject: 'Maths',
     exam: 'SSC MTS',
     chapter: 'Trigonometry',
     translation: {
-      question: `यदि sin(A) = ${(3+i/10).toFixed(2)}, तो cos(A) का मान क्या है?`,
-      options: [`${Math.sqrt(1 - ((3+i/10))**2).toFixed(2)}`, `${Math.sqrt(1 - ((3+i/10)+0.1)**2).toFixed(2)}`, `${Math.sqrt(1 - ((3+i/10)+0.2)**2).toFixed(2)}`, `${Math.sqrt(1 - ((3+i/10)-0.1)**2).toFixed(2)}`]
+      question: `यदि sin(A) = ${(0.3+i/20).toFixed(2)}, तो cos(A) का मान क्या है?`,
+      options: [`${Math.sqrt(1 - (0.3+i/20)**2).toFixed(2)}`, `${Math.sqrt(1 - ((0.3+i/20)+0.1)**2).toFixed(2)}`, `${Math.sqrt(1 - ((0.3+i/20)+0.2)**2).toFixed(2)}`, `${Math.sqrt(1 - ((0.3+i/20)-0.1)**2).toFixed(2)}`]
     }
   })),
   'maths-statistics': Array.from({ length: 10 }, (_, i) => ({
@@ -367,7 +397,7 @@ export const staticQuestions: { [key: string]: Question[] } = {
     { id: 904, question: 'A man is facing North. He turns 90 degrees in the clockwise direction and then 180 degrees in the anti-clockwise direction. Which direction is he facing now?', options: ['East', 'West', 'North', 'South'], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CGL', translation: { question: 'एक आदमी उत्तर की ओर मुंह करके खड़ा है। वह दक्षिणावर्त दिशा में 90 डिग्री घूमता है और फिर वामावर्त दिशा में 180 डिग्री घूमता है। अब वह किस दिशा में मुंह करके खड़ा है?', options: ['पूर्व', 'पश्चिम', 'उत्तर', 'दक्षिण'] } },
     { id: 905, question: 'Which word does NOT belong with the others? Book, Page, Chapter, Index', options: ['Book', 'Page', 'Chapter', 'Index'], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL', translation: { question: 'कौन सा शब्द दूसरों से संबंधित नहीं है? पुस्तक, पृष्ठ, अध्याय, सूचकांक', options: ['पुस्तक', 'पृष्ठ', 'अध्याय', 'सूचकांक'] } },
     { id: 906, question: 'If A is the brother of B, B is the sister of C, and C is the father of D, how is D related to A?', options: ['Brother', 'Sister', 'Nephew', 'Cannot be determined'], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC MTS', translation: { question: 'यदि A, B का भाई है, B, C की बहन है, और C, D का पिता है, तो D, A से कैसे संबंधित है?', options: ['भाई', 'बहन', 'भतीजा', 'निर्धारित नहीं किया जा सकता'] } },
-    { id: 907, id: 907, question: 'Arrange the words in a meaningful sequence: 1. Police, 2. Punishment, 3. Crime, 4. Judge, 5. Judgement', options: ['3, 1, 4, 5, 2', '3, 1, 2, 4, 5', '1, 2, 3, 4, 5', '3, 4, 5, 1, 2'], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CGL', translation: { question: 'शब्दों को एक सार्थक क्रम में व्यवस्थित करें: 1. पुलिस, 2. सजा, 3. अपराध, 4. न्यायाधीश, 5. निर्णय', options: ['3, 1, 4, 5, 2', '3, 1, 2, 4, 5', '1, 2, 3, 4, 5', '3, 4, 5, 1, 2'] } },
+    { id: 907, question: 'Arrange the words in a meaningful sequence: 1. Police, 2. Punishment, 3. Crime, 4. Judge, 5. Judgement', options: ['3, 1, 4, 5, 2', '3, 1, 2, 4, 5', '1, 2, 3, 4, 5', '3, 4, 5, 1, 2'], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CGL', translation: { question: 'शब्दों को एक सार्थक क्रम में व्यवस्थित करें: 1. पुलिस, 2. सजा, 3. अपराध, 4. न्यायाधीश, 5. निर्णय', options: ['3, 1, 4, 5, 2', '3, 1, 2, 4, 5', '1, 2, 3, 4, 5', '3, 4, 5, 1, 2'] } },
     { id: 908, question: 'Find the missing number in the series: 4, 9, 25, 49, ?, 169', options: ['81', '100', '121', '144'], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL', translation: { question: 'श्रृंखला में लुप्त संख्या ज्ञात करें: 4, 9, 25, 49, ?, 169', options: ['81', '100', '121', '144'] } },
     { id: 909, question: 'A is taller than B, but shorter than C. D is taller than A. Who is the tallest?', options: ['A', 'B', 'C', 'Cannot be determined'], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC MTS', translation: { question: 'A, B से लंबा है, लेकिन C से छोटा है। D, A से लंबा है। सबसे लंबा कौन है?', options: ['A', 'B', 'C', 'निर्धारित नहीं किया जा सकता'] } },
   ],
@@ -407,3 +437,5 @@ export const getChapterById = (subjectId: string, chapterId: string) => {
     }
     return subject.chapters?.find(c => c.id === chapterId);
 };
+
+    

@@ -18,7 +18,7 @@ export type ChapterGroup = {
 
 export type MixedTest = {
     id: string;
-    name: string;
+    name:string;
 }
 
 export type Subject = {
@@ -29,6 +29,11 @@ export type Subject = {
   chapterGroups?: ChapterGroup[];
   mixedTests?: MixedTest[];
 };
+
+export type Category = {
+  id: 'general' | 'obc' | 'sc' | 'st' | 'ews';
+  name: string;
+}
 
 export interface Question {
   id: number;
@@ -73,3 +78,5 @@ export interface Attempt {
   chapterName?: string;
 }
 
+
+    
