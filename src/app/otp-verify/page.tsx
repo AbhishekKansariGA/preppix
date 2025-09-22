@@ -1,8 +1,8 @@
 
 'use client';
 
-import { Suspense } from 'react';
-import { useForm } from 'react-hook-form';
+import { Suspense, useRef } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
@@ -14,7 +14,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/context/auth-context';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -22,19 +26,19 @@ import { useEffect, useState } from 'react';
 import { toast } from '@/hooks/use-toast';
 import { Loader } from '@/components/ui/loader';
 
-const DUMMY_OTP = "123456";
-
 const formSchema = z.object({
-  otp: z.string().length(6, {
-    message: 'OTP must be 6 digits.',
+  otp: z.string().length(4, {
+    message: 'OTP must be 4 digits.',
   }),
 });
+
 
 function OTPVerificationComponent() {
   const { login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isClient, setIsClient] = useState(false);
+  const [generatedOtp, setGeneratedOtp] = useState("");
 
   const username = searchParams.get('username');
   const mobile = searchParams.get('mobile');
@@ -47,6 +51,8 @@ function OTPVerificationComponent() {
     if (tempPassword) {
       setPassword(tempPassword);
     }
+    // Generate a 4-digit OTP
+    setGeneratedOtp(Math.floor(1000 + Math.random() * 9000).toString());
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,7 +63,7 @@ function OTPVerificationComponent() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.otp === DUMMY_OTP) {
+    if (values.otp === generatedOtp) {
       if (username && password && mobile && preparingExam) {
         login(username, password, mobile, preparingExam);
         sessionStorage.removeItem('tempPassword');
@@ -103,20 +109,27 @@ function OTPVerificationComponent() {
           <CardTitle className="text-3xl font-bold font-poppins">Verify OTP</CardTitle>
           <CardDescription>
             An OTP has been sent to your mobile number {mobile}. 
-            For this demo, the OTP is <span className='font-bold text-primary'>{DUMMY_OTP}</span>.
+            For this demo, the OTP is <span className='font-bold text-primary'>{generatedOtp}</span>.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
                 name="otp"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col items-center">
                     <FormLabel>Enter OTP</FormLabel>
                     <FormControl>
-                      <Input {...field} type="number" />
+                       <InputOTP maxLength={4} {...field}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                        </InputOTPGroup>
+                      </InputOTP>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
