@@ -47,12 +47,12 @@ const dummyTopCandidates: { username: string; score: number; exam: string; subje
   { username: 'Sameera Reddy', score: 42.5, exam: 'cgl', subject: 'reasoning', category: 'sc' },
 
   // SSC CHSL - Maths
-  { username: 'Anjali Kumari', score: 18.5, exam: 'chsl', subject: 'maths', category: 'obc' },
-  { username: 'Suresh Kumar', score: 17.0, exam: 'chsl', subject: 'maths', category: 'general' },
-  { username: 'Mithali Sharma', score: 16.5, exam: 'chsl', subject: 'maths', category: 'sc' },
-  { username: 'Varun Kohli', score: 16.0, exam: 'chsl', subject: 'maths', category: 'general' },
-  { username: 'Smriti Devi', score: 15.5, exam: 'chsl', subject: 'maths', category: 'st' },
-  { username: 'Rohit Sharma', score: 15.0, exam: 'chsl', subject: 'maths', category: 'general' },
+  { username: 'Sanjay Rawat', score: 18.5, exam: 'chsl', subject: 'maths', category: 'obc' },
+  { username: 'Pankaj Joshi', score: 17.0, exam: 'chsl', subject: 'maths', category: 'general' },
+  { username: 'Mithilesh Jha', score: 16.5, exam: 'chsl', subject: 'maths', category: 'sc' },
+  { username: 'Varun Negi', score: 16.0, exam: 'chsl', subject: 'maths', category: 'general' },
+  { username: 'Smita Devi', score: 15.5, exam: 'chsl', subject: 'maths', category: 'st' },
+  { username: 'Rohit Bisht', score: 15.0, exam: 'chsl', subject: 'maths', category: 'general' },
   // SSC CHSL - English
   { username: 'Rajesh Kumar', score: 47.0, exam: 'chsl', subject: 'english', category: 'general' },
   { username: 'Divya Singh', score: 46.0, exam: 'chsl', subject: 'english', category: 'obc' },
@@ -68,20 +68,20 @@ const dummyTopCandidates: { username: string; score: number; exam: string; subje
   { username: 'Tara Devi', score: 42.0, exam: 'chsl', subject: 'gs', category: 'st' },
   { username: 'Raj Kumar', score: 41.5, exam: 'chsl', subject: 'gs', category: 'ews' },
   // SSC CHSL - Reasoning
-  { username: 'Varun Dhawan', score: 46.5, exam: 'chsl', subject: 'reasoning', category: 'general' },
-  { username: 'Alia Bhatt', score: 45.5, exam: 'chsl', subject: 'reasoning', category: 'obc' },
-  { username: 'Sidharth Malhotra', score: 45.0, exam: 'chsl', subject: 'reasoning', category: 'general' },
-  { username: 'Shraddha Kapoor', score: 44.0, exam: 'chsl', subject: 'reasoning', category: 'ews' },
-  { username: 'Arjun Kapoor', score: 43.5, exam: 'chsl', subject: 'reasoning', category: 'sc' },
-  { username: 'Parineeti Chopra', score: 43.0, exam: 'chsl', subject: 'reasoning', category: 'general' },
+  { username: 'Sandeep Chaudhary', score: 46.5, exam: 'chsl', subject: 'reasoning', category: 'general' },
+  { username: 'Anjali Sharma', score: 45.5, exam: 'chsl', subject: 'reasoning', category: 'obc' },
+  { username: 'Sidharth Rawat', score: 45.0, exam: 'chsl', subject: 'reasoning', category: 'general' },
+  { username: 'Shraddha Verma', score: 44.0, exam: 'chsl', subject: 'reasoning', category: 'ews' },
+  { username: 'Arjun Negi', score: 43.5, exam: 'chsl', subject: 'reasoning', category: 'sc' },
+  { username: 'Parineeta Shah', score: 43.0, exam: 'chsl', subject: 'reasoning', category: 'general' },
 
   // SSC MTS - Maths
-  { username: 'Tushar Shroff', score: 19.0, exam: 'mts', subject: 'maths', category: 'general' },
-  { username: 'Disha Patidar', score: 18.5, exam: 'mts', subject: 'maths', category: 'obc' },
-  { username: 'Vidyut Jamwal', score: 18.0, exam: 'mts', subject: 'maths', category: 'general' },
+  { username: 'Tushar Gupta', score: 19.0, exam: 'mts', subject: 'maths', category: 'general' },
+  { username: 'Disha Mehra', score: 18.5, exam: 'mts', subject: 'maths', category: 'obc' },
+  { username: 'Vidyut Kumar', score: 18.0, exam: 'mts', subject: 'maths', category: 'general' },
   { username: 'Adah Sharma', score: 17.5, exam: 'mts', subject: 'maths', category: 'sc' },
-  { username: 'Kriti Sanon', score: 17.0, exam: 'mts', subject: 'maths', category: 'ews' },
-  { username: 'Siddharth Shukla', score: 16.5, exam: 'mts', subject: 'maths', category: 'general' },
+  { username: 'Kriti Singh', score: 17.0, exam: 'mts', subject: 'maths', category: 'ews' },
+  { username: 'Siddharth Rana', score: 16.5, exam: 'mts', subject: 'maths', category: 'general' },
   // SSC MTS - GS
   { username: 'Sunita Devi', score: 49.0, exam: 'mts', subject: 'gs', category: 'ews' },
   { username: 'Pankaj Tripathi', score: 48.0, exam: 'mts', subject: 'gs', category: 'general' },
@@ -97,11 +97,11 @@ const dummyTopCandidates: { username: string; score: number; exam: string; subje
   { username: 'Irrfan Khan', score: 44.0, exam: 'mts', subject: 'reasoning', category: 'st' },
   { username: 'Richa Chadha', score: 43.5, exam: 'mts', subject: 'reasoning', category: 'ews' },
   // SSC MTS - English
-  { username: 'Ranveer Singh', score: 48.5, exam: 'mts', subject: 'english', category: 'general' },
-  { username: 'Deepika Padukone', score: 48.0, exam: 'mts', subject: 'english', category: 'general' },
-  { username: 'Ranbir Kapoor', score: 47.0, exam: 'mts', subject: 'english', category: 'general' },
-  { username: 'Priyanka Chopra', score: 46.5, exam: 'mts', subject: 'english', category: 'obc' },
-  { username: 'Shahid Kapoor', score: 46.0, exam: 'mts', subject: 'english', category: 'ews' },
+  { username: 'Ranjeet Singh', score: 48.5, exam: 'mts', subject: 'english', category: 'general' },
+  { username: 'Divya Khanna', score: 48.0, exam: 'mts', subject: 'english', category: 'general' },
+  { username: 'Ranjeev Kapoor', score: 47.0, exam: 'mts', subject: 'english', category: 'general' },
+  { username: 'Priya Chauhan', score: 46.5, exam: 'mts', subject: 'english', category: 'obc' },
+  { username: 'Sahil Kumar', score: 46.0, exam: 'mts', subject: 'english', category: 'ews' },
   { username: 'Anushka Sharma', score: 45.5, exam: 'mts', subject: 'english', category: 'general' },
 ];
 
