@@ -1,14 +1,14 @@
 
 'use client'
-import { getExamById, getSubjectById, getChapterById } from '@/lib/data';
+import { getExamById, getSubjectById } from '@/lib/data';
 import { notFound, useRouter, useParams } from 'next/navigation';
-import { TestClient } from '@/components/mock-test/TestClient';
 import { useAuth } from '@/context/auth-context';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTestStore } from '@/hooks/use-test-store';
 
 export default function SubjectTestPage() {
   const params = useParams();
@@ -19,6 +19,7 @@ export default function SubjectTestPage() {
   const subjectData = getSubjectById(subjectId);
   
   const { isAuthenticated, isAuthInitialized } = useAuth();
+  const { attempts } = useTestStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +38,12 @@ export default function SubjectTestPage() {
 
   // If subject has mixed tests (like GS), show test selection page
   if (subjectData.mixedTests) {
+    const attemptedTestIds = new Set(
+        attempts
+            .filter(a => a.examId === exam.id && a.subjectId === subjectData.id && a.chapterId)
+            .map(a => a.chapterId)
+    );
+
     return (
       <div className="space-y-8">
         <div className="text-center">
@@ -44,26 +51,32 @@ export default function SubjectTestPage() {
             {exam.name} - {subjectData.name} Tests
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Choose a test to start.
+            Choose a test to start. Completed tests are marked with a tick.
           </p>
         </div>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {subjectData.mixedTests.map((test) => (
-              <Link href={`/tests/${exam.id}/${subjectData.id}/${test.id}/test`} key={test.id} className="group">
-                  <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
-                  <CardHeader className='flex-1'>
-                      <CardTitle className="text-xl font-semibold font-poppins text-foreground">{test.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                      <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
-                      <span>Start Test</span>
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                      </Button>
-                  </CardContent>
-                  </Card>
-              </Link>
-          ))}
+          {subjectData.mixedTests.map((test) => {
+              const isAttempted = attemptedTestIds.has(test.id);
+              return (
+                <Link href={`/tests/${exam.id}/${subjectData.id}/${test.id}/test`} key={test.id} className="group">
+                    <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
+                    <CardHeader className='flex-1'>
+                        <div className='flex items-center gap-2'>
+                          {isAttempted && <CheckCircle2 className="h-5 w-5 text-green-500" />}
+                          <CardTitle className="text-xl font-semibold font-poppins text-foreground">{test.name}</CardTitle>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
+                        <span>{isAttempted ? "Retake Test" : "Start Test"}</span>
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Button>
+                    </CardContent>
+                    </Card>
+                </Link>
+              )
+          })}
         </div>
       </div>
     );
@@ -71,6 +84,11 @@ export default function SubjectTestPage() {
 
   // If subject has chapters, show chapter selection page
   if (subjectData.chapters) {
+     const attemptedChapterIds = new Set(
+        attempts
+            .filter(a => a.examId === exam.id && a.subjectId === subjectData.id && a.chapterId)
+            .map(a => a.chapterId)
+    );
     return (
       <div className="space-y-8">
         <div className="text-center">
@@ -78,26 +96,32 @@ export default function SubjectTestPage() {
             {exam.name} - {subjectData.name} Chapters
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Choose a chapter to start the test.
+            Choose a chapter to start the test. Completed tests are marked with a tick.
           </p>
         </div>
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {subjectData.chapters.map((chapter) => (
+          {subjectData.chapters.map((chapter) => {
+             const isAttempted = attemptedChapterIds.has(chapter.id);
+             return (
               <Link href={`/tests/${exam.id}/${subjectData.id}/${chapter.id}/test`} key={chapter.id} className="group">
                   <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
                   <CardHeader className='flex-1'>
-                      <CardTitle className="text-xl font-semibold font-poppins text-foreground">{chapter.name}</CardTitle>
+                      <div className='flex items-center gap-2'>
+                        {isAttempted && <CheckCircle2 className="h-5 w-5 text-green-500" />}
+                        <CardTitle className="text-xl font-semibold font-poppins text-foreground">{chapter.name}</CardTitle>
+                      </div>
                   </CardHeader>
                   <CardContent>
                       <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
-                      <span>Start Test</span>
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        <span>{isAttempted ? "Retake Test" : "Start Test"}</span>
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                       </Button>
                   </CardContent>
                   </Card>
               </Link>
-          ))}
+             )
+          })}
         </div>
       </div>
     );
@@ -110,14 +134,6 @@ export default function SubjectTestPage() {
   }
 
   // Default to full test if no chapters/groups
-  const { icon: Icon, ...subject } = subjectData;
-
-  return (
-    <div className='mt-8'>
-    <TestClient
-      exam={exam}
-      subject={subject}
-    />
-    </div>
-  );
+  router.push(`/tests/${exam.id}/${subjectData.id}/test`);
+  return null;
 }
