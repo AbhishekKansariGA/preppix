@@ -5,7 +5,7 @@ import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 import { mathsQuestions } from './questions/maths';
 import { allGsQuestions } from './questions/gs';
 import { allReasoningQuestions } from './questions/reasoning';
-import { englishQuestions } from './questions/english';
+import { allEnglishQuestions } from './questions/english';
 
 
 export const exams: Exam[] = [
@@ -80,6 +80,11 @@ export const reasoningMixedTests: MixedTest[] = Array.from({ length: 10 }, (_, i
     name: `Test ${i + 1}`
 }));
 
+export const englishMixedTests: MixedTest[] = Array.from({ length: 10 }, (_, i) => ({
+    id: `test-${i + 1}`,
+    name: `Test ${i + 1}`
+}));
+
 
 export const subjects: Subject[] = [
   { 
@@ -103,7 +108,12 @@ export const subjects: Subject[] = [
     icon: BrainCircuit,
     mixedTests: reasoningMixedTests
   },
-  { id: 'english', name: 'English', icon: Mic2 },
+  { 
+    id: 'english', 
+    name: 'English', 
+    icon: Mic2,
+    mixedTests: englishMixedTests
+  },
 ];
 
 // Function to shuffle an array
@@ -141,7 +151,11 @@ const staticQuestions: { [key: string]: Question[] } = {
     acc[`reasoning-${test.id}`] = testQuestions;
     return acc;
   }, {} as { [key: string]: Question[] }),
-  'english': fullTestQuestions(englishQuestions, 25),
+  ...englishMixedTests.reduce((acc, test) => {
+    const testQuestions = shuffle([...allEnglishQuestions]).slice(0, 25);
+    acc[`english-${test.id}`] = testQuestions;
+    return acc;
+  }, {} as { [key: string]: Question[] }),
 };
 
 export const getQuestions = (subjectId: string, chapterId?: string): Question[] => {
@@ -163,7 +177,7 @@ export const getChapterById = (subjectId: string, chapterId: string) => {
     const subject = subjects.find(s => s.id === subjectId);
     if (!subject) return undefined;
     
-    if ((subject.id === 'gs' || subject.id === 'reasoning') && subject.mixedTests) {
+    if ((subject.id === 'gs' || subject.id === 'reasoning' || subject.id === 'english') && subject.mixedTests) {
         return subject.mixedTests.find(t => t.id === chapterId);
     }
 
@@ -172,3 +186,4 @@ export const getChapterById = (subjectId: string, chapterId: string) => {
     }
     return subject.chapters?.find(c => c.id === chapterId);
 };
+

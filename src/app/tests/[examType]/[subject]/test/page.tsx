@@ -26,7 +26,7 @@ export default function TestPage() {
     notFound();
   }
   
-  if (subjectId === 'maths' || subjectId === 'reasoning' || subjectId === 'gs') {
+  if (subjectId === 'maths' || subjectId === 'reasoning' || subjectId === 'gs' || subjectId === 'english') {
       // This page is for full subject tests, not for subjects with chapters/mixed tests
       notFound();
   }
@@ -46,3 +46,4 @@ export default function TestPage() {
     </div>
   );
 }
+
