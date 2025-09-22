@@ -1,4 +1,5 @@
 
+
 import { Exam, Subject, Question, Chapter } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 
@@ -8,177 +9,82 @@ export const exams: Exam[] = [
   { id: 'mts', name: 'SSC MTS', description: 'Multi-Tasking Staff' },
 ];
 
-export const mathsChapters: Chapter[] = [
-    { id: 'percentage', name: 'Percentage' },
-    { id: 'profit-loss', name: 'Profit & Loss' },
-    { id: 'average', name: 'Average' },
-    { id: 'si-ci', name: 'Simple & Compound Interest' },
-    { id: 'discount', name: 'Discount' },
-    { id: 'boat-stream', name: 'Boat and Stream' },
-    { id: 'di', name: 'Data Interpretation' },
+export const arithmeticChapters: Chapter[] = [
+    { id: 'number-system', name: 'Number System' },
+    { id: 'percentages', name: 'Percentages' },
+    { id: 'ratio-proportion', name: 'Ratio and Proportion' },
+    { id: 'averages', name: 'Averages' },
+    { id: 'si-ci', name: 'Simple and Compound Interest' },
+    { id: 'profit-loss-discount', name: 'Profit, Loss and Discount' },
+    { id: 'mixtures-allegations', name: 'Mixtures and Allegations' },
+    { id: 'time-work', name: 'Time and Work' },
+    { id: 'time-speed-distance', name: 'Time, Speed and Distance' },
+    { id: 'partnership', name: 'Partnership' },
 ];
 
+export const advancedChapters: Chapter[] = [
+    { id: 'algebra', name: 'Algebra' },
+    { id: 'geometry', name: 'Geometry' },
+    { id: 'mensuration', name: 'Mensuration' },
+    { id: 'trigonometry', name: 'Trigonometry' },
+    { id: 'statistics', name: 'Statistics' },
+    { id: 'probability', name: 'Probability' },
+    { id: 'di', name: 'Data Interpretation' },
+    { id: 'coordinate-geometry', name: 'Coordinate Geometry' },
+];
+
+export const allMathsChapters: Chapter[] = [...arithmeticChapters, ...advancedChapters];
+
 export const subjects: Subject[] = [
-  { id: 'maths', name: 'Maths', icon: Calculator, chapters: mathsChapters },
+  { 
+    id: 'maths', 
+    name: 'Maths', 
+    icon: Calculator,
+    chapterGroups: [
+        { title: 'Arithmetic', chapters: arithmeticChapters },
+        { title: 'Advanced Maths', chapters: advancedChapters },
+    ]
+  },
   { id: 'gs', name: 'General Studies', icon: BookOpen },
   { id: 'reasoning', name: 'Reasoning', icon: BrainCircuit },
   { id: 'english', name: 'English', icon: Mic2 },
 ];
 
 export const staticQuestions: { [key: string]: Question[] } = {
-  'maths-percentage': [
-    {
-      id: 100,
-      question: 'If a number is increased by 25%, by what percentage must the new number be decreased to return to the original number?',
-      options: ['20%', '25%', '15%', '30%'],
-      correctAnswerIndex: 0,
-      subject: 'Maths',
-      exam: 'SSC CGL',
-      chapter: 'Percentage',
-      translation: {
-        question: 'यदि किसी संख्या में 25% की वृद्धि की जाती है, तो मूल संख्या पर वापस आने के लिए नई संख्या में कितने प्रतिशत की कमी करनी होगी?',
-        options: ['20%', '25%', '15%', '30%']
-      }
-    },
-    {
-      id: 101,
-      question: 'A man\'s salary is decreased by 50%. By what percent should his new salary be increased to restore the original salary?',
-      options: ['50%', '100%', '75%', '80%'],
-      correctAnswerIndex: 1,
-      subject: 'Maths',
-      exam: 'SSC CGL',
-      chapter: 'Percentage',
-      translation: {
-        question: 'एक आदमी का वेतन 50% कम हो जाता है। मूल वेतन को बहाल करने के लिए उसके नए वेतन में कितने प्रतिशत की वृद्धि की जानी चाहिए?',
-        options: ['50%', '100%', '75%', '80%']
-      }
-    },
-    {
-      id: 102,
-      question: 'What is 20% of 50% of 300?',
-      options: ['30', '15', '60', '45'],
-      correctAnswerIndex: 0,
-      subject: 'Maths',
-      exam: 'SSC CGL',
-      chapter: 'Percentage',
-      translation: {
-        question: '300 का 50% का 20% क्या है?',
-        options: ['30', '15', '60', '45']
-      }
-    },
-    {
-        id: 103,
-        question: 'If 40% of a number is 240, what is the number?',
-        options: ['600', '500', '480', '720'],
-        correctAnswerIndex: 0,
-        subject: 'Maths',
-        exam: 'SSC CGL',
-        chapter: 'Percentage',
-        translation: {
-            question: 'यदि किसी संख्या का 40% 240 है, तो वह संख्या क्या है?',
-            options: ['600', '500', '480', '720']
-        }
-    },
-    {
-        id: 104,
-        question: 'A student has to secure 40% marks to pass. He gets 40 marks and fails by 40 marks. What are the maximum marks?',
-        options: ['100', '150', '200', '250'],
-        correctAnswerIndex: 2,
-        subject: 'Maths',
-        exam: 'SSC CHSL',
-        chapter: 'Percentage',
-        translation: {
-            question: 'एक छात्र को पास होने के लिए 40% अंक प्राप्त करने होते हैं। उसे 40 अंक मिलते हैं और वह 40 अंकों से फेल हो जाता है। अधिकतम अंक क्या हैं?',
-            options: ['100', '150', '200', '250']
-        }
-    },
-    {
-        id: 105,
-        question: 'The price of sugar is increased by 20%. By how much percent must a family reduce its consumption to keep the expenditure the same?',
-        options: ['20%', '25%', '16.66%', '15%'],
-        correctAnswerIndex: 2,
-        subject: 'Maths',
-        exam: 'SSC MTS',
-        chapter: 'Percentage',
-        translation: {
-            question: 'चीनी की कीमत में 20% की वृद्धि होती है। एक परिवार को खर्च को समान रखने के लिए अपनी खपत में कितने प्रतिशत की कमी करनी चाहिए?',
-            options: ['20%', '25%', '16.66%', '15%']
-        }
-    },
-    {
-        id: 106,
-        question: 'In an election, a candidate who gets 60% of the votes is elected by a majority of 120 votes. What is the total number of votes polled?',
-        options: ['300', '400', '500', '600'],
-        correctAnswerIndex: 3,
-        subject: 'Maths',
-        exam: 'SSC CGL',
-        chapter: 'Percentage',
-        translation: {
-            question: 'एक चुनाव में, 60% वोट पाने वाला उम्मीदवार 120 वोटों के बहुमत से चुना जाता है। डाले गए वोटों की कुल संख्या क्या है?',
-            options: ['300', '400', '500', '600']
-        }
-    },
-    {
-        id: 107,
-        question: 'If the length of a rectangle is increased by 10% and the breadth is decreased by 10%, what is the change in its area?',
-        options: ['1% increase', '1% decrease', 'No change', '2% decrease'],
-        correctAnswerIndex: 1,
-        subject: 'Maths',
-        exam: 'SSC CHSL',
-        chapter: 'Percentage',
-        translation: {
-            question: 'यदि एक आयत की लंबाई में 10% की वृद्धि होती है और चौड़ाई में 10% की कमी होती है, तो उसके क्षेत्रफल में क्या परिवर्तन होता है?',
-            options: ['1% वृद्धि', '1% कमी', 'कोई परिवर्तन नहीं', '2% कमी']
-        }
-    },
-    {
-        id: 108,
-        question: 'Out of 80 students, 30% are girls. How many boys are there?',
-        options: ['24', '56', '30', '50'],
-        correctAnswerIndex: 1,
-        subject: 'Maths',
-        exam: 'SSC MTS',
-        chapter: 'Percentage',
-        translation: {
-            question: '80 छात्रों में से 30% लड़कियां हैं। कितने लड़के हैं?',
-            options: ['24', '56', '30', '50']
-        }
-    },
-    {
-        id: 109,
-        question: 'A number is first increased by 20% and then decreased by 20%. What is the net change in the number?',
-        options: ['4% increase', '4% decrease', 'No change', '2% increase'],
-        correctAnswerIndex: 1,
-        subject: 'Maths',
-        exam: 'SSC CGL',
-        chapter: 'Percentage',
-        translation: {
-            question: 'एक संख्या में पहले 20% की वृद्धि की जाती है और फिर 20% की कमी की जाती है। संख्या में शुद्ध परिवर्तन क्या है?',
-            options: ['4% वृद्धि', '4% कमी', 'कोई परिवर्तन नहीं', '2% वृद्धि']
-        }
-    },
-  ],
-  'maths-profit-loss': Array.from({ length: 10 }, (_, i) => ({
+  'maths-percentages': Array.from({ length: 10 }, (_, i) => ({
+    id: 100 + i,
+    question: `If a number is increased by ${10 + i}%, by what percentage must the new number be decreased to return to the original number?`,
+    options: [`${(100 * (10 + i)) / (110 + i)}%`, '25%', '15%', '30%'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CGL',
+    chapter: 'Percentages',
+    translation: {
+      question: `यदि किसी संख्या में ${10 + i}% की वृद्धि की जाती है, तो मूल संख्या पर वापस आने के लिए नई संख्या में कितने प्रतिशत की कमी करनी होगी?`,
+      options: [`${(100 * (10 + i)) / (110 + i)}%`, '25%', '15%', '30%']
+    }
+  })),
+  'maths-profit-loss-discount': Array.from({ length: 10 }, (_, i) => ({
     id: 200 + i,
     question: `A shopkeeper sells an item for Rs. ${550 + i*10} at a profit of 10%. What is the cost price?`,
     options: [`Rs. ${500 + i*10}`, `Rs. ${525 + i*10}`, `Rs. ${475 + i*10}`, `Rs. ${450 + i*10}`],
     correctAnswerIndex: 0,
     subject: 'Maths',
     exam: 'SSC CGL',
-    chapter: 'Profit & Loss',
+    chapter: 'Profit, Loss and Discount',
      translation: {
         question: `एक दुकानदार 10% के लाभ पर एक वस्तु को ${550 + i*10} रुपये में बेचता है। लागत मूल्य क्या है?`,
         options: [`रु. ${500 + i*10}`, `रु. ${525 + i*10}`, `रु. ${475 + i*10}`, `रु. ${450 + i*10}`]
     }
   })),
-  'maths-average': Array.from({ length: 10 }, (_, i) => ({
+  'maths-averages': Array.from({ length: 10 }, (_, i) => ({
     id: 300 + i,
     question: `The average of 5 consecutive numbers is ${15 + i}. What is the largest number?`,
     options: [`${16+i}`, `${17+i}`, `${18+i}`, `${19+i}`],
     correctAnswerIndex: 1,
     subject: 'Maths',
     exam: 'SSC CGL',
-    chapter: 'Average',
+    chapter: 'Averages',
      translation: {
         question: `5 लगातार संख्याओं का औसत ${15 + i} है। सबसे बड़ी संख्या क्या है?`,
         options: [`${16+i}`, `${17+i}`, `${18+i}`, `${19+i}`]
@@ -197,30 +103,160 @@ export const staticQuestions: { [key: string]: Question[] } = {
         options: [`रु. ${100 + i*10}`, `रु. ${110 + i*10}`, `रु. ${120 + i*10}`, `रु. ${130 + i*10}`]
     }
   })),
-   'maths-discount': Array.from({ length: 10 }, (_, i) => ({
+   'maths-time-work': Array.from({ length: 10 }, (_, i) => ({
     id: 500 + i,
-    question: `A shopkeeper gives a 20% discount on an item marked at Rs. ${1000 + i * 50}. What is the selling price?`,
-    options: [`Rs. ${800 + i*40}`, `Rs. ${900 + i*40}`, `Rs. ${750 + i*40}`, `Rs. ${850 + i*40}`],
+    question: `A can do a piece of work in ${10 + i} days. B can do it in ${15 + i} days. In how many days can they do it together?`,
+    options: [`${(10+i)*(15+i)/(25+2*i)} days`, `7 days`, `8 days`, `9 days`],
     correctAnswerIndex: 0,
     subject: 'Maths',
     exam: 'SSC CGL',
-    chapter: 'Discount',
+    chapter: 'Time and Work',
     translation: {
-        question: `एक दुकानदार ${1000 + i * 50} रुपये की चिह्नित वस्तु पर 20% की छूट देता है। विक्रय मूल्य क्या है?`,
-        options: [`रु. ${800 + i*40}`, `रु. ${900 + i*40}`, `रु. ${750 + i*40}`, `रु. ${850 + i*40}`]
+        question: `A एक काम को ${10 + i} दिनों में कर सकता है। B उसे ${15 + i} दिनों में कर सकता है। वे दोनों मिलकर इसे कितने दिनों में कर सकते हैं?`,
+        options: [`${(10+i)*(15+i)/(25+2*i)} दिन`, `7 दिन`, `8 दिन`, `9 दिन`]
     }
   })),
-  'maths-boat-stream': Array.from({ length: 10 }, (_, i) => ({
-    id: 600 + i,
-    question: `A boat goes ${10 + i*2} km upstream in 2 hours. The speed of the stream is 1 km/h. What is the speed of the boat in still water?`,
-    options: [`${4 + i} km/h`, `${5 + i} km/h`, `${6 + i} km/h`, `${7 + i} km/h`],
-    correctAnswerIndex: 2,
+    'maths-number-system': Array.from({ length: 10 }, (_, i) => ({
+    id: 1100 + i,
+    question: `What is the unit digit of ${3 + i}^${4 + i}?`,
+    options: [`1`, `3`, `7`, `9`],
+    correctAnswerIndex: 0,
     subject: 'Maths',
     exam: 'SSC CGL',
-    chapter: 'Boat and Stream',
+    chapter: 'Number System',
     translation: {
-        question: `एक नाव 2 घंटे में ${10 + i*2} किमी धारा के प्रतिकूल जाती है। धारा की गति 1 किमी/घंटा है। शांत जल में नाव की गति क्या है?`,
-        options: [`${4 + i} किमी/घंटा`, `${5 + i} किमी/घंटा`, `${6 + i} किमी/घंटा`, `${7 + i} किमी/घंटा`]
+      question: `${3 + i}^${4 + i} का इकाई अंक क्या है?`,
+      options: [`1`, `3`, `7`, `9`]
+    }
+  })),
+  'maths-ratio-proportion': Array.from({ length: 10 }, (_, i) => ({
+    id: 1200 + i,
+    question: `If a:b = ${2 + i}:${3 + i} and b:c = ${4 + i}:${5 + i}, what is a:c?`,
+    options: [`${(2+i)*(4+i)}:${(3+i)*(5+i)}`, '2:5', '8:15', '1:2'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CHSL',
+    chapter: 'Ratio and Proportion',
+    translation: {
+      question: `यदि a:b = ${2 + i}:${3 + i} और b:c = ${4 + i}:${5 + i}, तो a:c क्या है?`,
+      options: [`${(2+i)*(4+i)}:${(3+i)*(5+i)}`, '2:5', '8:15', '1:2']
+    }
+  })),
+  'maths-mixtures-allegations': Array.from({ length: 10 }, (_, i) => ({
+    id: 1300 + i,
+    question: `In what ratio must a grocer mix two varieties of pulses costing Rs. ${15 + i} and Rs. ${20 + i} per kg respectively so as to get a mixture worth Rs. ${16.5 + i} kg?`,
+    options: [`7:3`, `5:3`, `3:7`, `3:5`],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CGL',
+    chapter: 'Mixtures and Allegations',
+    translation: {
+      question: `एक पंसारी को क्रमशः ${15 + i} रुपये और ${20 + i} रुपये प्रति किलो लागत वाली दो किस्मों की दालों को किस अनुपात में मिलाना चाहिए ताकि ${16.5 + i} रुपये किलो का मिश्रण प्राप्त हो सके?`,
+      options: [`7:3`, `5:3`, `3:7`, `3:5`]
+    }
+  })),
+  'maths-time-speed-distance': Array.from({ length: 10 }, (_, i) => ({
+    id: 1400 + i,
+    question: `A train ${100 + i*10} m long is running at the speed of 30 km/hr. Find the time taken by it to pass a man standing near the railway line.`,
+    options: [`${12 + i} sec`, `${15 + i} sec`, `${10 + i} sec`, `${11 + i} sec`],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC MTS',
+    chapter: 'Time, Speed and Distance',
+    translation: {
+      question: `${100 + i*10} मीटर लंबी एक ट्रेन 30 किमी/घंटा की गति से चल रही है। रेलवे लाइन के पास खड़े एक आदमी को पार करने में उसे कितना समय लगेगा?`,
+      options: [`${12 + i} सेकंड`, `${15 + i} सेकंड`, `${10 + i} सेकंड`, `${11 + i} सेकंड`]
+    }
+  })),
+  'maths-partnership': Array.from({ length: 10 }, (_, i) => ({
+    id: 1500 + i,
+    question: `A and B start a business with capitals of Rs. ${3000 + i*100} and Rs. ${4000 + i*100}. Find the share of A in a profit of Rs. ${1400 + i*100}.`,
+    options: [`Rs. ${600 + i*50}`, `Rs. 800`, `Rs. 700`, `Rs. 500`],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CGL',
+    chapter: 'Partnership',
+    translation: {
+      question: `A और B क्रमशः ${3000 + i*100} रुपये और ${4000 + i*100} रुपये की पूंजी के साथ एक व्यवसाय शुरू करते हैं। ${1400 + i*100} रुपये के लाभ में A का हिस्सा ज्ञात करें।`,
+      options: [`रु. ${600 + i*50}`, `रु. 800`, `रु. 700`, `रु. 500`]
+    }
+  })),
+  'maths-algebra': Array.from({ length: 10 }, (_, i) => ({
+    id: 1600 + i,
+    question: `If x + 1/x = ${3 + i}, then what is the value of x^2 + 1/x^2?`,
+    options: [`${(3+i)**2 - 2}`, '11', '12', '13'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CGL',
+    chapter: 'Algebra',
+    translation: {
+      question: `यदि x + 1/x = ${3 + i}, तो x^2 + 1/x^2 का मान क्या है?`,
+      options: [`${(3+i)**2 - 2}`, '11', '12', '13']
+    }
+  })),
+  'maths-geometry': Array.from({ length: 10 }, (_, i) => ({
+    id: 1700 + i,
+    question: `In a circle, a chord of length ${6 + i} cm is at a distance of ${4 + i} cm from the center. What is the radius of the circle?`,
+    options: [`${Math.sqrt((3+i/2)**2 + (4+i)**2)} cm`, '5 cm', '6 cm', '7 cm'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CHSL',
+    chapter: 'Geometry',
+    translation: {
+      question: `एक वृत्त में, ${6 + i} सेमी लंबाई की एक जीवा केंद्र से ${4 + i} सेमी की दूरी पर है। वृत्त की त्रिज्या क्या है?`,
+      options: [`${Math.sqrt((3+i/2)**2 + (4+i)**2)} सेमी`, '5 सेमी', '6 सेमी', '7 सेमी']
+    }
+  })),
+  'maths-mensuration': Array.from({ length: 10 }, (_, i) => ({
+    id: 1800 + i,
+    question: `The area of a square field is ${64 + i*10} sq.m. What is the length of its diagonal?`,
+    options: [`${Math.sqrt(2 * (64 + i*10))} m`, '10 m', '12 m', '14 m'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CGL',
+    chapter: 'Mensuration',
+    translation: {
+      question: `एक वर्गाकार मैदान का क्षेत्रफल ${64 + i*10} वर्ग मीटर है। इसके विकर्ण की लंबाई क्या है?`,
+      options: [`${Math.sqrt(2 * (64 + i*10))} मीटर`, '10 मीटर', '12 मीटर', '14 मीटर']
+    }
+  })),
+  'maths-trigonometry': Array.from({ length: 10 }, (_, i) => ({
+    id: 1900 + i,
+    question: `If sin(A) = ${3+i}/5, what is the value of cos(A)?`,
+    options: [`${Math.sqrt(1 - ((3+i)/5)**2)}`, '4/5', '3/4', '5/3'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC MTS',
+    chapter: 'Trigonometry',
+    translation: {
+      question: `यदि sin(A) = ${3+i}/5, तो cos(A) का मान क्या है?`,
+      options: [`${Math.sqrt(1 - ((3+i)/5)**2)}`, '4/5', '3/4', '5/3']
+    }
+  })),
+  'maths-statistics': Array.from({ length: 10 }, (_, i) => ({
+    id: 2000 + i,
+    question: `Find the mean of the first ${5 + i} natural numbers.`,
+    options: [`${(5+i+1)/2}`, '3', '3.5', '4'],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CGL',
+    chapter: 'Statistics',
+    translation: {
+      question: `पहले ${5 + i} प्राकृतिक संख्याओं का माध्य ज्ञात कीजिए।`,
+      options: [`${(5+i+1)/2}`, '3', '3.5', '4']
+    }
+  })),
+  'maths-probability': Array.from({ length: 10 }, (_, i) => ({
+    id: 2100 + i,
+    question: `What is the probability of getting a head when a coin is tossed ${i + 1} times?`,
+    options: [`1/2`, `1/3`, `1/4`, `1/5`],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC CHSL',
+    chapter: 'Probability',
+    translation: {
+      question: `एक सिक्के को ${i + 1} बार उछालने पर चित आने की क्या प्रायिकता है?`,
+      options: [`1/2`, `1/3`, `1/4`, `1/5`]
     }
   })),
   'maths-di': Array.from({ length: 10 }, (_, i) => ({
@@ -234,6 +270,19 @@ export const staticQuestions: { [key: string]: Question[] } = {
     translation: {
         question: `एक पाई चार्ट खर्चों का वितरण दिखाता है। यदि कुल व्यय 1,00,000 रुपये है, तो भोजन पर व्यय (${40 + i}%) क्या है?`,
         options: [`रु. ${30000 + i*1000}`, `रु. ${40000 + i*1000}`, `रु. ${50000 + i*1000}`, `रु. ${60000 + i*1000}`]
+    }
+  })),
+   'maths-coordinate-geometry': Array.from({ length: 10 }, (_, i) => ({
+    id: 2200 + i,
+    question: `Find the distance between the points (${i}, ${i+2}) and (${i+3}, ${i+6}).`,
+    options: [`5`, `6`, `7`, `8`],
+    correctAnswerIndex: 0,
+    subject: 'Maths',
+    exam: 'SSC MTS',
+    chapter: 'Coordinate Geometry',
+    translation: {
+        question: `बिंदुओं (${i}, ${i+2}) और (${i+3}, ${i+6}) के बीच की दूरी ज्ञात कीजिए।`,
+        options: [`5`, `6`, `7`, `8`]
     }
   })),
   'gs': [
@@ -285,5 +334,5 @@ export const getExamById = (id: string) => exams.find(e => e.id === id);
 export const getSubjectById = (id: string) => subjects.find(s => s.id === id);
 export const getChapterById = (subjectId: string, chapterId: string) => {
     if (subjectId !== 'maths') return undefined;
-    return mathsChapters.find(c => c.id === chapterId);
+    return allMathsChapters.find(c => c.id === chapterId);
 };

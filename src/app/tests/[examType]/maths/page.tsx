@@ -1,4 +1,5 @@
 
+
 'use client';
 import Link from 'next/link';
 import { notFound, useParams, useRouter } from 'next/navigation';
@@ -27,7 +28,7 @@ export default function MathsChapterPage() {
     return null;
   }
 
-  if (!exam || !subject || !subject.chapters) {
+  if (!exam || !subject || !subject.chapterGroups) {
     notFound();
   }
   
@@ -41,23 +42,29 @@ export default function MathsChapterPage() {
           Choose a chapter to start the test.
         </p>
       </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {subject.chapters.map((chapter) => (
-             <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
-                <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
-                  <CardHeader className='flex-1'>
-                    <CardTitle className="text-xl font-semibold font-poppins text-primary">{chapter.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
-                      <span>Start Test</span>
-                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                    </Button>
-                  </CardContent>
-                </Card>
-            </Link>
-          ))}
+      
+      {subject.chapterGroups.map((group) => (
+        <div key={group.title}>
+            <h2 className="text-2xl font-bold tracking-tight mb-4 text-primary">{group.title}</h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {group.chapters.map((chapter) => (
+                <Link href={`/tests/${exam.id}/maths/${chapter.id}`} key={chapter.id} className="group">
+                    <Card className="h-full bg-secondary/30 hover:bg-secondary/60 cursor-pointer flex flex-col">
+                    <CardHeader className='flex-1'>
+                        <CardTitle className="text-xl font-semibold font-poppins text-foreground">{chapter.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Button variant="outline" className="w-full group-hover:bg-primary/20 group-hover:border-primary">
+                        <span>Start Test</span>
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Button>
+                    </CardContent>
+                    </Card>
+                </Link>
+            ))}
+            </div>
         </div>
+      ))}
     </div>
   );
 }

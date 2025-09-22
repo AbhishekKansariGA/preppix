@@ -1,4 +1,5 @@
 
+
 export type Exam = {
   id: string;
   name: string;
@@ -10,11 +11,17 @@ export type Chapter = {
   name: string;
 };
 
+export type ChapterGroup = {
+  title: string;
+  chapters: Chapter[];
+}
+
 export type Subject = {
   id: string;
   name: string;
   icon: React.ElementType;
   chapters?: Chapter[];
+  chapterGroups?: ChapterGroup[];
 };
 
 export interface Question {
