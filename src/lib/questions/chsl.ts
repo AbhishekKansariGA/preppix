@@ -1,40 +1,124 @@
-
 import { Question } from '../types';
 
 export const chslQuestions: Question[] = [
   // --- Maths (Moderate) ---
-  // Percentages
-  { id: 11001, question: "If 15% of a number is 45, what is the number?", options: ["200", "300", "150", "450"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
-  { id: 11002, question: "A man spends 75% of his income. If his income increases by 20% and his expenditure increases by 10%, his savings will be increased by:", options: ["40%", "50%", "30%", "25%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  // Number System (10)
+  { id: 11001, question: "What is the largest 4-digit number exactly divisible by 88?", options: ["9944", "9900", "9988", "8888"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11002, question: "The sum of two numbers is 40 and their product is 375. What will be the sum of their reciprocals?", options: ["8/75", "1/40", "75/8", "75/4"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11003, question: "Find the unit digit in the product (2467)^153 * (341)^72.", options: ["1", "3", "7", "9"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11004, question: "A number when divided by 6 leaves a remainder 3. When the square of the same number is divided by 6, the remainder is:", options: ["0", "1", "2", "3"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11005, question: "The HCF of two numbers is 23 and their LCM is 1449. If one of the numbers is 161, the other is:", options: ["207", "307", "187", "227"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11006, question: "Which of the following is a prime number?", options: ["117", "147", "177", "197"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11007, question: "The value of 5 + [4 - (6 - 2 - 1)] is:", options: ["5", "4", "3", "2"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11008, question: "If a number is divisible by both 11 and 13, then it must be necessarily divisible by:", options: ["11+13", "13-11", "11*13", "None of these"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11009, question: "Find the sum of first 30 natural numbers.", options: ["465", "455", "475", "485"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
+  { id: 11010, question: "What is the local value of 7 in the numeral 657982?", options: ["7000", "700", "70", "7"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'number-system' },
 
-  // Profit & Loss
-  { id: 11003, question: "A shopkeeper sells an article for Rs. 492 after allowing a discount of 18%. Find the marked price.", options: ["Rs. 580", "Rs. 600", "Rs. 620", "Rs. 550"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'profit-loss-discount' },
-  { id: 11004, question: "The cost price of 15 articles is the same as the selling price of 10 articles. The profit percent is:", options: ["30%", "40%", "50%", "45%"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CHSL', chapter: 'profit-loss-discount' },
-
-  // Algebra
-  { id: 11005, question: "If x + 1/x = 4, then find the value of x² + 1/x².", options: ["14", "16", "12", "18"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
-  { id: 11006, question: "Find the factors of x² - 5x + 6.", options: ["(x-2)(x-3)", "(x+2)(x+3)", "(x-2)(x+3)", "(x+2)(x-3)"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
-
-  // Geometry
-  { id: 11007, question: "The angles of a quadrilateral are in the ratio 1:2:3:4. Find the measure of the largest angle.", options: ["120°", "144°", "150°", "100°"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'geometry'},
-  { id: 11008, question: "Two parallel chords of a circle of radius 13 cm are on the same side of the center. If the length of chords are 10 cm and 24 cm, find the distance between them.", options: ["7 cm", "8 cm", "5 cm", "12 cm"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'geometry'},
+  // Percentages (10)
+  { id: 11011, question: "If 15% of a number is 45, what is 30% of the number?", options: ["60", "90", "75", "100"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11012, question: "A man spends 75% of his income. If his income increases by 20% and his expenditure increases by 10%, his savings will be increased by:", options: ["40%", "50%", "30%", "25%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11013, question: "In a class of 60 students, 45% are girls. The number of boys in the class is:", options: ["27", "33", "30", "25"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11014, question: "A number exceeds 20% of itself by 40. The number is:", options: ["50", "60", "80", "48"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11015, question: "What percent of 2/7 is 1/35?", options: ["10%", "20%", "25%", "5%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11016, question: "If the price of a commodity is decreased by 20% and its consumption is increased by 20%, what will be the increase or decrease in expenditure on the commodity?", options: ["4% decrease", "4% increase", "8% decrease", "No change"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11017, question: "Fresh fruit contains 68% water and dry fruit contains 20% water. How much dry fruit can be obtained from 100 kg of fresh fruits?", options: ["32 kg", "40 kg", "52 kg", "80 kg"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11018, question: "The value of a machine depreciates at the rate of 10% every year. It was purchased 3 years ago. If its present value is Rs. 8748, its purchase price was:", options: ["Rs. 10000", "Rs. 11372.40", "Rs. 12000", "Rs. 12500"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11019, question: "In an examination, 35% of the candidates failed in one subject and 42% failed in another subject while 15% failed in both the subjects. If 2500 candidates appeared at the examination, how many passed in either subject but not in both?", options: ["1550", "1600", "1175", "1325"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
+  { id: 11020, question: "A man's salary is first increased by 50% and then decreased by 50%. What is the percentage change in his salary?", options: ["25% decrease", "25% increase", "No change", "50% decrease"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'percentages' },
   
-  // Trigonometry
-  { id: 11009, question: "If sin(θ) = 5/13, find the value of tan(θ).", options: ["5/12", "12/5", "12/13", "13/12"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'trigonometry'},
-  { id: 11010, question: "What is the value of tan 45° + cot 45°?", options: ["1", "2", "0", "1/2"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'trigonometry'},
+  // ... more maths questions
 
-  // --- General Studies (Moderate) ---
+  // Algebra (10)
+  { id: 11101, question: "If x + 1/x = 4, then find the value of x² + 1/x².", options: ["14", "16", "12", "18"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11102, question: "Find the factors of x² - 5x + 6.", options: ["(x-2)(x-3)", "(x+2)(x+3)", "(x-2)(x+3)", "(x+2)(x-3)"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11103, question: "If 2a - 3b = 3 and ab = 2, find the value of 4a² + 9b².", options: ["9", "21", "33", "45"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11104, question: "If x + y = 7 and xy = 12, then the value of x² + y² is:", options: ["25", "37", "49", "13"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11105, question: "The sum of the squares of three consecutive natural numbers is 110. The numbers are:", options: ["4, 5, 6", "5, 6, 7", "6, 7, 8", "3, 4, 5"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11106, question: "If (x - 2) is a factor of x² + kx + 4, then k = ?", options: ["-4", "4", "-3", "3"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11107, question: "What is the value of (999 + 99)²?", options: ["1195024", "1205604", "1185024", "1188064"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11108, question: "If a/3 = b/4 = c/7, then the value of (a+b+c)/c is:", options: ["1", "2", "3", "7"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11109, question: "Simplify: (x²-y²) / (x-y)", options: ["x-y", "x+y", "xy", "(x-y)²"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+  { id: 11110, question: "If x + 1/x = 2, then x¹⁰⁰ + 1/x¹⁰⁰ is equal to:", options: ["2", "1", "100", "200"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC CHSL', chapter: 'algebra'},
+
+
+  // --- General Studies (Moderate) - 25 questions ---
   { id: 21001, question: "Who was the first woman to preside over the Indian National Congress?", options: ["Sarojini Naidu", "Annie Besant", "Indira Gandhi", "Vijaya Lakshmi Pandit"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
   { id: 21002, question: "Which vitamin deficiency causes Scurvy?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
-  { id: 21003, question: "What is the main function of the RBI?", options: ["Printing currency", "Controlling inflation", "Formulating fiscal policy", "Both a and b"], correctAnswerIndex: 3, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21003, question: "What is the main function of the RBI?", options: ["Printing currency", "Controlling inflation", "Formulating fiscal policy", "Both a and b"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21004, question: "The first battle of Panipat was fought between:", options: ["Babur and Lodi", "Akbar and Hemu", "Mughal and British", "Akbar and Lodi"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21005, question: "Who is the author of the book 'The God of Small Things'?", options: ["Arundhati Roy", "Vikram Seth", "Salman Rushdie", "Amitav Ghosh"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21006, question: "Which of the following is the longest river in India?", options: ["Ganga", "Brahmaputra", "Yamuna", "Godavari"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21007, question: "Which gas is most abundant in the Earth's atmosphere?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Argon"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21008, question: "The instrument used to measure blood pressure is:", options: ["Sphygmomanometer", "Barometer", "Thermometer", "Stethoscope"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21009, question: "The 'Right to Education' in India is a:", options: ["Fundamental Right", "Directive Principle", "Legal Right", "Constitutional Right"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21010, question: "Which country is known as the 'Land of the Rising Sun'?", options: ["China", "Japan", "South Korea", "Thailand"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21011, question: "What does 'http' stand for in a website address?", options: ["HyperText Transfer Protocol", "HighText Transfer Protocol", "HyperText Transmission Protocol", "HighText Transmission Protocol"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21012, question: "Who was the first Indian to win a Nobel Prize?", options: ["Rabindranath Tagore", "C. V. Raman", "Mother Teresa", "Amartya Sen"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21013, question: "Which of the following is not a Union Territory of India?", options: ["Puducherry", "Goa", "Lakshadweep", "Daman and Diu"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21014, question: "The 'Quit India Movement' was launched in the year:", options: ["1930", "1942", "1945", "1920"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21015, question: "What is the capital of Australia?", options: ["Sydney", "Melbourne", "Canberra", "Perth"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21016, question: "The 'Saka Era' was started by which ruler?", options: ["Ashoka", "Kanishka", "Harshavardhana", "Chandragupta Maurya"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21017, question: "Which of the following is a classical dance form of Kerala?", options: ["Kathakali", "Bharatanatyam", "Kuchipudi", "Odissi"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21018, question: "The acid present in lemon is:", options: ["Acetic acid", "Formic acid", "Citric acid", "Lactic acid"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21019, question: "Who is known as the 'Iron Man of India'?", options: ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Vallabhbhai Patel", "Subhas Chandra Bose"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21020, question: "Which of the following countries is not a member of SAARC?", options: ["Nepal", "Maldives", "China", "Bhutan"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21021, question: "The layer of atmosphere closest to the Earth's surface is:", options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21022, question: "The headquarters of ISRO is located in:", options: ["Mumbai", "Hyderabad", "Bengaluru", "Chennai"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21023, question: "Which is the smallest bone in the human body?", options: ["Femur", "Humerus", "Stapes", "Tibia"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21024, question: "The currency of Bangladesh is:", options: ["Rupee", "Taka", "Kyat", "Riyal"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
+  { id: 21025, question: "Who wrote the Indian National Anthem?", options: ["Bankim Chandra Chatterjee", "Rabindranath Tagore", "Sarojini Naidu", "Sri Aurobindo"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC CHSL' },
 
-  // --- Reasoning (Moderate) ---
+  // --- Reasoning (Moderate) - 25 questions ---
   { id: 31001, question: "Find the missing number in the series: 4, 9, 16, 25, ?, 49.", options: ["36", "30", "42", "40"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
   { id: 31002, question: "If 'CAT' is coded as '3120', what is the code for 'DOG'?", options: ["4157", "4158", "4147", "4156"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
   { id: 31003, question: "A man is facing West. He turns 45° in the clockwise direction and then another 180° in the same direction and then 270° in the anti-clockwise direction. Which direction is he facing now?", options: ["South-West", "South", "West", "North-West"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31004, question: "Find the odd one out: Car, Bus, Scooter, Aeroplane", options: ["Car", "Bus", "Scooter", "Aeroplane"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31005, question: "In a row of boys, if A who is 10th from the left and B who is 9th from the right interchange their positions, A becomes 15th from the left. How many boys are there in the row?", options: ["23", "27", "28", "31"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31006, question: "Select the related letters/words/number from the given alternatives. Flow : River :: Stagnant : ?", options: ["Rain", "Stream", "Pool", "Canal"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31007, question: "If 'F' is coded as 6, 'MAT' is coded as 34, then how will 'CAR' be coded?", options: ["21", "22", "25", "28"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31008, question: "Pointing to a photograph, a man said, 'I have no brother or sister but that man's father is my father's son.' Whose photograph was it?", options: ["His own", "His son's", "His father's", "His nephew's"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31009, question: "How many 7's are there in the following series which are not preceded by 5 but are followed by either 2 or 3? 5 7 2 9 7 3 5 7 8 7 3 7 2 7 5", options: ["1", "2", "3", "4"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31010, question: "If 'white' is called 'blue', 'blue' is called 'red', 'red' is called 'yellow', 'yellow' is called 'green', 'green' is called 'black', 'black' is called 'violet' and 'violet' is called 'orange', what would be the color of human blood?", options: ["Red", "Green", "Yellow", "Violet"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31011, question: "A and B are brothers. C and D are sisters. A's son is D's brother. How is B related to C?", options: ["Father", "Brother", "Uncle", "Grandfather"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31012, question: "Find the next term in the series: 3, 9, 27, 81, ?", options: ["243", "324", "162", "216"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31013, question: "Which of the following words cannot be formed from the letters of the word 'EXAMINATION'?", options: ["NATION", "EXAM", "MINT", "TONE"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31014, question: "If P denotes 'divided by', Q denotes 'added to', R denotes 'subtracted from' and S denotes 'multiplied by', then 18 S 36 P 12 Q 6 R 7 = ?", options: ["53", "55", "62", "48"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31015, question: "Arrange the following in a logical order: 1. Doctor, 2. Fever, 3. Medicine, 4. Diagnosis, 5. Medical Shop", options: ["2, 1, 4, 3, 5", "2, 1, 3, 4, 5", "1, 4, 3, 5, 2", "2, 1, 4, 5, 3"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31016, question: "Find the water image of the word 'NUCLEAR'.", options: ["ЯAƎ⅃ƆUИ", "ИUC˥E∀Я", "NUC˥EAR", "ЯAELCUN"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31017, question: "Statement: All dogs are cats. Some cats are rats. Conclusion: I. Some dogs are rats. II. Some rats are cats.", options: ["Only I follows", "Only II follows", "Both follow", "Neither follows"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31018, question: "Find the number of squares in the given figure.", options: ["10", "12", "14", "15"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31019, question: "In a class of 45 students, a boy is ranked 20th. When two boys joined, his rank was dropped by one. What is his new rank from the end?", options: ["25th", "26th", "27th", "28th"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31020, question: "SCD, TEF, UGH, ____, WKL", options: ["CMN", "UJI", "VIJ", "IJT"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31021, question: "If the day before yesterday was Thursday, when will Sunday be?", options: ["Today", "Tomorrow", "Day after tomorrow", "Two days after today"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31022, question: "Which one set of letters when sequentially placed at the gaps in the given letter series shall complete it? a_c_abb_a_bc_a_b", options: ["bcbca", "bcacb", "bccab", "bcabc"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31023, question: "Choose the correct alternative from the given ones that will complete the series. 1, 5, 13, 29, 61, ?", options: ["122", "125", "127", "128"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31024, question: "Find the odd one out: (8, 11), (1, 4), (7, 10), (3, 5)", options: ["(8, 11)", "(1, 4)", "(7, 10)", "(3, 5)"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC CHSL' },
+  { id: 31025, question: "If 'book' is coded as 'cnnj', how is 'pencil' coded?", options: ["qfodjm", "qfojdm", "qfohjm", "qdofjm"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC CHSL' },
 
-  // --- English (Moderate) ---
+  // --- English (Moderate) - 25 questions ---
   { id: 41001, question: "Find the antonym of 'Ancient'.", options: ["Old", "Modern", "Aged", "Past"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
   { id: 41002, question: "Choose the correctly spelt word.", options: ["Millenium", "Millennium", "Milennium", "Millennim"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
   { id: 41003, question: "Fill in the blank: He is ___ honorable man.", options: ["a", "an", "the", "No article"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41004, question: "Select the synonym of 'Abundant'.", options: ["Scarce", "Plentiful", "Rare", "Limited"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41005, question: "Select the meaning of the idiom 'To smell a rat'.", options: ["To have a bad smell", "To suspect something foul", "To see a hidden rat", "To be in a bad mood"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41006, question: "A person who can speak two languages is known as:", options: ["Bilingual", "Monolingual", "Multilingual", "Linguist"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41007, question: "Identify the segment with a grammatical error: The furnitures in his house are old.", options: ["The furnitures", "in his house", "are old", "No error"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41008, question: "Change the voice: 'She was writing a letter.'", options: ["A letter was wrote by her.", "A letter was being written by her.", "A letter is being written by her.", "A letter has been written by her."], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41009, question: "Choose the correct one-word substitution: The study of human mind.", options: ["Psychology", "Sociology", "Philosophy", "Anthropology"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41010, question: "Select the antonym for 'Brave'.", options: ["Bold", "Courageous", "Timid", "Daring"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41011, question: "Find the correctly spelt word.", options: ["Believe", "Beleive", "Bilieve", "Bileive"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41012, question: "Fill in the blank: She has been waiting ____ 4 o'clock.", options: ["for", "since", "from", "at"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41013, question: "Select the synonym of 'Brief'.", options: ["Long", "Extensive", "Concise", "Detailed"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41014, question: "What is the meaning of the idiom 'To hit the nail on the head'?", options: ["To do something exactly right", "To hit someone's head", "To make a wrong decision", "To work hard"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41015, question: "One who does not believe in the existence of God.", options: ["Theist", "Atheist", "Agnostic", "Fanatic"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41016, question: "Find the error in the sentence: 'Each of the students have done well.'", options: ["Each of the students", "have done well", "No error"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41017, question: "Change the narration: He said, 'I am unwell.'", options: ["He said that he was unwell.", "He says that he is unwell.", "He said that he is unwell.", "He asked that he was unwell."], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41018, question: "Select the antonym of 'Accept'.", options: ["Admit", "Agree", "Reject", "Receive"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41019, question: "Choose the correctly spelt word.", options: ["Neccessary", "Necesary", "Necessary", "Necessery"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41020, question: "Fill in the blank: The cat jumped ____ the table.", options: ["on", "upon", "in", "at"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41021, question: "Select the synonym of 'Happy'.", options: ["Sad", "Sorrowful", "Joyful", "Miserable"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41022, question: "Meaning of the idiom 'A piece of cake'.", options: ["Something very difficult", "A sweet dish", "Something very easy", "A small portion"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41023, question: "One who loves books is called a:", options: ["Bibliophile", "Philanthropist", "Librarian", "Author"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41024, question: "Find the error: 'The news are incorrect.'", options: ["The news", "are incorrect", "No error"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC CHSL' },
+  { id: 41025, question: "Change the voice: 'The boy laughed at the beggar.'", options: ["The beggar was laughed by the boy.", "The beggar was being laughed by the boy.", "The beggar was laughed at by the boy.", "The beggar laughs at the boy."], correctAnswerIndex: 2, subject: 'English', exam: 'SSC CHSL' },
 ];

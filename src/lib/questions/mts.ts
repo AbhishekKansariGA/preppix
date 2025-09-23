@@ -1,40 +1,123 @@
-
 import { Question } from '../types';
 
 export const mtsQuestions: Question[] = [
-  // --- Maths (Moderate/Easy) ---
-  // Percentages
-  { id: 12001, question: "What is 50% of 200?", options: ["50", "100", "150", "200"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
-  { id: 12002, question: "A shopkeeper bought a chair for Rs. 500 and sold it for Rs. 550. What is his profit percentage?", options: ["10%", "5%", "15%", "12%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  // --- Maths (Easy/Moderate) ---
+  // Number System (10)
+  { id: 12001, question: "What is the sum of the first 10 even numbers?", options: ["110", "120", "100", "90"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12002, question: "Which is the smallest prime number?", options: ["0", "1", "2", "3"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12003, question: "What is the place value of 5 in 15,203?", options: ["5", "50", "500", "5000"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12004, question: "The product of two numbers is 120 and their HCF is 2. What is their LCM?", options: ["60", "120", "240", "30"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12005, question: "Simplify: 12 + 15 ÷ 3 × 2", options: ["18", "22", "27", "9"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12006, question: "How many numbers between 1 and 100 are divisible by 7?", options: ["12", "13", "14", "15"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12007, question: "The sum of the digits of a two-digit number is 8. The number obtained by reversing the digits is 18 more than the original number. Find the number.", options: ["26", "35", "53", "62"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12008, question: "What is 1004 × 996?", options: ["999984", "99984", "99840", "999994"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12009, question: "Find the unit digit of 7^105.", options: ["1", "3", "5", "7"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+  { id: 12010, question: "The predecessor of -99 is:", options: ["-98", "-100", "98", "100"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'number-system' },
+
+  // Percentages (10)
+  { id: 12011, question: "What is 50% of 200?", options: ["50", "100", "150", "200"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12012, question: "A shopkeeper bought a chair for Rs. 500 and sold it for Rs. 550. What is his profit percentage?", options: ["10%", "5%", "15%", "12%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12013, question: "Convert 3/5 into percentage.", options: ["30%", "40%", "50%", "60%"], correctAnswerIndex: 3, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12014, question: "If 20% of a number is 80, what is the number?", options: ["160", "200", "400", "800"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12015, question: "An item marked at Rs. 840 is sold for Rs. 714. What is the discount %?", options: ["10%", "15%", "20%", "25%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12016, question: "In a school of 1200 students, 70% are boys. Find the number of girls.", options: ["360", "840", "400", "300"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12017, question: "A number is first increased by 10% and then decreased by 10%. The number:", options: ["Remains the same", "Decreases by 1%", "Increases by 1%", "Decreases by 2%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12018, question: "Ram's salary is Rs. 10,000. He gets a raise of 10%. What is his new salary?", options: ["Rs. 11,000", "Rs. 10,100", "Rs. 9,000", "Rs. 10,500"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12019, question: "What is 0.05 as a percentage?", options: ["50%", "5%", "0.5%", "0.05%"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
+  { id: 12020, question: "Out of 40 students in a class, 8 are absent. What percentage of students are present?", options: ["80%", "20%", "90%", "75%"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'percentages' },
   
-  // Profit & Loss
-  { id: 12003, question: "If the cost price of an item is Rs. 80 and the selling price is Rs. 100, what is the profit?", options: ["Rs. 20", "Rs. 180", "Rs. 25", "Rs. 10"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'profit-loss-discount' },
-  { id: 12004, question: "A discount of 20% on an article is Rs. 40. What is the marked price?", options: ["Rs. 200", "Rs. 160", "Rs. 240", "Rs. 800"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'profit-loss-discount' },
+  // ... more maths questions
 
-  // Algebra
-  { id: 12005, question: "If x + 5 = 12, what is the value of x?", options: ["7", "17", "-7", "5"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
-  { id: 12006, question: "Simplify: 3a + 2b - a + 4b", options: ["2a + 6b", "4a + 6b", "2a + 2b", "4a + 2b"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  // Algebra (10)
+  { id: 12101, question: "If x + 5 = 12, what is the value of x?", options: ["7", "17", "-7", "5"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12102, question: "Simplify: 3a + 2b - a + 4b", options: ["2a + 6b", "4a + 6b", "2a + 2b", "4a + 2b"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12103, question: "Find the value of 2x + 3 when x = 4.", options: ["8", "11", "10", "14"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12104, question: "If 5y = 20, then y = ?", options: ["2", "4", "5", "100"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12105, question: "Find the value of x² when x = 9.", options: ["18", "81", "3", "27"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12106, question: "What is the sum of (a + b) and (a - b)?", options: ["2a", "2b", "a²+b²", "0"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12107, question: "If a = 2, b = 3, find the value of a² + b².", options: ["5", "13", "12", "25"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12108, question: "Solve for p: 3p - 2 = 7.", options: ["1", "2", "3", "9/3"], correctAnswerIndex: 2, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12109, question: "The product of (x+2) and (x+3) is:", options: ["x²+5x+6", "x²+6x+5", "x²+x+6", "x²+6"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
+  { id: 12110, question: "If x/4 = 5, then x is:", options: ["1", "20", "9", "1.25"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'algebra'},
 
-  // Geometry
-  { id: 12007, question: "What is the area of a square with a side of 10 cm?", options: ["40 sq.cm", "100 sq.cm", "20 sq.cm", "10 sq.cm"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'geometry'},
-  { id: 12008, question: "What is the perimeter of a rectangle with length 8 cm and width 5 cm?", options: ["13 cm", "26 cm", "40 cm", "21 cm"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'geometry'},
-  
-  // Trigonometry
-  { id: 12009, question: "What is the value of sin 90°?", options: ["0", "1", "1/2", "undefined"], correctAnswerIndex: 1, subject: 'Maths', exam: 'SSC MTS', chapter: 'trigonometry'},
-  { id: 12010, question: "If a right-angled triangle has sides 3 cm and 4 cm, what is the hypotenuse?", options: ["5 cm", "6 cm", "7 cm", "2.5 cm"], correctAnswerIndex: 0, subject: 'Maths', exam: 'SSC MTS', chapter: 'trigonometry'},
-
-  // --- General Studies (Moderate/Easy) ---
+  // --- General Studies (Easy/Moderate) - 25 questions ---
   { id: 22001, question: "Who was the first Prime Minister of India?", options: ["Mahatma Gandhi", "Sardar Patel", "Jawaharlal Nehru", "Dr. Rajendra Prasad"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
   { id: 22002, question: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC MTS' },
   { id: 22003, question: "What is the capital of Japan?", options: ["Beijing", "Seoul", "Tokyo", "Bangkok"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22004, question: "The 'Ganges' river originates from which glacier?", options: ["Yamunotri", "Siachen", "Gangotri", "Pindari"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22005, question: "Who wrote 'Ramcharitmanas'?", options: ["Tulsidas", "Valmiki", "Kalidas", "Ved Vyas"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22006, question: "Which is the largest state in India by area?", options: ["Maharashtra", "Madhya Pradesh", "Uttar Pradesh", "Rajasthan"], correctAnswerIndex: 3, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22007, question: "Sound cannot travel through:", options: ["Air", "Water", "Steel", "Vacuum"], correctAnswerIndex: 3, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22008, question: "Who invented the telephone?", options: ["Thomas Edison", "Alexander Graham Bell", "Guglielmo Marconi", "James Watt"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22009, question: "How many states are there in India?", options: ["28", "29", "30", "27"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22010, question: "Which festival is known as the festival of lights?", options: ["Holi", "Diwali", "Eid", "Christmas"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22011, question: "What is the full form of CPU?", options: ["Central Processing Unit", "Central Program Unit", "Computer Processing Unit", "Central Power Unit"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22012, question: "Who was the first man to walk on the moon?", options: ["Yuri Gagarin", "Neil Armstrong", "Rakesh Sharma", "Buzz Aldrin"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22013, question: "Which is the hardest substance available on earth?", options: ["Gold", "Iron", "Diamond", "Platinum"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22014, "question": "The 'Dandi March' was started by Mahatma Gandhi in which year?", "options": ["1920", "1930", "1942", "1928"], "correctAnswerIndex": 1, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22015, question: "What is the national animal of India?", options: ["Lion", "Tiger", "Elephant", "Leopard"], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22016, question: "Who built the Taj Mahal?", options: ["Akbar", "Jahangir", "Shah Jahan", "Aurangzeb"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22017, question: "Which Indian city is known as the 'Pink City'?", options: ["Jaipur", "Udaipur", "Jodhpur", "Delhi"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22018, question: "Which is the main gas that causes the greenhouse effect?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Hydrogen"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22019, question: "Who is known as the 'Father of the Nation' in India?", options: ["Sardar Patel", "Jawaharlal Nehru", "Mahatma Gandhi", "Dr. B. R. Ambedkar"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22020, question: "What is the currency of the USA?", options: ["Euro", "Yen", "Pound", "Dollar"], correctAnswerIndex: 3, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22021, question: "Which of the following is an input device for a computer?", options: ["Monitor", "Printer", "Keyboard", "Speaker"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22022, question: "The headquarters of the United Nations (UN) is located in:", options: ["Geneva", "New York City", "Paris", "Washington D.C."], correctAnswerIndex: 1, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22023, question: "Which is the largest ocean in the world?", options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"], correctAnswerIndex: 3, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22024, question: "The human skeleton is composed of how many bones?", options: ["206", "208", "201", "300"], correctAnswerIndex: 0, subject: 'General Studies', exam: 'SSC MTS' },
+  { id: 22025, question: "What is the boiling point of water?", options: ["0°C", "50°C", "100°C", "150°C"], correctAnswerIndex: 2, subject: 'General Studies', exam: 'SSC MTS' },
 
-  // --- Reasoning (Moderate/Easy) ---
+  // --- Reasoning (Easy/Moderate) - 25 questions ---
   { id: 32001, question: "Which number will complete the series? 2, 4, 6, 8, ?", options: ["10", "12", "9", "11"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
   { id: 32002, question: "If 'Book' is related to 'Read', then 'Pen' is related to:", options: ["Write", "Ink", "Paper", "Blue"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
   { id: 32003, question: "Find the odd one out: Apple, Banana, Carrot, Mango.", options: ["Apple", "Banana", "Carrot", "Mango"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32004, question: "Complete the series: A, C, E, G, ?", options: ["H", "I", "J", "K"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32005, question: "If 'HOT' is coded as 'SGL', then what is the code for 'COLD'?", options: ["XLOW", "XMPW", "XLOW", "XLOW"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32006, question: "A man walks 5 km East, then 5 km South. In which direction is he from his starting point?", options: ["North-East", "South-West", "South-East", "North-West"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32007, question: "Which of the following is a leap year?", options: ["1900", "2002", "2004", "2100"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32008, question: "Doctor : Patient :: Lawyer : ?", options: ["Client", "Customer", "Accused", "Magistrate"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32009, question: "Arrange the words in a logical order: 1. Key 2. Door 3. Lock 4. Room 5. Switch on", options: ["5, 1, 2, 3, 4", "1, 3, 2, 4, 5", "4, 2, 1, 3, 5", "1, 2, 3, 5, 4"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32010, question: "Find the missing number: 8, 27, 64, ?, 216", options: ["100", "125", "150", "180"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32011, question: "Ravi's mother is the only daughter of Monika's father. How is Monika's husband related to Ravi?", options: ["Uncle", "Father", "Brother", "Grandfather"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32012, question: "Find the odd one out: January, May, July, November", options: ["January", "May", "July", "November"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32013, question: "Complete the pattern: 1, 4, 9, 16, 25, ?", options: ["30", "36", "49", "64"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32014, question: "If '+' means 'x' and '-' means '+', what is the value of 5 + 3 - 2?", options: ["13", "17", "6", "5"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32015, question: "In a certain code, '253' means 'books are old'; '546' means 'man is old'; '378' means 'buy good books'. What stands for 'are' in that code?", options: ["2", "3", "5", "6"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32016, question: "Which of the following diagrams best represents the relationship between 'Table', 'Chair', 'Furniture'?", options: ["Diagram A", "Diagram B", "Diagram C", "Diagram D"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32017, question: "If Z=52 and ACT=48, then BAT will be equal to:", options: ["39", "41", "44", "46"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32018, question: "A is taller than B, C is taller than A. D is taller than E but shorter than B. Who is the tallest?", options: ["A", "B", "C", "D"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32019, question: "Find the next pair of letters in the series: AZ, CX, FU, ?", options: ["IR", "IV", "JQ", "KP"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32020, question: "How many meaningful English words can be made with the letters 'A, E, R' using each letter only once in each word?", options: ["One", "Two", "Three", "Four"], correctAnswerIndex: 1, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32021, question: "If the 3rd day of a month is Monday, which of the following will be the 25th day of the month?", options: ["Monday", "Tuesday", "Wednesday", "Sunday"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32022, question: "Eye : See :: Ear : ?", options: ["Hear", "Smell", "Taste", "Touch"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32023, question: "Find the number of triangles in the given figure.", options: ["5", "6", "7", "8"], correctAnswerIndex: 3, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32024, question: "If day-after-tomorrow is Saturday, what day was three days before yesterday?", options: ["Sunday", "Monday", "Tuesday", "Wednesday"], correctAnswerIndex: 0, subject: 'Reasoning', exam: 'SSC MTS' },
+  { id: 32025, question: "Select the missing number from the given responses. 9, 12, 15, ?, 21", options: ["16", "17", "18", "19"], correctAnswerIndex: 2, subject: 'Reasoning', exam: 'SSC MTS' },
 
-  // --- English (Moderate/Easy) ---
+  // --- English (Easy/Moderate) - 25 questions ---
   { id: 42001, question: "What is the opposite of 'Happy'?", options: ["Joyful", "Glad", "Sad", "Cheerful"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
   { id: 42002, question: "What is the plural of 'child'?", options: ["Childs", "Children", "Childes", "Childer"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
   { id: 42003, question: "Choose the correct verb: The dogs ___ barking.", options: ["is", "am", "are", "was"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42004, question: "Select the correctly spelt word.", options: ["Grammer", "Grammar", "Gramer", "Gramar"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42005, question: "Choose the synonym for 'Start'.", options: ["Stop", "End", "Begin", "Finish"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42006, question: "Fill in the blank: The book is ____ the table.", options: ["on", "in", "at", "with"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC MTS' },
+  { id: 42007, question: "What is the past tense of 'go'?", options: ["Goed", "Gone", "Went", "Goes"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42008, question: "Identify the noun in the sentence: 'The cat is sleeping.'", options: ["The", "Cat", "Is", "Sleeping"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42009, question: "Select the antonym for 'Big'.", options: ["Large", "Huge", "Small", "Giant"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42010, question: "Choose the correct article: I saw ____ elephant.", options: ["a", "an", "the", "no article"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42011, question: "Which word means 'a place where birds are kept'?", options: ["Aquarium", "Aviary", "Apiary", "Zoo"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42012, question: "Select the part of speech of the underlined word: She sings 'beautifully'.", options: ["Adjective", "Verb", "Adverb", "Noun"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42013, question: "What is the plural of 'man'?", options: ["Mans", "Manes", "Mens", "Men"], correctAnswerIndex: 3, subject: 'English', exam: 'SSC MTS' },
+  { id: 42014, question: "Find the error: 'He don't like coffee.'", options: ["He", "don't like", "coffee", "No error"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42015, question: "Choose the synonym of 'Quick'.", options: ["Slow", "Lazy", "Fast", "Dull"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42016, question: "Fill in the blank: I am fond ____ music.", options: ["of", "in", "with", "to"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC MTS' },
+  { id: 42017, question: "Select the correctly spelt word.", options: ["Toomorrow", "Tommorrow", "Tomorrow", "Tommorow"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42018, question: "What is the opposite of 'Hot'?", options: ["Warm", "Cold", "Boiling", "Sunny"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42019, question: "Choose the correct sentence.", options: ["She is more taller than him.", "She is taller than him.", "She is tallest than him.", "She is more tall than him."], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42020, question: "A person who writes books is called an:", options: ["Author", "Editor", "Publisher", "Reader"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC MTS' },
+  { id: 42021, question: "What is the feminine gender of 'horse'?", options: ["Doe", "Mare", "Vixen", "Goose"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42022, question: "Fill in the blank: He is afraid ____ dogs.", options: ["from", "with", "of", "to"], correctAnswerIndex: 2, subject: 'English', exam: 'SSC MTS' },
+  { id: 42023, question: "Select the synonym for 'Beautiful'.", options: ["Ugly", "Pretty", "Plain", "Horrible"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42024, question: "Find the error: 'My brother have a new car.'", options: ["My brother", "have a new car", "No error"], correctAnswerIndex: 1, subject: 'English', exam: 'SSC MTS' },
+  { id: 42025, question: "What do you call a person who cannot read or write?", options: ["Illiterate", "Ignorant", "Uneducated", "Scholar"], correctAnswerIndex: 0, subject: 'English', exam: 'SSC MTS' },
 ];

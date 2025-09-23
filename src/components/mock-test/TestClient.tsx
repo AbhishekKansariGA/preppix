@@ -39,23 +39,14 @@ interface TranslatedQuestion {
 }
 
 const getTestDuration = (examId: string, subjectId: string, isChapterTest: boolean): number => {
-    if (subjectId === 'gs') {
-        return 15 * 60; // 15 minutes for all GS tests
+    if (subjectId === 'gs' || subjectId === 'reasoning' || subjectId === 'english') {
+        return 15 * 60; // 15 minutes for all mixed tests
     }
-    if (isChapterTest) {
-        switch (examId) {
-            case 'cgl':
-            case 'chsl':
-                return 10 * 60; // 10 minutes
-            case 'mts':
-                return 15 * 60; // 15 minutes
-            default:
-                return 10 * 60; // Default 10 minutes for chapter tests
-        }
-    } else {
-        // For full subject tests
-        return 25 * 60; // 25 minutes
+    if (isChapterTest) { // This will now only be for Maths
+        return 10 * 60; // 10 minutes for maths chapter tests
     }
+    // Fallback/Default for any other case
+    return 25 * 60; 
 }
 
 export function TestClient({ exam, subject, chapter }: TestClientProps) {
@@ -291,7 +282,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'Hindi'}` : `Translate to ${targetLanguage}`}</p>
+                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'Hindi' : 'English'}` : `Translate to ${targetLanguage}`}</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -338,5 +329,3 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
-
-  

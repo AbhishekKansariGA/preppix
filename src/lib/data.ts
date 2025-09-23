@@ -1,4 +1,3 @@
-
 import { Exam, Subject, Question, Chapter, MixedTest, Category } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
 import { cglQuestions } from './questions/cgl';
@@ -149,7 +148,8 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
     if (subjectId === 'maths') {
         if (chapterId) {
             // It's a chapter-specific test
-            finalQuestions = subjectQuestions.filter(q => q.chapter === chapterId);
+            const chapterQuestions = subjectQuestions.filter(q => q.chapter === chapterId);
+            finalQuestions = shuffle([...chapterQuestions]).slice(0, 10);
         } else {
             // Full maths test - currently not a feature, but we can handle it if needed
             return [];
@@ -157,26 +157,21 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
     } else if (subjectId === 'gs' || subjectId === 'reasoning' || subjectId === 'english') {
         if (chapterId) { // chapterId here represents a mixed test ID like "test-1"
              // To make tests seem different, we'll shuffle the pool and slice it.
-             // Using the test number as a seed for slicing ensures consistency for each test.
-             const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
-             const testSize = (subjectId === 'gs') ? 25 : 25; // Define test size
-             const startIndex = (testNumber - 1) * 10 % subjectQuestions.length; // Use modulo to wrap around
-             
+             const testSize = 25; 
              const shuffled = shuffle([...subjectQuestions]);
              
-             // Take a slice to simulate a unique test
-             finalQuestions = shuffled.slice(0, testSize);
+             // Take a slice to simulate a unique test, using testId for pseudo-randomness
+             const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
+             const startIndex = (testNumber - 1) * 10 % (shuffled.length - testSize + 1);
+             finalQuestions = shuffled.slice(startIndex, startIndex + testSize);
         } else {
-             // This case is for full subject tests that don't have chapters, not currently used for GS/Eng/Reas
              return [];
         }
     } else {
-         // For any other subject that might be added
          finalQuestions = subjectQuestions;
     }
 
-    // Return a shuffled copy of the final questions
-    return shuffle([...finalQuestions]);
+    return finalQuestions;
 };
 
 export const getExamById = (id: string) => exams.find(e => e.id === id);
