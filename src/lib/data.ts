@@ -140,7 +140,14 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
     }
 
     // 2. Filter the pool by the selected subject
-    let subjectQuestions = questionPool.filter(q => q.subject.toLowerCase().replace(/\s+/g, '-').includes(subjectId));
+    const subjectIdMapping: { [key: string]: string } = {
+        'maths': 'Maths',
+        'gs': 'General Studies',
+        'reasoning': 'Reasoning',
+        'english': 'English'
+    };
+    const subjectName = subjectIdMapping[subjectId];
+    let subjectQuestions = questionPool.filter(q => q.subject === subjectName);
     
     let finalQuestions: Question[] = [];
 
@@ -157,7 +164,7 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
              const testSize = 25; 
              const shuffled = shuffle([...subjectQuestions]);
              const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
-             const startIndex = (testNumber - 1) * 10 % (shuffled.length - testSize + 1);
+             const startIndex = (testNumber - 1) * testSize % (shuffled.length - testSize + 1);
              finalQuestions = shuffled.slice(startIndex, startIndex + testSize);
         } else {
              return [];
