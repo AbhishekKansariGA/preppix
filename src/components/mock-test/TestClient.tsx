@@ -39,8 +39,11 @@ interface TranslatedQuestion {
 }
 
 const getTestDuration = (examId: string, subjectId: string, isChapterTest: boolean): number => {
-    if (subjectId === 'gs' || subjectId === 'reasoning' || subjectId === 'english') {
-        return 15 * 60; // 15 minutes for all mixed tests
+    if (subjectId === 'reasoning') {
+        return 25 * 60; // 25 minutes for reasoning
+    }
+    if (subjectId === 'gs' || subjectId === 'english') {
+        return 15 * 60; // 15 minutes for mixed tests
     }
     if (isChapterTest) { // This will now only be for Maths
         return 10 * 60; // 10 minutes for maths chapter tests
