@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft, Languages, Pause, Play, History } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Flag, RotateCcw, Clock, ChevronLeft, Languages } from 'lucide-react';
 import { getQuestions as fetchStaticQuestions } from '@/lib/data';
 import {
   AlertDialog,
@@ -24,23 +24,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Loader } from '../ui/loader';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { cn } from '@/lib/utils';
 
 interface TestClientProps {
   exam: Exam;
   subject: Omit<Subject, 'icon'>;
   chapter?: Chapter;
-}
-
-interface InProgressTestState {
-    examId: string;
-    subjectId: string;
-    chapterId?: string;
-    answers: UserAnswer[];
-    currentQuestionIndex: number;
-    timeLeft: number;
-    questions: Question[];
 }
 
 const getTestDuration = (examId: string, subjectId: string, isChapterTest: boolean): number => {
@@ -57,6 +45,7 @@ const getTestDuration = (examId: string, subjectId: string, isChapterTest: boole
     return 25 * 60; 
 }
 
+
 export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const router = useRouter();
   const { addAttempt } = useTestStore();
@@ -68,82 +57,24 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const [timeLeft, setTimeLeft] = useState(() => getTestDuration(exam.id, subject.id, !!chapter));
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   
   const [isTranslated, setIsTranslated] = useState<Record<number, boolean>>({});
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showResumeDialog, setShowResumeDialog] = useState(false);
-  
-  const inProgressTestKey = `in-progress-test-${exam.id}-${subject.id}-${chapter?.id || 'full'}`;
 
-  const saveInProgressTest = (state: InProgressTestState) => {
-    localStorage.setItem(inProgressTestKey, JSON.stringify(state));
-  };
-  
-  const clearInProgressTest = () => {
-      localStorage.removeItem(inProgressTestKey);
-  };
-  
-  const startNewTest = useCallback(() => {
-    clearInProgressTest();
+  useEffect(() => {
     const fetchedQuestions = fetchStaticQuestions(exam.id, subject.id, chapter?.id);
     setQuestions(fetchedQuestions);
     setAnswers(fetchedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-    setCurrentQuestionIndex(0);
-    setTimeLeft(getTestDuration(exam.id, subject.id, !!chapter));
     setIsLoading(false);
   }, [exam.id, subject.id, chapter?.id]);
-  
-  const resumeTest = useCallback((savedState: InProgressTestState) => {
-    setQuestions(savedState.questions);
-    setAnswers(savedState.answers);
-    setCurrentQuestionIndex(savedState.currentQuestionIndex);
-    setTimeLeft(savedState.timeLeft);
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    const savedStateRaw = localStorage.getItem(inProgressTestKey);
-    if (savedStateRaw) {
-      try {
-        const savedState: InProgressTestState = JSON.parse(savedStateRaw);
-        if (savedState.questions && savedState.questions.length > 0) {
-          setShowResumeDialog(true);
-        } else {
-            startNewTest();
-        }
-      } catch (error) {
-        startNewTest();
-      }
-    } else {
-      startNewTest();
-    }
-  }, [inProgressTestKey, startNewTest]);
-
-
-  useEffect(() => {
-    if (!isLoading && questions.length > 0) {
-      const stateToSave: InProgressTestState = {
-        examId: exam.id,
-        subjectId: subject.id,
-        chapterId: chapter?.id,
-        answers,
-        currentQuestionIndex,
-        timeLeft,
-        questions
-      };
-      saveInProgressTest(stateToSave);
-    }
-  }, [answers, currentQuestionIndex, timeLeft, isLoading, questions]);
 
   const currentQuestion = useMemo(() => questions[currentQuestionIndex], [questions, currentQuestionIndex]);
-  
+
   const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
     if (questions.length > 0) {
       const newAttemptId = addAttempt(exam.id, subject.id, answers, chapter?.id, questions);
-      clearInProgressTest();
       router.push(`/results/${newAttemptId}`);
     } else {
         setIsSubmitting(false);
@@ -152,7 +83,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   }, [addAttempt, answers, chapter?.id, exam.id, subject.id, router, questions]);
 
   useEffect(() => {
-    if (questions.length === 0 || isPaused || isLoading) return;
+    if (questions.length === 0 || isLoading) return;
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
@@ -165,7 +96,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [questions.length, isPaused, isLoading]);
+  }, [questions.length, isLoading]);
 
   useEffect(() => {
     if (isTimeUp) {
@@ -213,39 +144,8 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     }
   };
   
-  const togglePause = () => {
-      setIsPaused(prev => !prev);
-  }
-  
   if (isLoading) {
       return <div className="flex justify-center items-center h-64"><Loader /></div>;
-  }
-  
-  if (showResumeDialog) {
-    return (
-      <AlertDialog open={showResumeDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Resume Test?</AlertDialogTitle>
-            <AlertDialogDescription>
-              We found an incomplete test. Would you like to resume where you left off or start a new test?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <Button variant="outline" onClick={() => { startNewTest(); setShowResumeDialog(false); }}>
-                <RotateCcw className="mr-2 h-4 w-4" /> Start New
-            </Button>
-            <Button onClick={() => {
-              const savedState = JSON.parse(localStorage.getItem(inProgressTestKey)!);
-              resumeTest(savedState);
-              setShowResumeDialog(false);
-            }}>
-              <History className="mr-2 h-4 w-4" /> Resume
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    );
   }
 
   if (questions.length === 0) {
@@ -298,16 +198,7 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
         </AlertDialogContent>
       </AlertDialog>
 
-      <Card className="relative">
-        {isPaused && (
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex flex-col justify-center items-center gap-4">
-                <h2 className="text-2xl font-bold text-primary">Test Paused</h2>
-                <Button onClick={togglePause}>
-                    <Play className="mr-2 h-4 w-4"/>
-                    Resume Test
-                </Button>
-            </div>
-        )}
+      <Card>
         <CardHeader>
           <div className="flex justify-between items-start flex-wrap gap-4">
             <div>
@@ -328,31 +219,19 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Are you sure you want to exit the test?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Your progress will be saved. You can resume it later.
+                        This will end your current test attempt. You cannot resume it later.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => router.back()}>Yes, Exit</AlertDialogAction>
+                      <AlertDialogCancel>No</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => router.back()}>Yes</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-                <div className={cn("flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10", isPaused && "animate-pulse")}>
+                <div className="flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10">
                     <Clock className="h-5 w-5" />
                     <span>{formatTime(timeLeft)}</span>
                 </div>
-                 <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button variant="outline" size="icon" onClick={togglePause}>
-                           {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{isPaused ? 'Resume Test' : 'Pause Test'}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
                 <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" size="sm">End Test</Button>
@@ -381,22 +260,13 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
                   {currentQuestionIndex + 1}. {displayQuestion?.question}
                 </div>
                 {currentQuestion.translation && (
-                 <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                       <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={handleTranslate}
-                      >
-                        <Languages className="h-4 w-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{showTranslated ? `Show in ${subject.id === 'english' ? 'English' : 'English'}` : `Translate to ${targetLanguage}`}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                  <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={handleTranslate}
+                  >
+                    <Languages className="h-4 w-4" />
+                  </Button>
                 )}
             </div>
             <RadioGroup
@@ -440,6 +310,3 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
-
-
-    
