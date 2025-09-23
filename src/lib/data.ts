@@ -177,13 +177,8 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
         // Filter by exam
         questionPool = questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase());
 
-        if (chapterId) { // This is for mixed tests
-             // Since mixed tests are random, we shuffle and pick
-             questions = shuffle([...questionPool]).slice(0, 25);
-        } else {
-            // This case should ideally not happen for gs/reasoning/english as they always have chapterId (mixedTestId)
-            questions = shuffle([...questionPool]).slice(0, 25);
-        }
+        const testSize = (subjectId === 'maths' && chapterId) ? 10 : 25;
+        questions = shuffle([...questionPool]).slice(0, testSize);
     }
 
     // Shuffle questions to make them appear in a random order
