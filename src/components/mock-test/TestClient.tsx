@@ -76,10 +76,10 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
 
 
   useEffect(() => {
-    const fetchedQuestions = fetchStaticQuestions(subject.id, chapter?.id);
+    const fetchedQuestions = fetchStaticQuestions(exam.id, subject.id, chapter?.id);
     setQuestions(fetchedQuestions);
     setAnswers(fetchedQuestions.map(q => ({ questionId: q.id, selectedOption: null })));
-  }, [subject.id, chapter?.id]);
+  }, [exam.id, subject.id, chapter?.id]);
 
 
   const currentQuestion = useMemo(() => questions[currentQuestionIndex], [questions, currentQuestionIndex]);
@@ -338,3 +338,5 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
     </div>
   );
 }
+
+  

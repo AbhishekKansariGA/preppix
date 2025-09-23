@@ -2,7 +2,9 @@
 
 import { Exam, Subject, Question, Chapter, MixedTest, Category } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
-import { mathsQuestions } from './questions/maths';
+import { cglMathsQuestions } from './questions/cgl-maths';
+import { chslMathsQuestions } from './questions/chsl-maths';
+import { mtsMathsQuestions } from './questions/mts-maths';
 import { allGsQuestions } from './questions/gs';
 import { allReasoningQuestions } from './questions/reasoning';
 import { allEnglishQuestions } from './questions/english';
@@ -134,42 +136,60 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const fullTestQuestions = (questions: Question[], count: number) => {
-    return shuffle([...questions]).slice(0, count);
-}
-
-
-const staticQuestions: { [key: string]: Question[] } = {
-  ...mathsQuestions,
-  ...gsMixedTests.reduce((acc, test) => {
-    const testQuestions = shuffle([...allGsQuestions]).slice(0, 25);
-    acc[`gs-${test.id}`] = testQuestions;
-    return acc;
-  }, {} as { [key: string]: Question[] }),
-  ...reasoningMixedTests.reduce((acc, test) => {
-    const testQuestions = shuffle([...allReasoningQuestions]).slice(0, 25);
-    acc[`reasoning-${test.id}`] = testQuestions;
-    return acc;
-  }, {} as { [key: string]: Question[] }),
-  ...englishMixedTests.reduce((acc, test) => {
-    const testQuestions = shuffle([...allEnglishQuestions]).slice(0, 25);
-    acc[`english-${test.id}`] = testQuestions;
-    return acc;
-  }, {} as { [key: string]: Question[] }),
+const getMathsQuestionsForExam = (examId: string) => {
+    switch (examId) {
+        case 'cgl':
+            return cglMathsQuestions;
+        case 'chsl':
+            return chslMathsQuestions;
+        case 'mts':
+            return mtsMathsQuestions;
+        default:
+            return cglMathsQuestions; // Default to CGL
+    }
 };
 
-export const getQuestions = (subjectId: string, chapterId?: string): Question[] => {
-  const key = chapterId ? `${subjectId}-${chapterId}` : subjectId;
-  const questions = staticQuestions[key] || [];
-  // For non-chapter maths tests, return 10 random questions from all chapters
-  if (subjectId === 'maths' && !chapterId) {
-       const allMathQuestions = allMathsChapters.flatMap(c => staticQuestions[`maths-${c.id}`] || []);
-       return shuffle(allMathQuestions).slice(0, 10);
-  }
+export const getQuestions = (examId: string, subjectId: string, chapterId?: string): Question[] => {
+    let questions: Question[] = [];
 
-  // Shuffle questions to make them appear in a random order
-  return [...questions].sort(() => Math.random() - 0.5);
-}
+    if (subjectId === 'maths') {
+        const mathsQuestions = getMathsQuestionsForExam(examId);
+        const key = chapterId ? `maths-${chapterId}` : 'maths';
+        if (chapterId && mathsQuestions[key]) {
+             questions = mathsQuestions[key];
+        } else if (!chapterId) {
+            // For full maths test, get random questions from all chapters for that exam
+            const allMathQuestions: Question[] = [];
+            for (const chap of allMathsChapters) {
+                const chapKey = `maths-${chap.id}`;
+                if (mathsQuestions[chapKey]) {
+                    allMathQuestions.push(...mathsQuestions[chapKey]);
+                }
+            }
+            questions = shuffle(allMathQuestions).slice(0, 10);
+        }
+    } else {
+        let questionPool: Question[] = [];
+        if (subjectId === 'gs') questionPool = allGsQuestions;
+        if (subjectId === 'reasoning') questionPool = allReasoningQuestions;
+        if (subjectId === 'english') questionPool = allEnglishQuestions;
+        
+        // Filter by exam
+        questionPool = questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase());
+
+        if (chapterId) { // This is for mixed tests
+             // Since mixed tests are random, we shuffle and pick
+             questions = shuffle([...questionPool]).slice(0, 25);
+        } else {
+            // This case should ideally not happen for gs/reasoning/english as they always have chapterId (mixedTestId)
+            questions = shuffle([...questionPool]).slice(0, 25);
+        }
+    }
+
+    // Shuffle questions to make them appear in a random order
+    return [...questions].sort(() => Math.random() - 0.5);
+};
+
 
 export const getExamById = (id: string) => exams.find(e => e.id === id);
 export const getSubjectById = (id: string) => subjects.find(s => s.id === id);
@@ -187,3 +207,4 @@ export const getChapterById = (subjectId: string, chapterId: string) => {
     return subject.chapters?.find(c => c.id === chapterId);
 };
 
+  
