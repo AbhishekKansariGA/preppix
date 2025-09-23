@@ -1,12 +1,9 @@
 
-
 import { Exam, Subject, Question, Chapter, MixedTest, Category } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
-import { mathsQuestions } from './questions/maths';
-import { allGsQuestions } from './questions/gs';
-import { allReasoningQuestions } from './questions/reasoning';
-import { allEnglishQuestions } from './questions/english';
-
+import { cglQuestions } from './questions/cgl';
+import { chslQuestions } from './questions/chsl';
+import { mtsQuestions } from './questions/mts';
 
 export const exams: Exam[] = [
   { id: 'cgl', name: 'SSC CGL', description: 'Combined Graduate Level' },
@@ -42,7 +39,6 @@ export const leaderboardCutoffs: Record<string, Record<string, Record<Category['
     english:   { general: 40, obc: 38, sc: 36, st: 34, ews: 39 },
   }
 };
-
 
 export const arithmeticChapters: Chapter[] = [
     { id: 'number-system', name: 'Number System' },
@@ -85,7 +81,6 @@ export const englishMixedTests: MixedTest[] = Array.from({ length: 10 }, (_, i) 
     name: `Test ${i + 1}`
 }));
 
-
 export const subjects: Subject[] = [
   { 
     id: 'maths', 
@@ -119,62 +114,70 @@ export const subjects: Subject[] = [
 // Function to shuffle an array
 function shuffle(array: any[]) {
   let currentIndex = array.length, randomIndex;
-
-  // While there remain elements to shuffle.
   while (currentIndex !== 0) {
-    // Pick a remaining element.
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
   }
-
   return array;
 }
 
-
 export const getQuestions = (examId: string, subjectId: string, chapterId?: string): Question[] => {
-    let questions: Question[] = [];
+    let questionPool: Question[] = [];
 
-    if (subjectId === 'maths') {
-        if (chapterId) {
-            const key = `maths-${chapterId}`;
-            if (mathsQuestions[key]) {
-                questions = mathsQuestions[key].filter(q => q.exam.toLowerCase() === examId.toLowerCase());
-            }
-        } else {
-            // Full test for a subject that has chapters (but no chapter selected)
-            // This case should not happen for Maths as it has chapter groups.
-            // If it does, we can return an empty array or some default questions.
-            return [];
-        }
-    } else {
-        let questionPool: Question[] = [];
-        if (subjectId === 'gs') questionPool = allGsQuestions;
-        if (subjectId === 'reasoning') questionPool = allReasoningQuestions;
-        if (subjectId === 'english') questionPool = allEnglishQuestions;
-        
-        if (chapterId) { // For mixed tests like GS Test 1, GS Test 2
-             // Since GS/Reasoning/English questions are not chapter-specific in the data,
-             // we will just take a random slice for each "test" to simulate different tests.
-             // We use chapterId as a seed for 'randomness' to keep it consistent.
-             const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
-             const testSize = 25;
-             const startIndex = (testNumber - 1) * testSize;
-             // We shuffle the pool based on the test number to get different-looking tests
-             questions = shuffle(questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase())).slice(0, testSize);
-        } else {
-            // Full subject test (should not happen for GS/Reasoning/English based on UI flow)
-             questions = shuffle(questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase())).slice(0, 25);
-        }
+    // 1. Select the question pool based on the exam
+    switch (examId) {
+        case 'cgl':
+            questionPool = cglQuestions;
+            break;
+        case 'chsl':
+            questionPool = chslQuestions;
+            break;
+        case 'mts':
+            questionPool = mtsQuestions;
+            break;
+        default:
+            return []; // Return empty if exam is not found
     }
 
-    // Shuffle questions to make them appear in a random order
-    return [...questions].sort(() => Math.random() - 0.5);
-};
+    // 2. Filter the pool by the selected subject
+    let subjectQuestions = questionPool.filter(q => q.subject.toLowerCase().replace(/\s+/g, '-') === subjectId);
+    
+    let finalQuestions: Question[] = [];
 
+    // 3. Filter by chapter or handle mixed tests
+    if (subjectId === 'maths') {
+        if (chapterId) {
+            // It's a chapter-specific test
+            finalQuestions = subjectQuestions.filter(q => q.chapter === chapterId);
+        } else {
+            // Full maths test - currently not a feature, but we can handle it if needed
+            return [];
+        }
+    } else if (subjectId === 'gs' || subjectId === 'reasoning' || subjectId === 'english') {
+        if (chapterId) { // chapterId here represents a mixed test ID like "test-1"
+             // To make tests seem different, we'll shuffle the pool and slice it.
+             // Using the test number as a seed for slicing ensures consistency for each test.
+             const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
+             const testSize = (subjectId === 'gs') ? 25 : 25; // Define test size
+             const startIndex = (testNumber - 1) * 10 % subjectQuestions.length; // Use modulo to wrap around
+             
+             const shuffled = shuffle([...subjectQuestions]);
+             
+             // Take a slice to simulate a unique test
+             finalQuestions = shuffled.slice(0, testSize);
+        } else {
+             // This case is for full subject tests that don't have chapters, not currently used for GS/Eng/Reas
+             return [];
+        }
+    } else {
+         // For any other subject that might be added
+         finalQuestions = subjectQuestions;
+    }
+
+    // Return a shuffled copy of the final questions
+    return shuffle([...finalQuestions]);
+};
 
 export const getExamById = (id: string) => exams.find(e => e.id === id);
 export const getSubjectById = (id: string) => subjects.find(s => s.id === id);
@@ -191,5 +194,3 @@ export const getChapterById = (subjectId: string, chapterId: string) => {
     }
     return subject.chapters?.find(c => c.id === chapterId);
 };
-
-  
