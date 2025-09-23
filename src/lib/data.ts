@@ -145,7 +145,7 @@ const getMathsQuestionsForExam = (examId: string) => {
         case 'mts':
             return mtsMathsQuestions;
         default:
-            return cglMathsQuestions; // Default to CGL
+            return {}; 
     }
 };
 
@@ -153,20 +153,17 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
     let questions: Question[] = [];
 
     if (subjectId === 'maths') {
-        const mathsQuestions = getMathsQuestionsForExam(examId);
-        const key = `maths-${chapterId}`;
-        if (chapterId && mathsQuestions[key]) {
-             questions = mathsQuestions[key];
-        } else if (!chapterId) {
-            // For full maths test, get random questions from all chapters for that exam
-            const allMathQuestions: Question[] = [];
-            for (const chap of allMathsChapters) {
-                const chapKey = `maths-${chap.id}`;
-                if (mathsQuestions[chapKey]) {
-                    allMathQuestions.push(...mathsQuestions[chapKey]);
-                }
+        const examMathsQuestions = getMathsQuestionsForExam(examId);
+        if (chapterId) {
+            const key = `maths-${chapterId}`;
+            if (examMathsQuestions[key]) {
+                questions = examMathsQuestions[key];
             }
-            questions = shuffle(allMathQuestions).slice(0, 10);
+        } else {
+            // Full test for a subject that has chapters (but no chapter selected)
+            // This case should not happen for Maths as it has chapter groups.
+            // If it does, we can return an empty array or some default questions.
+            return [];
         }
     } else {
         let questionPool: Question[] = [];
@@ -176,9 +173,20 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
         
         // Filter by exam
         questionPool = questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase());
-
-        const testSize = (subjectId === 'maths' && chapterId) ? 10 : 25;
-        questions = shuffle([...questionPool]).slice(0, testSize);
+        
+        if (chapterId) { // For mixed tests like GS Test 1, GS Test 2
+             // Since GS/Reasoning/English questions are not chapter-specific in the data,
+             // we will just take a random slice for each "test" to simulate different tests.
+             // We use chapterId as a seed for 'randomness' to keep it consistent.
+             const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
+             const testSize = 25;
+             const startIndex = (testNumber - 1) * testSize;
+             // We shuffle the pool based on the test number to get different-looking tests
+             questions = shuffle(questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase())).slice(0, testSize);
+        } else {
+            // Full subject test (should not happen for GS/Reasoning/English based on UI flow)
+             questions = shuffle(questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase())).slice(0, 25);
+        }
     }
 
     // Shuffle questions to make them appear in a random order
