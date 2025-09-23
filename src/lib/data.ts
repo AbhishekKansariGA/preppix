@@ -154,7 +154,7 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
 
     if (subjectId === 'maths') {
         const mathsQuestions = getMathsQuestionsForExam(examId);
-        const key = chapterId ? `maths-${chapterId}` : 'maths';
+        const key = `maths-${chapterId}`;
         if (chapterId && mathsQuestions[key]) {
              questions = mathsQuestions[key];
         } else if (!chapterId) {
