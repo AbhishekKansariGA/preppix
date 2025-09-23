@@ -140,27 +140,22 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
     }
 
     // 2. Filter the pool by the selected subject
-    let subjectQuestions = questionPool.filter(q => q.subject.toLowerCase().replace(/\s+/g, '-') === subjectId);
+    let subjectQuestions = questionPool.filter(q => q.subject.toLowerCase().replace(/\s+/g, '-').includes(subjectId));
     
     let finalQuestions: Question[] = [];
 
     // 3. Filter by chapter or handle mixed tests
     if (subjectId === 'maths') {
         if (chapterId) {
-            // It's a chapter-specific test
             const chapterQuestions = subjectQuestions.filter(q => q.chapter === chapterId);
             finalQuestions = shuffle([...chapterQuestions]).slice(0, 10);
         } else {
-            // Full maths test - currently not a feature, but we can handle it if needed
             return [];
         }
     } else if (subjectId === 'gs' || subjectId === 'reasoning' || subjectId === 'english') {
-        if (chapterId) { // chapterId here represents a mixed test ID like "test-1"
-             // To make tests seem different, we'll shuffle the pool and slice it.
+        if (chapterId) { 
              const testSize = 25; 
              const shuffled = shuffle([...subjectQuestions]);
-             
-             // Take a slice to simulate a unique test, using testId for pseudo-randomness
              const testNumber = parseInt(chapterId.replace('test-', '')) || 1;
              const startIndex = (testNumber - 1) * 10 % (shuffled.length - testSize + 1);
              finalQuestions = shuffled.slice(startIndex, startIndex + testSize);
