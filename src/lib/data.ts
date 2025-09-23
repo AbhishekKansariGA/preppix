@@ -2,9 +2,7 @@
 
 import { Exam, Subject, Question, Chapter, MixedTest, Category } from './types';
 import { Calculator, BookOpen, BrainCircuit, Mic2 } from 'lucide-react';
-import { cglMathsQuestions } from './questions/cgl-maths';
-import { chslMathsQuestions } from './questions/chsl-maths';
-import { mtsMathsQuestions } from './questions/mts-maths';
+import { mathsQuestions } from './questions/maths';
 import { allGsQuestions } from './questions/gs';
 import { allReasoningQuestions } from './questions/reasoning';
 import { allEnglishQuestions } from './questions/english';
@@ -136,28 +134,15 @@ function shuffle(array: any[]) {
   return array;
 }
 
-const getMathsQuestionsForExam = (examId: string) => {
-    switch (examId) {
-        case 'cgl':
-            return cglMathsQuestions;
-        case 'chsl':
-            return chslMathsQuestions;
-        case 'mts':
-            return mtsMathsQuestions;
-        default:
-            return {}; 
-    }
-};
 
 export const getQuestions = (examId: string, subjectId: string, chapterId?: string): Question[] => {
     let questions: Question[] = [];
 
     if (subjectId === 'maths') {
-        const examMathsQuestions = getMathsQuestionsForExam(examId);
         if (chapterId) {
             const key = `maths-${chapterId}`;
-            if (examMathsQuestions[key]) {
-                questions = examMathsQuestions[key];
+            if (mathsQuestions[key]) {
+                questions = mathsQuestions[key].filter(q => q.exam.toLowerCase() === examId.toLowerCase());
             }
         } else {
             // Full test for a subject that has chapters (but no chapter selected)
@@ -170,9 +155,6 @@ export const getQuestions = (examId: string, subjectId: string, chapterId?: stri
         if (subjectId === 'gs') questionPool = allGsQuestions;
         if (subjectId === 'reasoning') questionPool = allReasoningQuestions;
         if (subjectId === 'english') questionPool = allEnglishQuestions;
-        
-        // Filter by exam
-        questionPool = questionPool.filter(q => q.exam.toLowerCase() === examId.toLowerCase());
         
         if (chapterId) { // For mixed tests like GS Test 1, GS Test 2
              // Since GS/Reasoning/English questions are not chapter-specific in the data,

@@ -1,4 +1,5 @@
 
+
 import { Question } from '../types';
 
 export const allReasoningQuestions: Question[] = [
@@ -262,7 +263,7 @@ export const allReasoningQuestions: Question[] = [
         subject: 'Reasoning', 
         exam: 'SSC CGL', 
         translation: { 
-            question: "एक कोड में, 'CLEVER' को 'BMDUDS' लिखा जाता है। उस कोड में 'STUPID' कैसे लिखा जाता है?", 
+            question: "एक कोड में, 'CLEVER' को 'BMDUDS' लिखा جاتا ہے۔ उस कोड में 'STUPID' कैसे लिखा जाता है?", 
             options: ["RSVHQC", "RTTOJC", "RSVНQC", "RSVHPC"] 
         } 
     },
