@@ -173,7 +173,6 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
   const showTranslated = isTranslated[currentQuestion.id];
   const displayQuestion = (showTranslated && currentQuestion.translation) ? currentQuestion.translation : {question: currentQuestion.question, options: currentQuestion.options};
   
-  // Determine the target language for the tooltip based on the subject.
   const targetLanguage = subject.id === 'english' ? 'Hindi' : 'English';
     
   const formatTime = (seconds: number) => {
@@ -226,9 +225,25 @@ export function TestClient({ exam, subject, chapter }: TestClientProps) {
               <CardDescription>Question {currentQuestionIndex + 1} of {questions.length}</CardDescription>
             </div>
             <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" onClick={() => router.back()}>
-                    <ChevronLeft className="h-4 w-4" />
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure you want to exit the test?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Your progress will not be saved and you will have to start again.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => router.back()}>Yes, Exit</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
                 <div className={cn("flex items-center gap-2 font-semibold text-lg text-primary p-2 rounded-md bg-primary/10", isPaused && "animate-pulse")}>
                     <Clock className="h-5 w-5" />
                     <span>{formatTime(timeLeft)}</span>
